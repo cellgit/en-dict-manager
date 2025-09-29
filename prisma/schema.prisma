@@ -1,0 +1,169 @@
+/// Prisma schema 定义了词汇管理后台的数据库结构。
+/// 所有表均以 `dict_` 前缀命名，便于与其它领域区分。
+/// 数据库：PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// 主词表，存储词头与基础信息。
+model dict_word {
+  id          String               @id @default(uuid()) @db.Uuid
+  rank        Int?                 @db.Integer
+  headword    String               @db.VarChar(255)
+  phonetic_us String?              @db.VarChar(255)
+  phonetic_uk String?              @db.VarChar(255)
+  audio_us    String?              @db.Text
+  audio_uk    String?              @db.Text
+  book_id     String?              @db.VarChar(255)
+  memory_tip  String?              @db.Text
+  created_at  DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime             @updatedAt @db.Timestamptz(6)
+
+  /// 一对多：释义集合。
+  definitions       dict_definition[]
+  /// 一对多：独立例句（非绑定释义时使用）。
+  exampleSentences  dict_example_sentence[]
+  /// 一对多：近义词分组集合。
+  synonymGroups     dict_synonym_group[]
+  /// 一对多：短语集合。
+  phrases           dict_phrase[]
+  /// 一对多：同根或相关词集合。
+  relatedWords      dict_related_word[]
+  /// 一对多：导入日志。
+  importLogs        dict_import_log[]
+
+  @@unique([headword, book_id])
+  @@index([headword])
+}
+
+/// 释义表，记录词性、中文释义、英文解释等信息。
+model dict_definition {
+  id              String                  @id @default(uuid()) @db.Uuid
+  word_id         String                  @db.Uuid
+  part_of_speech  String?                 @db.VarChar(64)
+  meaning_cn      String?                 @db.Text
+  meaning_en      String?                 @db.Text
+  note            String?                 @db.Text
+  created_at      DateTime                @default(now()) @db.Timestamptz(6)
+
+  /// 多对一：所属词条。
+  word            dict_word               @relation(fields: [word_id], references: [id], onDelete: Cascade)
+  /// 一对多：关联例句。
+  exampleSentences dict_example_sentence[]
+
+  @@index([word_id])
+}
+
+/// 例句表，可独立于释义或绑定特定释义。
+model dict_example_sentence {
+  id             String          @id @default(uuid()) @db.Uuid
+  word_id        String          @db.Uuid
+  definition_id  String?         @db.Uuid
+  source         String          @db.Text
+  translation    String?         @db.Text
+  meta           Json?           @db.Json
+  created_at     DateTime        @default(now()) @db.Timestamptz(6)
+
+  /// 多对一：所属词条。
+  word        dict_word          @relation(fields: [word_id], references: [id], onDelete: Cascade)
+  /// 多对一：可选释义。
+  definition  dict_definition?   @relation(fields: [definition_id], references: [id])
+
+  @@index([word_id])
+  @@index([definition_id])
+}
+
+/// 近义词分组表，用于归类同义词集合。
+model dict_synonym_group {
+  id             String         @id @default(uuid()) @db.Uuid
+  word_id        String         @db.Uuid
+  part_of_speech String?        @db.VarChar(64)
+  meaning_cn     String?        @db.Text
+  note           String?        @db.Text
+
+  /// 多对一：所属词条。
+  word     dict_word            @relation(fields: [word_id], references: [id], onDelete: Cascade)
+  /// 一对多：近义词条目。
+  synos    dict_synonym[]
+
+  @@index([word_id])
+}
+
+/// 近义词条目表，存储单个近义词文本。
+model dict_synonym {
+  id        String             @id @default(uuid()) @db.Uuid
+  group_id  String             @db.Uuid
+  value     String             @db.VarChar(255)
+
+  /// 多对一：所属近义词分组。
+  group dict_synonym_group     @relation(fields: [group_id], references: [id], onDelete: Cascade)
+
+  @@index([group_id])
+}
+
+/// 短语表，记录与词条相关的短语及释义。
+model dict_phrase {
+  id          String        @id @default(uuid()) @db.Uuid
+  word_id     String        @db.Uuid
+  content     String        @db.Text
+  meaning_cn  String?       @db.Text
+  meaning_en  String?       @db.Text
+
+  /// 多对一：所属词条。
+  word dict_word            @relation(fields: [word_id], references: [id], onDelete: Cascade)
+
+  @@index([word_id])
+}
+
+/// 同根/相关词表。
+model dict_related_word {
+  id             String      @id @default(uuid()) @db.Uuid
+  word_id        String      @db.Uuid
+  part_of_speech String?     @db.VarChar(64)
+  headword       String      @db.VarChar(255)
+  meaning_cn     String?     @db.Text
+
+  /// 多对一：所属词条。
+  word dict_word            @relation(fields: [word_id], references: [id], onDelete: Cascade)
+
+  @@index([word_id])
+}
+
+/// 导入批次表，记录批量导入的总体结果。
+model dict_import_batch {
+  id             String           @id @default(uuid()) @db.Uuid
+  source_name    String?          @db.VarChar(255)
+  total_count    Int              @db.Integer
+  success_count  Int              @db.Integer
+  skipped_count  Int              @db.Integer
+  error_details  Json?            @db.Json
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+
+  /// 一对多：批次下的日志列表。
+  logs dict_import_log[]
+}
+
+/// 导入日志表，逐条记录导入状态。
+model dict_import_log {
+  id          String           @id @default(uuid()) @db.Uuid
+  batch_id    String           @db.Uuid
+  word_id     String?          @db.Uuid
+  raw_headword String          @db.VarChar(255)
+  status      String           @db.VarChar(32)
+  message     String?          @db.Text
+  created_at  DateTime         @default(now()) @db.Timestamptz(6)
+
+  /// 多对一：所属批次。
+  batch dict_import_batch      @relation(fields: [batch_id], references: [id], onDelete: Cascade)
+  /// 可选关联成功写入的词条。
+  word  dict_word?             @relation(fields: [word_id], references: [id])
+
+  @@index([batch_id])
+  @@index([word_id])
+}

@@ -1,0 +1,18 @@
+services:
+  db:
+    container_name: en-dict-manager-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dict_admin
+      POSTGRES_PASSWORD: dict_admin
+      POSTGRES_DB: en_dict_manager
+    ports:
+      - "55432:5432"
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dict_admin"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
