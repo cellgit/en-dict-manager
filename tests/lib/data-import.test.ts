@@ -55,6 +55,63 @@ const sampleWord: NormalizedWord = {
   relatedWords: []
 };
 
+const rawDatasetEntry = {
+  book_id: "PEPXiaoXue3_1",
+  head_word: "ruler",
+  word_rank: 1,
+  content: {
+    word: {
+      word_head: "ruler",
+      content: {
+        usphone: "'rulɚ",
+        ukphone: "'ruːlə",
+        rem_method: { val: "样例记忆法" },
+        trans: [
+          {
+            desc_cn: "n",
+            desc_other: "英释",
+            tran_cn: "尺子",
+            tran_other: "a tool for measuring"
+          }
+        ],
+        sentence: {
+          sentences: [
+            {
+              s_cn: "一把12英寸的尺子",
+              s_content: "a 12-inch ruler"
+            }
+          ]
+        },
+        syno: {
+          synos: [
+            {
+              pos: "n",
+              tran: "尺子",
+              hwds: [{ w: "measure" }]
+            }
+          ]
+        },
+        phrase: {
+          phrases: [
+            {
+              p_content: "blue pencil",
+              p_cn: "蓝铅笔"
+            }
+          ]
+        },
+        rel_word: {
+          rels: [
+            {
+              pos: "adj",
+              words: [{ hwd: "ruling", tran: "统治的" }]
+            }
+          ]
+        }
+      }
+    }
+  }
+};
+
 const getPrismaMock = () => prisma as unknown as {
   dict_import_batch: {
     create: jest.Mock;
@@ -188,5 +245,21 @@ describe("importWords", () => {
         data: expect.objectContaining({ status: "failed", message: "boom" })
       })
     );
+  });
+
+  it("auto-normalizes raw dataset entry", async () => {
+    const prismaMock = getPrismaMock();
+
+    const summary = await importWords([rawDatasetEntry], { dryRun: true });
+
+    expect(summary).toEqual(
+      expect.objectContaining({
+        total: 1,
+        success: 1,
+        skipped: 0,
+        failed: 0
+      })
+    );
+    expect(prismaMock.dict_import_batch.create).not.toHaveBeenCalled();
   });
 });

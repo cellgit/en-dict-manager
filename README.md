@@ -478,18 +478,18 @@
 
   1. 准备依赖：
     - Node.js ≥ 18
-    - PostgreSQL（创建数据库并配置 `DATABASE_URL` 环境变量，例如 `postgresql://user:password@localhost:5432/en_dict_manager`）。
+    - Docker Desktop（脚本会自动启动 Postgres）。
   2. 安装依赖：
     ```bash
     npm install
     ```
-  3. 同步 Prisma Schema（可选，如需生成客户端）：
-    ```bash
-    npx prisma generate
-    ```
-  4. 启动开发服务器：
+  3. 一键启动（创建本地数据库、推送 schema、种子真实数据并启动 Next.js）：
     ```bash
     npm run dev
+    ```
+  4. 若希望仅启动前端，可在数据库服务已运行的前提下执行：
+    ```bash
+    npm run dev:next
     ```
 
   ## 可用脚本
@@ -502,8 +502,11 @@
 
   ## 批量导入使用指南
 
-  - 导入入口位于后台导航的“批量导入”页（`/(admin)/import`）。
-  - 将**已清洗的**单词数组粘贴到文本框中，每个元素需符合 `NormalizedWord` 结构，例如：
+  - 导入入口位于后台导航的“批量导入”页（`/import`）。
+  - 支持粘贴两种结构：
+    - 已清洗的 `NormalizedWord` 数组（见下方示例）；
+    - 原始教材 JSON（如 `PEPXiaoXue3_1.json`）中的条目数组，系统会自动规范化并导入。
+  - `NormalizedWord` 结构示例：
     ```json
     [
      {

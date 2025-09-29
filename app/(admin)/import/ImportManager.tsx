@@ -15,9 +15,9 @@ export default function ImportManager() {
   const [lastModeDryRun, setLastModeDryRun] = useState<boolean | null>(null);
 
   const importAction = useAction(importWordsAction, {
-    onSuccess: (summary, { input }) => {
+    onSuccess: (summary, ctx) => {
       setLastSummary(summary);
-      setLastModeDryRun(input.dryRun ?? false);
+      setLastModeDryRun(ctx?.input?.dryRun ?? false);
     }
   });
 

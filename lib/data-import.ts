@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { normalizedWordSchema } from "@/app/words/schemas";
+import { normalizeDictionaryEntry } from "@/lib/dataset-normalizer";
 import { prisma } from "@/lib/prisma";
 import type { NormalizedWord } from "@/lib/types";
 import {
@@ -70,19 +71,30 @@ export async function importWords(
 
   rawWords.forEach((entry, index) => {
     const parsed = normalizedWordSchema.safeParse(entry);
-    if (!parsed.success) {
-      const reason = parsed.error.errors.map((err) => err.message).join("；");
-      errors.push({
-        index,
-        headword: pickHeadword(entry, `#${index + 1}`),
-        reason,
-        status: "skipped"
-      });
-      summary.skipped += 1;
+    if (parsed.success) {
+      validWords.push({ index, word: parsed.data });
       return;
     }
 
-    validWords.push({ index, word: parsed.data });
+    const normalizedResult = normalizeDictionaryEntry(entry);
+    if (normalizedResult.ok) {
+      validWords.push({ index, word: normalizedResult.word });
+      return;
+    }
+
+    const schemaReason = parsed.error.errors.map((err) => err.message).join("；");
+    const reasonParts = [schemaReason, normalizedResult.reason].filter(
+      (value): value is string => Boolean(value && value.trim())
+    );
+    const reason = reasonParts.length > 0 ? [...new Set(reasonParts)].join("；") : "数据格式无法识别";
+
+    errors.push({
+      index,
+      headword: pickHeadword(entry, `#${index + 1}`),
+      reason,
+      status: "skipped"
+    });
+    summary.skipped += 1;
   });
 
   let batchId: string | null = null;

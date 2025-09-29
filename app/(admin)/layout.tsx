@@ -3,8 +3,8 @@ import "@/app/globals.css";
 
 const navItems = [
   { href: "/", label: "首页" },
-  { href: "/(admin)/words", label: "单词管理" },
-  { href: "/(admin)/import", label: "批量导入" }
+  { href: "/words", label: "单词管理" },
+  { href: "/import", label: "批量导入" }
 ];
 
 export default function AdminLayout({
