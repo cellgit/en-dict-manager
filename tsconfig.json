@@ -29,7 +29,7 @@
         "prisma/*"
       ],
       "@/components/*": [
-        "app/components/*"
+        "components/*"
       ],
       "@/tests/*": [
         "tests/*"

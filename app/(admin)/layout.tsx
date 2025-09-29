@@ -1,10 +1,24 @@
 import Link from "next/link";
+import { GraduationCap } from "lucide-react";
+
+import { AdminShell, type NavItem } from "@/components/layout/admin-shell";
+import { Button } from "@/components/ui/button";
+
 import "@/app/globals.css";
 
-const navItems = [
-  { href: "/", label: "首页" },
-  { href: "/words", label: "单词管理" },
-  { href: "/import", label: "批量导入" }
+const navItems: NavItem[] = [
+  {
+    href: "/words",
+    label: "单词管理",
+    description: "检索、编辑和维护词条数据",
+    icon: "book-open-check"
+  },
+  {
+    href: "/import",
+    label: "批量导入",
+    description: "粘贴教材 JSON，执行 Dry Run 或正式导入",
+    icon: "upload-cloud"
+  }
 ];
 
 export default function AdminLayout({
@@ -13,24 +27,26 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <h1 className="text-xl font-semibold text-slate-800">词汇管理后台</h1>
-          <nav className="flex gap-4 text-sm text-slate-600">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded px-2 py-1 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </header>
-      <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
-    </div>
+    <AdminShell
+      navItems={navItems}
+      headerActions={
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="hidden sm:flex"
+        >
+          <Link
+            href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-technical.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GraduationCap className="mr-2 h-4 w-4" /> 使用文档
+          </Link>
+        </Button>
+      }
+    >
+      {children}
+    </AdminShell>
   );
 }
