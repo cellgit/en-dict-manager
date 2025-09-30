@@ -1,25 +1,11 @@
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
 
-import { AdminShell, type NavItem } from "@/components/layout/admin-shell";
+import { AdminShell } from "@/components/layout/admin-shell";
 import { Button } from "@/components/ui/button";
+import { adminNavItems } from "@/lib/admin-nav";
 
 import "@/app/globals.css";
-
-const navItems: NavItem[] = [
-  {
-    href: "/words",
-    label: "单词管理",
-    description: "检索、编辑和维护词条数据",
-    icon: "book-open-check"
-  },
-  {
-    href: "/import",
-    label: "批量导入",
-    description: "粘贴教材 JSON，执行 Dry Run 或正式导入",
-    icon: "upload-cloud"
-  }
-];
 
 export default function AdminLayout({
   children
@@ -28,7 +14,7 @@ export default function AdminLayout({
 }) {
   return (
     <AdminShell
-      navItems={navItems}
+      navItems={adminNavItems}
       headerActions={
         <Button
           asChild

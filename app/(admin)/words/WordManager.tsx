@@ -42,6 +42,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -346,6 +347,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
   const [formMode, setFormMode] = useState<FormMode | null>(null);
   const [formData, setFormData] = useState<NormalizedWordInput>(emptyWord());
   const [error, setError] = useState<string | null>(null);
+  const [listSheetOpen, setListSheetOpen] = useState(false);
 
   const selectedIdRef = useRef<string | null>(selectedId);
   useEffect(() => {
@@ -478,6 +480,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
     (id: string) => {
       setSelectedId(id);
       void detailAction.execute({ id });
+      setListSheetOpen(false);
     },
     [detailAction]
   );
@@ -486,7 +489,17 @@ export default function WordManager({ initialList }: WordManagerProps) {
     setFormMode("create");
     setFormData(emptyWord());
     setError(null);
+    setListSheetOpen(false);
   }, []);
+
+  const handleOpenList = useCallback(() => {
+    setListSheetOpen(true);
+  }, []);
+
+  const handleSearchSubmit = useCallback(() => {
+    void refreshList({ page: 0, query });
+    setListSheetOpen(true);
+  }, [query, refreshList]);
 
   const handleEdit = useCallback(() => {
     if (!selectedWord) {
@@ -561,52 +574,179 @@ export default function WordManager({ initialList }: WordManagerProps) {
     return mapWordToViewModel(selectedWord);
   }, [selectedWord]);
 
+  const lastUpdatedAt = selectedWord?.updated_at ?? null;
+
+  const metrics = useMemo(
+    () => [
+      {
+        label: "词条总数",
+        value: listState.total.toLocaleString("zh-CN"),
+        description: "当前数据库中可管理的词条数量。"
+      },
+      {
+        label: "当前列表",
+        value: `${listState.items.length} / ${listState.pageSize}`,
+        description: `第 ${listState.page + 1} 页正在浏览的词条数量。`
+      },
+      {
+        label: "最近更新",
+        value: lastUpdatedAt ? lastUpdatedAt.toLocaleString("zh-CN") : "选择词条以查看",
+        description: lastUpdatedAt
+          ? `${selectedWord?.headword ?? ""} 最近于此时间更新。`
+          : "请选择列表中的词条即可查看最新的更新时间。"
+      }
+    ],
+    [lastUpdatedAt, listState.items.length, listState.page, listState.pageSize, listState.total, selectedWord?.headword]
+  );
+
   return (
     <TooltipProvider delayDuration={150}>
-      <Sheet open={formMode !== null} onOpenChange={(open) => !open && handleSheetClose()}>
-        <div className="grid gap-6 lg:grid-cols-[340px,1fr] xl:grid-cols-[360px,1fr]">
-          <WordListPanel
-            state={listState}
-            query={query}
-            onQueryChange={setQuery}
-            onSearch={() => void refreshList({ page: 0 })}
-            onSelect={handleSelect}
-            onCreate={handleCreate}
-            loading={loadingList}
-            selectedId={selectedId}
-          />
+      <>
+        <Sheet open={formMode !== null} onOpenChange={(open) => !open && handleSheetClose()}>
+          <div className="space-y-10">
+            <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/15 via-background to-background">
+              <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-primary/20 blur-3xl opacity-60 md:left-auto md:right-0 md:translate-x-1/3" />
+              <div className="relative flex flex-col gap-8 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
+                <div className="max-w-xl space-y-5">
+                  <Badge variant="outline" className="w-fit border-primary/60 bg-primary/10 text-primary">
+                    智能词条工作台
+                  </Badge>
+                  <div className="space-y-3">
+                    <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                      管理教材词条的中心舞台
+                    </h1>
+                    <p className="text-base text-muted-foreground sm:text-lg">
+                      在同一处完成查询、创建与审阅，帮助团队保持教材与导入内容的一致性。
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button type="button" onClick={handleCreate}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      新建词条
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="xl:hidden"
+                      onClick={handleOpenList}
+                    >
+                      <Search className="mr-2 h-4 w-4" />
+                      浏览词条
+                    </Button>
+                  </div>
+                </div>
 
-          <div className="flex flex-col gap-4">
-            {error && !formMode ? (
-              <Alert variant="destructive">
-                <AlertTitle>操作失败</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            ) : null}
+                <div className="grid w-full max-w-md gap-4 sm:grid-cols-2 lg:max-w-xl lg:grid-cols-3">
+                  {metrics.map((metric) => (
+                    <div
+                      key={metric.label}
+                      className="flex flex-col gap-1 rounded-2xl border border-border/40 bg-background/80 p-4 shadow-sm backdrop-blur"
+                    >
+                      <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {metric.label}
+                      </span>
+                      <span className="text-2xl font-semibold text-foreground">{metric.value}</span>
+                      <span className="text-xs text-muted-foreground">{metric.description}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
 
-            <WordDetailPanel
-              word={viewModel}
-              loading={loadingDetail && !viewModel}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              deleting={deleting}
-            />
+            <div className="grid gap-6 xl:grid-cols-[420px,1fr]">
+              <div className="hidden xl:block">
+                <WordListPanel
+                  state={listState}
+                  query={query}
+                  onQueryChange={setQuery}
+                  onSearch={handleSearchSubmit}
+                  onSelect={handleSelect}
+                  onCreate={handleCreate}
+                  loading={loadingList}
+                  selectedId={selectedId}
+                />
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-border/60 bg-muted/20 px-4 py-3 text-sm text-muted-foreground xl:hidden">
+                  <div>
+                    <p className="font-medium text-foreground">词条列表</p>
+                    <p className="text-xs">共 {listState.total} 条词条，点击右侧按钮浏览与筛选。</p>
+                  </div>
+                  <Button size="sm" variant="secondary" onClick={handleOpenList}>
+                    <Search className="mr-2 h-3.5 w-3.5" />浏览
+                  </Button>
+                </div>
+
+                {error && !formMode ? (
+                  <Alert variant="destructive">
+                    <AlertTitle>操作失败</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                ) : null}
+
+                <WordDetailPanel
+                  word={viewModel}
+                  loading={loadingDetail && !viewModel}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  deleting={deleting}
+                />
+              </div>
+            </div>
           </div>
-        </div>
 
-        {formMode ? (
-          <WordEditorSheet
-            mode={formMode}
-            formData={formData}
-            onClose={handleSheetClose}
-            onSubmit={handleSubmit}
-            submitting={submitting}
-            submitDisabled={submitDisabled}
-            setFormData={setFormData}
-            error={error}
-          />
-        ) : null}
-      </Sheet>
+          {formMode ? (
+            <WordEditorSheet
+              mode={formMode}
+              formData={formData}
+              onClose={handleSheetClose}
+              onSubmit={handleSubmit}
+              submitting={submitting}
+              submitDisabled={submitDisabled}
+              setFormData={setFormData}
+              error={error}
+            />
+          ) : null}
+        </Sheet>
+
+        <Sheet open={listSheetOpen} onOpenChange={setListSheetOpen}>
+          <SheetContent
+            side="left"
+            className="flex w-full max-w-lg flex-col gap-0 border-border/60 p-0"
+          >
+            <SheetHeader className="border-b border-border/60 px-6 py-4 text-left">
+              <SheetTitle className="text-lg font-semibold">词条列表</SheetTitle>
+              <SheetDescription>搜索、浏览或创建词条，所有操作实时同步。</SheetDescription>
+            </SheetHeader>
+            <ScrollArea className="flex-1">
+              <div className="px-6 py-5">
+                <WordListPanel
+                  state={listState}
+                  query={query}
+                  onQueryChange={setQuery}
+                  onSearch={handleSearchSubmit}
+                  onSelect={handleSelect}
+                  onCreate={handleCreate}
+                  loading={loadingList}
+                  selectedId={selectedId}
+                  variant="plain"
+                />
+              </div>
+            </ScrollArea>
+            <SheetFooter className="border-t border-border/60 px-6 py-4">
+              <div className="flex w-full items-center justify-between text-xs text-muted-foreground">
+                <span>共 {listState.total} 条结果</span>
+                <SheetClose asChild>
+                  <Button variant="ghost" size="sm">
+                    关闭
+                  </Button>
+                </SheetClose>
+              </div>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </>
     </TooltipProvider>
   );
 }
@@ -619,7 +759,8 @@ function WordListPanel({
   onSelect,
   onCreate,
   loading,
-  selectedId
+  selectedId,
+  variant = "card"
 }: {
   state: WordListState;
   query: string;
@@ -629,10 +770,18 @@ function WordListPanel({
   onCreate: () => void;
   loading: boolean;
   selectedId: string | null;
+  variant?: "card" | "plain";
 }) {
+  const isPlain = variant === "plain";
+
   return (
-    <Card className="flex h-full flex-col border-border/80">
-      <CardHeader className="space-y-4">
+    <Card
+      className={cn(
+        "flex h-full flex-col border-border/80",
+        isPlain && "border-none bg-transparent shadow-none"
+      )}
+    >
+  <CardHeader className={cn("space-y-4", isPlain && "p-0 pb-5")}>
         <CardTitle className="text-lg font-semibold">词条管理</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">
           搜索、浏览或创建词条。
@@ -662,7 +811,12 @@ function WordListPanel({
           新建词条
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden p-0">
+      <CardContent
+        className={cn(
+          "flex-1 overflow-hidden p-0",
+          isPlain && "rounded-2xl border border-border/50 bg-background/60"
+        )}
+      >
         <ScrollArea className="h-full">
           <div className="space-y-2 p-4">
             {state.items.length === 0 ? (
@@ -707,12 +861,14 @@ function WordListPanel({
           </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>共 {state.total} 条记录</span>
-        <span>
-          每页 {state.pageSize} 条 · 第 {state.page + 1} 页
-        </span>
-      </CardFooter>
+      {isPlain ? null : (
+        <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>共 {state.total} 条记录</span>
+          <span>
+            每页 {state.pageSize} 条 · 第 {state.page + 1} 页
+          </span>
+        </CardFooter>
+      )}
     </Card>
   );
 }
