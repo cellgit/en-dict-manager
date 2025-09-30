@@ -91,6 +91,8 @@ type WordViewModel = {
   audioUs: string | null;
   audioUk: string | null;
   memoryTip: string | null;
+  createdAt: Date;
+  updatedAt: Date;
   definitions: Array<{
     partOfSpeech: string | null;
     meaningCn: string | null;
@@ -292,6 +294,8 @@ const mapWordToViewModel = (word: WordWithRelations): WordViewModel => ({
   audioUs: word.audio_us,
   audioUk: word.audio_uk,
   memoryTip: word.memory_tip,
+  createdAt: new Date(word.created_at),
+  updatedAt: new Date(word.updated_at),
   definitions: word.definitions.map((definition) => ({
     partOfSpeech: definition.part_of_speech,
     meaningCn: definition.meaning_cn,
@@ -574,7 +578,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
     return mapWordToViewModel(selectedWord);
   }, [selectedWord]);
 
-  const lastUpdatedAt = selectedWord?.updated_at ?? null;
+  const lastUpdatedAt = viewModel?.updatedAt ?? null;
 
   const metrics = useMemo(
     () => [
@@ -592,11 +596,11 @@ export default function WordManager({ initialList }: WordManagerProps) {
         label: "最近更新",
         value: lastUpdatedAt ? lastUpdatedAt.toLocaleString("zh-CN") : "选择词条以查看",
         description: lastUpdatedAt
-          ? `${selectedWord?.headword ?? ""} 最近于此时间更新。`
+          ? `${viewModel?.headword ?? ""} 最近于此时间更新。`
           : "请选择列表中的词条即可查看最新的更新时间。"
       }
     ],
-    [lastUpdatedAt, listState.items.length, listState.page, listState.pageSize, listState.total, selectedWord?.headword]
+    [lastUpdatedAt, listState.items.length, listState.page, listState.pageSize, listState.total, viewModel?.headword]
   );
 
   return (
@@ -931,6 +935,183 @@ function WordDetailPanel({
     void audio.play();
   };
 
+  const baseInfoRows = [
+    {
+      label: "Rank",
+      value: word.rank !== null ? `#${word.rank}` : "未提供"
+    },
+    {
+      label: "教材/分组",
+      value: word.bookId ?? "未提供"
+    },
+    {
+      label: "美式音标",
+      value: word.phoneticUs ?? "未提供"
+    },
+    {
+      label: "英式音标",
+      value: word.phoneticUk ?? "未提供"
+    },
+    {
+      label: "美式音频链接",
+      value: word.audioUs ?? "未提供"
+    },
+    {
+      label: "英式音频链接",
+      value: word.audioUk ?? "未提供"
+    },
+    {
+      label: "创建时间",
+      value: word.createdAt.toLocaleString("zh-CN")
+    },
+    {
+      label: "最近更新",
+      value: word.updatedAt.toLocaleString("zh-CN")
+    }
+  ];
+
+  const definitionsContent =
+    word.definitions.length === 0 ? (
+      <EmptyState title="暂无释义" description="该词条尚未配置释义内容。" />
+    ) : (
+      word.definitions.map((definition, index) => (
+        <DetailTile
+          key={`${word.id}-definition-${index}`}
+          title={`释义 ${index + 1}`}
+          description={definition.partOfSpeech ?? undefined}
+        >
+          <div className="space-y-3 text-sm">
+            {definition.meaningCn ? (
+              <DetailRow label="中文释义" value={definition.meaningCn} />
+            ) : null}
+            {definition.meaningEn ? (
+              <DetailRow label="英文释义" value={definition.meaningEn} />
+            ) : null}
+            {definition.note ? <DetailRow label="备注" value={definition.note} /> : null}
+            {definition.examples.length ? (
+              <div className="space-y-3">
+                <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  例句
+                </h4>
+                <div className="space-y-3">
+                  {definition.examples.map((example, exampleIndex) => (
+                    <div
+                      key={`${word.id}-definition-${index}-example-${exampleIndex}`}
+                      className="rounded-lg border border-border/70 bg-card/60 p-3 text-sm"
+                    >
+                      <p className="font-medium text-foreground">{example.source}</p>
+                      {example.translation ? (
+                        <p className="mt-2 text-muted-foreground">{example.translation}</p>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </DetailTile>
+      ))
+    );
+
+  const examplesContent =
+    word.examples.length === 0 ? (
+      <EmptyState title="暂无独立例句" description="可以在编辑页为词条补充更多例句。" />
+    ) : (
+      word.examples.map((example, index) => (
+        <DetailTile key={`${word.id}-example-${index}`} title={`例句 ${index + 1}`}>
+          <p className="text-sm font-medium text-foreground">{example.source}</p>
+          {example.translation ? (
+            <p className="mt-2 text-sm text-muted-foreground">{example.translation}</p>
+          ) : null}
+        </DetailTile>
+      ))
+    );
+
+  const synonymsContent =
+    word.synonymGroups.length === 0 ? (
+      <EmptyState title="暂无近义词" description="为词条添加同义词组可以帮助记忆。" />
+    ) : (
+      word.synonymGroups.map((group, index) => (
+        <DetailTile
+          key={`${word.id}-synonym-${index}`}
+          title={group.partOfSpeech || "近义词组"}
+          description={group.meaningCn ?? undefined}
+        >
+          {group.items.length ? (
+            <div className="flex flex-wrap gap-2">
+              {group.items.map((item, itemIndex) => (
+                <Badge key={`${word.id}-synonym-${index}-item-${itemIndex}`} variant="secondary">
+                  {item}
+                </Badge>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">暂无同义词。</p>
+          )}
+        </DetailTile>
+      ))
+    );
+
+  const phrasesContent =
+    word.phrases.length === 0 ? (
+      <EmptyState title="暂无固定搭配" description="添加固定搭配可以丰富学习素材。" />
+    ) : (
+      word.phrases.map((phrase, index) => (
+        <DetailTile
+          key={`${word.id}-phrase-${index}`}
+          title={phrase.content}
+          description={phrase.meaningCn ?? undefined}
+        >
+          {phrase.meaningEn ? (
+            <p className="text-sm text-muted-foreground">{phrase.meaningEn}</p>
+          ) : null}
+        </DetailTile>
+      ))
+    );
+
+  const relationsContent =
+    word.relatedWords.length === 0 ? (
+      <EmptyState title="暂无相关词条" description="可以在编辑页关联近反义词或派生词。" />
+    ) : (
+      word.relatedWords.map((related, index) => (
+        <DetailTile
+          key={`${word.id}-related-${index}`}
+          title={related.headword}
+          description={related.partOfSpeech ?? undefined}
+        >
+          {related.meaningCn ? (
+            <p className="text-sm text-muted-foreground">{related.meaningCn}</p>
+          ) : null}
+        </DetailTile>
+      ))
+    );
+
+  const logsContent =
+    word.importLogs.length === 0 ? (
+      <EmptyState title="暂无导入记录" description="该词条尚未记录导入来源。" />
+    ) : (
+      word.importLogs.map((log) => (
+        <div
+          key={log.id}
+          className="rounded-lg border border-border/70 bg-card/40 p-4 text-sm"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-medium text-foreground">{log.rawHeadword}</span>
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <FileClock className="h-3 w-3" />
+              {log.createdAt.toLocaleString()}
+            </span>
+          </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <Badge variant="outline" className="uppercase">
+              {log.status}
+            </Badge>
+            {log.message ? <span>{log.message}</span> : null}
+          </div>
+        </div>
+      ))
+    );
+
   return (
     <Card className="flex h-full flex-col border-border/80">
       <CardHeader className="space-y-4">
@@ -994,8 +1175,11 @@ function WordDetailPanel({
         </div>
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden p-0">
-        <Tabs defaultValue="definitions" className="flex h-full flex-col">
+        <Tabs defaultValue="overview" className="flex h-full flex-col">
           <TabsList className="flex w-full justify-start overflow-auto px-6 py-2">
+            <TabsTrigger value="overview" className="whitespace-nowrap">
+              全部
+            </TabsTrigger>
             <TabsTrigger value="definitions" className="whitespace-nowrap">
               释义
             </TabsTrigger>
@@ -1017,154 +1201,67 @@ function WordDetailPanel({
           </TabsList>
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full px-6 pb-6">
+              <TabsContent value="overview" className="space-y-6 pt-4">
+                <DetailTile title="基础信息">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {baseInfoRows.map((item) => (
+                      <DetailRow key={item.label} label={item.label} value={item.value} />
+                    ))}
+                  </div>
+                </DetailTile>
+                {word.memoryTip ? (
+                  <DetailTile title="记忆提示">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.memoryTip}</p>
+                  </DetailTile>
+                ) : null}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">释义</h3>
+                  <div className="space-y-4">{definitionsContent}</div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">独立例句</h3>
+                  <div className="space-y-4">{examplesContent}</div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">近义词</h3>
+                  <div className="space-y-4">{synonymsContent}</div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">固定搭配</h3>
+                  <div className="space-y-4">{phrasesContent}</div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">相关词条</h3>
+                  <div className="space-y-4">{relationsContent}</div>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground">导入记录</h3>
+                  <div className="space-y-4">{logsContent}</div>
+                </div>
+              </TabsContent>
+
               <TabsContent value="definitions" className="space-y-6 pt-4">
-                {word.definitions.length === 0 ? (
-                  <EmptyState title="暂无释义" description="该词条尚未配置释义内容。" />
-                ) : (
-                  word.definitions.map((definition, index) => (
-                    <DetailTile
-                      key={`${word.id}-definition-${index}`}
-                      title={`释义 ${index + 1}`}
-                      description={definition.partOfSpeech ?? undefined}
-                    >
-                      <div className="space-y-3 text-sm">
-                        {definition.meaningCn ? (
-                          <DetailRow label="中文释义" value={definition.meaningCn} />
-                        ) : null}
-                        {definition.meaningEn ? (
-                          <DetailRow label="英文释义" value={definition.meaningEn} />
-                        ) : null}
-                        {definition.note ? <DetailRow label="备注" value={definition.note} /> : null}
-                        {definition.examples.length ? (
-                          <div className="space-y-3">
-                            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                              例句
-                            </h4>
-                            <div className="space-y-3">
-                              {definition.examples.map((example, exampleIndex) => (
-                                <div
-                                  key={`${word.id}-definition-${index}-example-${exampleIndex}`}
-                                  className="rounded-lg border border-border/70 bg-card/60 p-3 text-sm"
-                                >
-                                  <p className="font-medium text-foreground">{example.source}</p>
-                                  {example.translation ? (
-                                    <p className="mt-2 text-muted-foreground">{example.translation}</p>
-                                  ) : null}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
-                    </DetailTile>
-                  ))
-                )}
+                {definitionsContent}
               </TabsContent>
 
               <TabsContent value="examples" className="space-y-4 pt-4">
-                {word.examples.length === 0 ? (
-                  <EmptyState title="暂无独立例句" description="可以在编辑页为词条补充更多例句。" />
-                ) : (
-                  word.examples.map((example, index) => (
-                    <DetailTile key={`${word.id}-example-${index}`} title={`例句 ${index + 1}`}>
-                      <p className="text-sm font-medium text-foreground">{example.source}</p>
-                      {example.translation ? (
-                        <p className="mt-2 text-sm text-muted-foreground">{example.translation}</p>
-                      ) : null}
-                    </DetailTile>
-                  ))
-                )}
+                {examplesContent}
               </TabsContent>
 
               <TabsContent value="synonyms" className="space-y-4 pt-4">
-                {word.synonymGroups.length === 0 ? (
-                  <EmptyState title="暂无近义词" description="为词条添加同义词组可以帮助记忆。" />
-                ) : (
-                  word.synonymGroups.map((group, index) => (
-                    <DetailTile
-                      key={`${word.id}-synonym-${index}`}
-                      title={group.partOfSpeech || "近义词组"}
-                      description={group.meaningCn ?? undefined}
-                    >
-                      {group.items.length ? (
-                        <div className="flex flex-wrap gap-2">
-                          {group.items.map((item, itemIndex) => (
-                            <Badge key={`${word.id}-synonym-${index}-item-${itemIndex}`} variant="secondary">
-                              {item}
-                            </Badge>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">暂无同义词。</p>
-                      )}
-                    </DetailTile>
-                  ))
-                )}
+                {synonymsContent}
               </TabsContent>
 
               <TabsContent value="phrases" className="space-y-4 pt-4">
-                {word.phrases.length === 0 ? (
-                  <EmptyState title="暂无固定搭配" description="添加固定搭配可以丰富学习素材。" />
-                ) : (
-                  word.phrases.map((phrase, index) => (
-                    <DetailTile
-                      key={`${word.id}-phrase-${index}`}
-                      title={phrase.content}
-                      description={phrase.meaningCn ?? undefined}
-                    >
-                      {phrase.meaningEn ? (
-                        <p className="text-sm text-muted-foreground">{phrase.meaningEn}</p>
-                      ) : null}
-                    </DetailTile>
-                  ))
-                )}
+                {phrasesContent}
               </TabsContent>
 
               <TabsContent value="relations" className="space-y-4 pt-4">
-                {word.relatedWords.length === 0 ? (
-                  <EmptyState title="暂无相关词条" description="可以在编辑页关联近反义词或派生词。" />
-                ) : (
-                  word.relatedWords.map((related, index) => (
-                    <DetailTile
-                      key={`${word.id}-related-${index}`}
-                      title={related.headword}
-                      description={related.partOfSpeech ?? undefined}
-                    >
-                      {related.meaningCn ? (
-                        <p className="text-sm text-muted-foreground">{related.meaningCn}</p>
-                      ) : null}
-                    </DetailTile>
-                  ))
-                )}
+                {relationsContent}
               </TabsContent>
 
               <TabsContent value="logs" className="space-y-4 pt-4">
-                {word.importLogs.length === 0 ? (
-                  <EmptyState title="暂无导入记录" description="该词条尚未记录导入来源。" />
-                ) : (
-                  word.importLogs.map((log) => (
-                    <div
-                      key={log.id}
-                      className="rounded-lg border border-border/70 bg-card/40 p-4 text-sm"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-medium text-foreground">
-                          {log.rawHeadword}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                          <FileClock className="h-3 w-3" />
-                          {log.createdAt.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        <Badge variant="outline" className="uppercase">
-                          {log.status}
-                        </Badge>
-                        {log.message ? <span>{log.message}</span> : null}
-                      </div>
-                    </div>
-                  ))
-                )}
+                {logsContent}
               </TabsContent>
             </ScrollArea>
           </div>
@@ -1240,18 +1337,18 @@ function WordEditorSheet({
   const title = mode === "create" ? "新建词条" : "编辑词条";
 
   return (
-  <SheetContent className="flex w-full max-w-4xl flex-col gap-0 p-0">
+    <SheetContent className="flex h-[100dvh] max-h-[100dvh] w-full max-w-4xl flex-col gap-0 p-0">
       <SheetHeader className="border-b border-border/60 px-6 py-4 text-left">
         <SheetTitle className="text-lg font-semibold">{title}</SheetTitle>
         <SheetDescription>完善词条内容，保存后将立即生效。</SheetDescription>
       </SheetHeader>
 
-      <form onSubmit={onSubmit} className="flex flex-1 flex-col">
-        <ScrollArea className="flex-1">
+      <form onSubmit={onSubmit} className="flex flex-1 min-h-0 flex-col">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="space-y-6 px-6 py-6">
             <WordForm formData={formData} setFormData={setFormData} />
           </div>
-        </ScrollArea>
+        </div>
 
         <SheetFooter className="gap-4 border-t border-border/60 px-6 py-4">
           {error ? (
@@ -1807,6 +1904,22 @@ function WordForm({
                         rows={2}
                       />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`${prefix}-note`} className="text-xs font-medium text-muted-foreground">
+                      备注
+                    </Label>
+                    <Textarea
+                      id={`${prefix}-note`}
+                      value={group.note ?? ""}
+                      onChange={(event) =>
+                        updateSynonymGroup(index, {
+                          ...group,
+                          note: event.target.value
+                        })
+                      }
+                      rows={2}
+                    />
                   </div>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">

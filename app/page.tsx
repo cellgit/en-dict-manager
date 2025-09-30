@@ -6,6 +6,7 @@ import { AdminShell } from "@/components/layout/admin-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { adminNavItems } from "@/lib/admin-nav";
 
 export default function HomePage() {
@@ -21,8 +22,15 @@ export default function HomePage() {
     </Button>
   );
 
+  const headerActions = (
+    <>
+      <ThemeToggle />
+      {docButton}
+    </>
+  );
+
   return (
-    <AdminShell navItems={adminNavItems} headerActions={docButton}>
+    <AdminShell navItems={adminNavItems} headerActions={headerActions}>
       <section className="space-y-12">
         <div className="grid gap-8 rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-background p-8 shadow-sm md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-12">
           <div className="space-y-6">
