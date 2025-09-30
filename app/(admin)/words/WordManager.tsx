@@ -832,9 +832,10 @@ function WordListPanel({
                     type="button"
                     onClick={() => onSelect(item.id)}
                     className={cn(
-                      "w-full rounded-lg border border-transparent bg-card p-4 text-left transition-all",
-                      "hover:border-border/80 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
-                      isActive && "border-primary bg-primary/10"
+                      "w-full rounded-lg border bg-card p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
+                      isActive
+                        ? "border-primary/70 bg-primary/10 hover:bg-primary/15"
+                        : "border-transparent hover:border-border/80 hover:bg-card/80"
                     )}
                   >
                     <div className="flex items-center justify-between gap-2">
