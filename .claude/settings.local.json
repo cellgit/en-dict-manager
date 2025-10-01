@@ -10,7 +10,8 @@
       "Bash(bash:*)",
       "Bash(lsof:*)",
       "Bash(kill:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(xargs kill:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

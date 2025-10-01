@@ -101,7 +101,7 @@ export async function importWords(
   const deduplicatedWords: { index: number; word: NormalizedWord }[] = [];
 
   for (const item of validWords) {
-    const key = `${item.word.headword.trim().toLowerCase()}::${item.word.bookId ?? ""}`;
+    const key = `${item.word.headword.trim()}::${item.word.bookId ?? ""}`;
     if (!duplicateTracker.has(key)) {
       duplicateTracker.set(key, item.index);
       deduplicatedWords.push(item);
@@ -178,13 +178,13 @@ export async function importWords(
   });
 
   const existingSet = new Set(
-    existingWordsInDb.map((w) => `${w.headword.toLowerCase()}::${w.book_id ?? ""}`)
+    existingWordsInDb.map((w) => `${w.headword}::${w.book_id ?? ""}`)
   );
 
   const wordsToCreate: { index: number; word: NormalizedWord }[] = [];
 
   for (const item of deduplicatedWords) {
-    const key = `${item.word.headword.trim().toLowerCase()}::${item.word.bookId ?? ""}`;
+    const key = `${item.word.headword.trim()}::${item.word.bookId ?? ""}`;
     if (existingSet.has(key)) {
       errors.push({
         index: item.index,
