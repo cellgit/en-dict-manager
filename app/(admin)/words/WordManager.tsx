@@ -3,6 +3,7 @@
 import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
+import Link from "next/link";
 import {
   Clock,
   Edit3,
@@ -13,7 +14,8 @@ import {
   Trash2,
   Volume2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  GraduationCap
 } from "lucide-react";
 
 import {

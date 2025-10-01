@@ -112,10 +112,45 @@ export async function importWords(
     errors.push({
       index: item.index,
       headword: item.word.headword,
-      reason: `与第 ${firstIndex + 1} 条的数据 (word/book_id) 完全相同，已跳过`,
+      reason: `与第 ${firstIndex + 1} 条的数据 (headword/book_id) 完全相同，已跳过`,
       status: "skipped"
     });
     summary.skipped += 1;
+  }
+
+  // Check database for existing words before processing
+  const existingWordsInDb = await prisma.dict_word.findMany({
+    where: {
+      OR: deduplicatedWords.map((item) => ({
+        headword: item.word.headword.trim(),
+        book_id: item.word.bookId ?? null
+      }))
+    },
+    select: {
+      headword: true,
+      book_id: true
+    }
+  });
+
+  const existingSet = new Set(
+    existingWordsInDb.map((w) => `${w.headword.toLowerCase()}::${w.book_id ?? ""}`)
+  );
+
+  const wordsToCreate: { index: number; word: NormalizedWord }[] = [];
+
+  for (const item of deduplicatedWords) {
+    const key = `${item.word.headword.trim().toLowerCase()}::${item.word.bookId ?? ""}`;
+    if (existingSet.has(key)) {
+      errors.push({
+        index: item.index,
+        headword: item.word.headword,
+        reason: "数据库中已存在相同的 headword/book_id，已跳过",
+        status: "skipped"
+      });
+      summary.skipped += 1;
+    } else {
+      wordsToCreate.push(item);
+    }
   }
 
   let batchId: string | null = null;
@@ -146,7 +181,7 @@ export async function importWords(
     }
   }
 
-  for (const item of deduplicatedWords) {
+  for (const item of wordsToCreate) {
     if (dryRun) {
       summary.success += 1;
       continue;
@@ -154,21 +189,7 @@ export async function importWords(
 
     try {
       await prisma.$transaction(async (tx) => {
-        const existing = await tx.dict_word.findFirst({
-          where: {
-            headword: item.word.headword.trim(),
-            book_id: item.word.bookId ?? null
-          },
-          select: { id: true }
-        });
-
-        let wordId: string;
-        if (existing) {
-          await replaceWordWithinTransaction(tx, existing.id, item.word);
-          wordId = existing.id;
-        } else {
-          wordId = await createWordWithinTransaction(tx, item.word);
-        }
+        const wordId = await createWordWithinTransaction(tx, item.word);
 
         await tx.dict_import_log.create({
           data: {
@@ -176,7 +197,7 @@ export async function importWords(
             word_id: wordId,
             raw_headword: item.word.headword,
             status: "success",
-            message: existing ? "updated" : "created"
+            message: "created"
           }
         });
       });

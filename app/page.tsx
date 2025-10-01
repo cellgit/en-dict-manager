@@ -10,27 +10,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { adminNavItems } from "@/lib/admin-nav";
 
 export default function HomePage() {
-  const docButton = (
-    <Button asChild variant="outline" size="sm" className="hidden sm:flex">
-      <Link
-        href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-technical.md"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        文档说明
-      </Link>
-    </Button>
-  );
-
-  const headerActions = (
-    <>
-      <ThemeToggle />
-      {docButton}
-    </>
-  );
-
   return (
-    <AdminShell navItems={adminNavItems} headerActions={headerActions}>
+    <AdminShell navItems={adminNavItems} headerActions={<ThemeToggle />}>
       <section className="space-y-12">
         <div className="grid gap-8 rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-background p-8 shadow-sm md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-12">
           <div className="space-y-6">

@@ -19,9 +19,10 @@ export default function AdminLayout({
       headerActions={
         <>
           <ThemeToggle />
-          <Button asChild variant="outline" size="sm" className="hidden sm:flex">
+          <Button asChild variant="outline" size="sm">
             <Link href="/docs">
-              <GraduationCap className="mr-2 h-4 w-4" /> 使用文档
+              <GraduationCap className="mr-2 h-4 w-4" />
+              使用文档
             </Link>
           </Button>
         </>

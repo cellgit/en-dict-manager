@@ -90,6 +90,8 @@ export default function ImportManager() {
     (event: ChangeEvent<HTMLTextAreaElement>) => {
       setPayload(event.target.value);
       setClientError(null);
+      setLastSummary(null);
+      setLastModeDryRun(null);
       if (fileMeta) {
         setFileMeta(null);
       }
@@ -402,6 +404,11 @@ export default function ImportManager() {
                 <div className="space-y-3">
                   <p className="text-sm text-muted-foreground">
                     以下条目在导入过程中出现问题，请根据原因调整数据后重试：
+                    {lastSummary.errors.length > 20 && (
+                      <span className="ml-1 font-medium">
+                        （显示前 20 条，共 {lastSummary.errors.length} 条）
+                      </span>
+                    )}
                   </p>
                   <div className="overflow-hidden rounded-lg border">
                     <Table>
@@ -414,7 +421,7 @@ export default function ImportManager() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {lastSummary.errors.map((error) => (
+                        {lastSummary.errors.slice(0, 20).map((error) => (
                           <TableRow key={`${error.status}-${error.index}`} className="text-sm">
                             <TableCell>{error.index + 1}</TableCell>
                             <TableCell className="font-medium">{error.headword}</TableCell>
@@ -422,6 +429,13 @@ export default function ImportManager() {
                             <TableCell>{error.reason}</TableCell>
                           </TableRow>
                         ))}
+                        {lastSummary.errors.length > 20 && (
+                          <TableRow className="bg-muted/20">
+                            <TableCell colSpan={4} className="text-center text-sm text-muted-foreground italic">
+                              ... 还有 {lastSummary.errors.length - 20} 条未显示
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                   </div>
