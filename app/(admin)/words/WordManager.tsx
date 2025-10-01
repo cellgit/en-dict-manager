@@ -468,6 +468,16 @@ export default function WordManager({ initialList }: WordManagerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Real-time search with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void refreshList({ page: 0, query });
+    }, 400);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const loadingList = listAction.status === "executing";
   const loadingDetail = detailAction.status === "executing";
   const submitting =
@@ -514,7 +524,6 @@ export default function WordManager({ initialList }: WordManagerProps) {
 
   const handleSearchSubmit = useCallback(() => {
     void refreshList({ page: 0, query });
-    setListSheetOpen(true);
   }, [query, refreshList]);
 
   const handlePageChange = useCallback(
@@ -890,25 +899,23 @@ function WordListPanel({
         <CardDescription className="text-sm text-muted-foreground">
           搜索、浏览或创建词条。
         </CardDescription>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(event) => onQueryChange(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  onSearch();
-                }
-              }}
-              placeholder="搜索词条或释义"
-              className="pl-9"
-            />
-          </div>
-          <Button type="button" variant="secondary" onClick={onSearch} disabled={loading}>
-            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}搜索
-          </Button>
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          {loading && (
+            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+          )}
+          <Input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onSearch();
+              }
+            }}
+            placeholder="搜索词条或释义（实时搜索）"
+            className={cn("pl-9", loading && "pr-9")}
+          />
         </div>
         <Button type="button" onClick={onCreate} className="w-full">
           <Plus className="mr-2 h-4 w-4" />
