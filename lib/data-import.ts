@@ -97,6 +97,27 @@ export async function importWords(
     summary.skipped += 1;
   });
 
+  const duplicateTracker = new Map<string, number>();
+  const deduplicatedWords: { index: number; word: NormalizedWord }[] = [];
+
+  for (const item of validWords) {
+    const key = `${item.word.headword.trim().toLowerCase()}::${item.word.bookId ?? ""}`;
+    if (!duplicateTracker.has(key)) {
+      duplicateTracker.set(key, item.index);
+      deduplicatedWords.push(item);
+      continue;
+    }
+
+    const firstIndex = duplicateTracker.get(key)!;
+    errors.push({
+      index: item.index,
+      headword: item.word.headword,
+      reason: `与第 ${firstIndex + 1} 条的数据 (word/book_id) 完全相同，已跳过`,
+      status: "skipped"
+    });
+    summary.skipped += 1;
+  }
+
   let batchId: string | null = null;
 
   if (!dryRun) {
@@ -125,7 +146,7 @@ export async function importWords(
     }
   }
 
-  for (const item of validWords) {
+  for (const item of deduplicatedWords) {
     if (dryRun) {
       summary.success += 1;
       continue;

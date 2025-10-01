@@ -12,5 +12,11 @@ export const adminNavItems: NavItem[] = [
     label: "批量导入",
     description: "粘贴教材 JSON，执行 Dry Run 或正式导入",
     icon: "upload-cloud"
+  },
+  {
+    href: "/docs",
+    label: "使用文档",
+    description: "了解工作流、导入规范与常见问题",
+    icon: "file-text"
   }
 ];

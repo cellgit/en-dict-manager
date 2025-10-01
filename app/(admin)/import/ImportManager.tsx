@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useAction } from 'next-safe-action/hooks';
-import { AlertCircle, CheckCircle2, FileWarning } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileWarning, Trash2, UploadCloud } from 'lucide-react';
 
 import { importWordsAction } from '@/app/import/actions';
 import { Button } from '@/components/ui/button';
@@ -16,24 +16,61 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { ImportSummary } from '@/lib/data-import';
 
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`;
+};
+
 export default function ImportManager() {
   const [payload, setPayload] = useState('');
   const [sourceName, setSourceName] = useState('');
   const [lastSummary, setLastSummary] = useState<ImportSummary | null>(null);
   const [lastModeDryRun, setLastModeDryRun] = useState<boolean | null>(null);
+  const [clientError, setClientError] = useState<string | null>(null);
+  const [fileMeta, setFileMeta] = useState<{ name: string; size: number } | null>(null);
+  const [pendingMode, setPendingMode] = useState<'dry-run' | 'import' | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [readingFile, setReadingFile] = useState(false);
 
   const importAction = useAction(importWordsAction, {
     onSuccess: (summary, ctx) => {
       setLastSummary(summary);
       setLastModeDryRun(ctx?.input?.dryRun ?? false);
+      setClientError(null);
+      setPendingMode(null);
+    },
+    onError: () => {
+      setPendingMode(null);
     }
   });
 
   const handleSubmit = useCallback(
     (dryRun: boolean) => {
       const trimmed = payload.trim();
+
+      if (!trimmed) {
+        setClientError('请先粘贴或上传要导入的 JSON 数据。');
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (!Array.isArray(parsed)) {
+          setClientError('导入数据必须是数组，每个元素代表一个单词。');
+          return;
+        }
+      } catch (error) {
+        setClientError('JSON 解析失败，请检查文件或文本格式是否正确。');
+        return;
+      }
+
+      setClientError(null);
       setLastSummary(null);
       setLastModeDryRun(null);
+      setPendingMode(dryRun ? 'dry-run' : 'import');
       void importAction.execute({
         payload: trimmed,
         dryRun,
@@ -46,6 +83,65 @@ export default function ImportManager() {
   const isLoading = importAction.status === 'executing';
   const serverError = importAction.result?.serverError;
   const validationErrors = importAction.result?.validationErrors;
+  const hasPayload = payload.trim().length > 0;
+  const disableSubmission = isLoading || readingFile;
+
+  const handlePayloadChange = useCallback(
+    (event: ChangeEvent<HTMLTextAreaElement>) => {
+      setPayload(event.target.value);
+      setClientError(null);
+      if (fileMeta) {
+        setFileMeta(null);
+      }
+    },
+    [fileMeta]
+  );
+
+  const triggerFilePicker = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const clearFileSelection = useCallback(() => {
+    setFileMeta(null);
+    setClientError(null);
+    setPayload('');
+    setLastSummary(null);
+    setLastModeDryRun(null);
+  }, []);
+
+  const handleFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setReadingFile(true);
+    file
+      .text()
+      .then((text) => {
+        setPayload(text);
+        setClientError(null);
+        setFileMeta({ name: file.name, size: file.size });
+        setLastSummary(null);
+        setLastModeDryRun(null);
+        setSourceName((prev) => {
+          if (prev.trim().length > 0) {
+            return prev;
+          }
+          return file.name.replace(/\.json$/i, '') || prev;
+        });
+      })
+      .catch(() => {
+        setClientError('读取文件失败，请重试或检查文件权限。');
+        setFileMeta(null);
+      })
+      .finally(() => {
+        setReadingFile(false);
+      });
+
+    // 允许选取同名文件
+    event.target.value = '';
+  }, []);
 
   const summaryMetrics = useMemo(() => {
     if (!lastSummary) return [];
@@ -56,6 +152,8 @@ export default function ImportManager() {
       { label: '失败', value: lastSummary.failed }
     ];
   }, [lastSummary]);
+
+  const showClientError = Boolean(clientError) && !lastSummary;
 
   return (
     <div className="space-y-10">
@@ -68,7 +166,7 @@ export default function ImportManager() {
             <div className="space-y-3">
               <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">批量导入控制中心</h1>
               <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                支持原始教材 JSON 或标准化格式，通过 Dry Run 校验保障数据安全，再一键同步至词库。实时指标帮助你掌握每次导入的健康状况。
+                支持原始教材 JSON 或标准化格式，通过 Dry Run 校验保障数据安全，再一键同步至词库。你可以粘贴文本或直接上传 JSON 文件，实时指标帮助你掌握每次导入的健康状况。
               </p>
             </div>
           </div>
@@ -99,7 +197,7 @@ export default function ImportManager() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          提醒：Dry Run 不写入数据库，可在正式导入前查验字段合法性；正式导入会自动刷新词条列表和导入日志。
+          提醒：Dry Run 不会写入数据库；正式导入会生成批次 ID 并刷新词条列表与导入日志。
         </p>
       </section>
 
@@ -108,10 +206,55 @@ export default function ImportManager() {
           <CardHeader className="space-y-4">
             <CardTitle className="text-xl font-semibold">准备导入数据</CardTitle>
             <CardDescription>
-              粘贴 JSON 数组，选择 Dry Run 先行校验或直接执行正式导入。我们会自动识别数据结构并在必要时进行格式转换。
+              粘贴或上传 JSON 数组，选择 Dry Run 先行校验或直接执行正式导入。我们会自动识别数据结构并在必要时进行格式转换。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">上传 JSON 文件</p>
+                  <p className="text-xs">
+                    支持单个 <code>.json</code> 文件，系统会自动填充文本并在需要时补全数据来源。
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {fileMeta ? (
+                    <Button type="button" variant="outline" size="sm" onClick={clearFileSelection} disabled={disableSubmission}>
+                      <Trash2 className="mr-2 h-4 w-4" />清除文件
+                    </Button>
+                  ) : null}
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={triggerFilePicker}
+                    disabled={disableSubmission}
+                  >
+                    <UploadCloud className="mr-2 h-4 w-4" />{readingFile ? '读取中…' : '选择文件'}
+                  </Button>
+                </div>
+              </div>
+              {fileMeta ? (
+                <div className="mt-4 flex flex-col gap-1 rounded-lg border border-border/60 bg-background/80 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-0.5">
+                    <p className="font-medium text-foreground">{fileMeta.name}</p>
+                    <p>大小：{formatFileSize(fileMeta.size)}</p>
+                  </div>
+                  <p className="text-muted-foreground">
+                    内容已填充至文本框，可在提交前进一步检查或编辑。
+                  </p>
+                </div>
+              ) : null}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </div>
+
             <div className="grid gap-4 md:grid-cols-3">
               <div className="md:col-span-1 space-y-2">
                 <div className="text-sm font-medium text-muted-foreground">数据来源（可选）</div>
@@ -137,57 +280,76 @@ export default function ImportManager() {
                   粘贴一个由单词条目组成的数组。建议保持字段命名一致，以便自动映射到标准化结构。
                 </p>
               </div>
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 space-y-4">
                 <Textarea
                   value={payload}
-                  onChange={(event) => setPayload(event.target.value)}
+                  onChange={handlePayloadChange}
                   placeholder={`[ { "headword": "ruler", "definitions": [...] }, ... ]`}
                   rows={16}
+                  className="font-mono text-sm"
                 />
-                <p className="mt-2 text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   单次导入建议不超过 500 条。更大量的数据可分批处理，以获得更快的反馈体验。
                 </p>
               </div>
             </div>
 
+            {showClientError ? (
+              <Alert variant="warning">
+                <FileWarning className="h-4 w-4" />
+                <div className="space-y-1">
+                  <AlertTitle>校验未通过</AlertTitle>
+                  <AlertDescription>{clientError}</AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
+
             {validationErrors && Object.keys(validationErrors).length > 0 ? (
               <Alert variant="warning" className="border-dashed">
                 <FileWarning className="h-4 w-4" />
-                <AlertTitle>请求参数不完整</AlertTitle>
-                <AlertDescription className="space-y-1">
-                  {Object.entries(validationErrors).map(([field, messages]) => (
-                    <p key={field}>
-                      <span className="font-medium">{field}：</span>
-                      {(messages as string[]).join('；')}
-                    </p>
-                  ))}
-                </AlertDescription>
+                <div className="space-y-1">
+                  <AlertTitle>请求参数不完整</AlertTitle>
+                  <AlertDescription className="space-y-1">
+                    {Object.entries(validationErrors).map(([field, messages]) => (
+                      <p key={field}>
+                        <span className="font-medium">{field}：</span>
+                        {(messages as string[]).join('；')}
+                      </p>
+                    ))}
+                  </AlertDescription>
+                </div>
               </Alert>
             ) : null}
 
             {serverError ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>导入失败</AlertTitle>
-                <AlertDescription>{serverError}</AlertDescription>
+                <div className="space-y-1">
+                  <AlertTitle>导入失败</AlertTitle>
+                  <AlertDescription>{serverError}</AlertDescription>
+                </div>
               </Alert>
             ) : null}
           </CardContent>
           <CardFooter className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
-              Dry Run 输出校验报告但不写入数据库；正式导入会触发词条刷新与导入日志记录。
+              Dry Run 输出校验报告但不写入数据库；正式导入会生成批次 ID、刷新词条列表并记录导入日志。
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleSubmit(true)}
-                disabled={isLoading}
+                disabled={disableSubmission || !hasPayload}
               >
-                {isLoading ? '校验中...' : 'Dry Run 校验'}
+                {isLoading && pendingMode === 'dry-run' ? '校验中…' : 'Dry Run 校验'}
               </Button>
-              <Button type="button" onClick={() => handleSubmit(false)} disabled={isLoading}>
-                {isLoading ? '导入中...' : '正式导入'}
+              <Button
+                type="button"
+                onClick={() => handleSubmit(false)}
+                disabled={disableSubmission || !hasPayload}
+              >
+                {isLoading && pendingMode === 'import' ? '导入中…' : '正式导入'}
               </Button>
             </div>
           </CardFooter>

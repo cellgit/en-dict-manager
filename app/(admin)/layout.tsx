@@ -19,17 +19,8 @@ export default function AdminLayout({
       headerActions={
         <>
           <ThemeToggle />
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="hidden sm:flex"
-          >
-            <Link
-              href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-technical.md"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Button asChild variant="outline" size="sm" className="hidden sm:flex">
+            <Link href="/docs">
               <GraduationCap className="mr-2 h-4 w-4" /> 使用文档
             </Link>
           </Button>

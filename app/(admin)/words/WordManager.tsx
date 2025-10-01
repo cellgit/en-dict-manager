@@ -59,7 +59,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
 
 type WordManagerProps = {
   readonly initialList: ListWordsResult;
@@ -347,14 +347,17 @@ export default function WordManager({ initialList }: WordManagerProps) {
     page: 0,
     pageSize: PAGE_SIZE
   });
-  const [pendingPage, setPendingPage] = useState(0);
-  const [pendingPageSize, setPendingPageSize] = useState(PAGE_SIZE);
   const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
   const [selectedWord, setSelectedWord] = useState<WordWithRelations | null>(null);
   const [formMode, setFormMode] = useState<FormMode | null>(null);
   const [formData, setFormData] = useState<NormalizedWordInput>(emptyWord());
   const [error, setError] = useState<string | null>(null);
   const [listSheetOpen, setListSheetOpen] = useState(false);
+  const listRequestRef = useRef<{ page: number; pageSize: number; query: string }>({
+    page: 0,
+    pageSize: PAGE_SIZE,
+    query: ""
+  });
 
   const selectedIdRef = useRef<string | null>(selectedId);
   useEffect(() => {
@@ -378,11 +381,12 @@ export default function WordManager({ initialList }: WordManagerProps) {
   const listAction = useAction(listWordsAction, {
     onSuccess: (result) => {
       setError(null);
+      const { page, pageSize } = listRequestRef.current;
       setListState({
         items: result.items,
         total: result.total,
-        page: pendingPage,
-        pageSize: pendingPageSize
+        page,
+        pageSize
       });
 
       if (result.items.length === 0) {
@@ -472,14 +476,11 @@ export default function WordManager({ initialList }: WordManagerProps) {
     async (options?: { query?: string; page?: number; pageSize?: number }) => {
       const nextQuery = options?.query ?? query;
       const sizeOverride = options?.pageSize;
-      const nextPageSize = sizeOverride ?? listState.pageSize;
-      const nextPage = options?.page ?? (sizeOverride !== undefined ? 0 : listState.page);
-      setPendingPageSize(nextPageSize);
-      setPendingPage(nextPage);
+      const desiredPageSize = sizeOverride ?? listState.pageSize;
+      const nextPageSize = Math.max(1, Math.min(desiredPageSize, 100));
+      const nextPage = Math.max(0, options?.page ?? (sizeOverride !== undefined ? 0 : listState.page));
+      listRequestRef.current = { page: nextPage, pageSize: nextPageSize, query: nextQuery };
       setQuery(nextQuery);
-      if (sizeOverride !== undefined) {
-        setListState((prev) => ({ ...prev, pageSize: nextPageSize }));
-      }
       await listAction.execute({
         query: nextQuery ? nextQuery : undefined,
         skip: nextPage * nextPageSize,
@@ -617,7 +618,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
       },
       {
         label: "最近更新",
-        value: lastUpdatedAt ? lastUpdatedAt.toLocaleString("zh-CN") : "选择词条以查看",
+        value: lastUpdatedAt ? formatDateTime(lastUpdatedAt) : "选择词条以查看",
         description: lastUpdatedAt
           ? `${viewModel?.headword ?? ""} 最近于此时间更新。`
           : "请选择列表中的词条即可查看最新的更新时间。"
@@ -634,7 +635,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
             <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/15 via-background to-background">
               <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-primary/20 blur-3xl opacity-60 md:left-auto md:right-0 md:translate-x-1/3" />
               <div className="relative flex flex-col gap-8 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-                <div className="max-w-xl space-y-5">
+                <div className="max-w-2xl space-y-5">
                   <Badge variant="outline" className="w-fit border-primary/60 bg-primary/10 text-primary">
                     智能词条工作台
                   </Badge>
@@ -663,7 +664,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
                   </div>
                 </div>
 
-                <div className="grid w-full max-w-md gap-4 sm:grid-cols-2 lg:max-w-xl lg:grid-cols-3">
+                <div className="grid w-full max-w-lg gap-4 sm:grid-cols-2 lg:max-w-2xl lg:grid-cols-3">
                   {metrics.map((metric) => (
                     <div
                       key={metric.label}
@@ -680,7 +681,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
               </div>
             </section>
 
-            <div className="grid gap-6 xl:grid-cols-[420px,1fr]">
+            <div className="grid gap-6 xl:grid-cols-[460px,1fr] 2xl:grid-cols-[520px,1fr]">
               <div className="hidden xl:block">
                 <WordListPanel
                   state={listState}
@@ -812,7 +813,7 @@ function WordListPanel({
   const canGoPrev = state.page > 0;
   const canGoNext = state.page + 1 < totalPages;
   const rangeStart = state.total === 0 ? 0 : state.page * state.pageSize + 1;
-  const rangeEnd = state.total === 0 ? 0 : Math.min(state.total, rangeStart + state.pageSize - 1);
+  const rangeEnd = state.total === 0 ? 0 : Math.min(state.total, rangeStart + Math.max(0, state.items.length - 1));
   const defaultPageSizes = [10, 20, 50, 100] as const;
   const pageSizes = Array.from(new Set([...defaultPageSizes, state.pageSize])).sort((a, b) => a - b);
 
@@ -927,6 +928,7 @@ function WordListPanel({
             ) : (
               state.items.map((item) => {
                 const isActive = selectedId === item.id;
+                const updatedDisplay = formatDateTime(item.updatedAt) || "未知时间";
                 return (
                   <button
                     key={item.id}
@@ -950,7 +952,7 @@ function WordListPanel({
                       </div>
                       <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
                         {item.bookId ? <Badge variant="outline">{item.bookId}</Badge> : null}
-                        <span>更新于 {new Date(item.updatedAt).toLocaleString()}</span>
+                        <span>更新于 {updatedDisplay}</span>
                       </div>
                     </div>
                     {item.rank ? (
@@ -1052,11 +1054,11 @@ function WordDetailPanel({
     },
     {
       label: "创建时间",
-      value: word.createdAt.toLocaleString("zh-CN")
+      value: formatDateTime(word.createdAt) || "未提供"
     },
     {
       label: "最近更新",
-      value: word.updatedAt.toLocaleString("zh-CN")
+      value: formatDateTime(word.updatedAt) || "未提供"
     }
   ];
 
@@ -1189,7 +1191,7 @@ function WordDetailPanel({
             <span className="font-medium text-foreground">{log.rawHeadword}</span>
             <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
               <FileClock className="h-3 w-3" />
-              {log.createdAt.toLocaleString()}
+              {formatDateTime(log.createdAt) || "--"}
             </span>
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

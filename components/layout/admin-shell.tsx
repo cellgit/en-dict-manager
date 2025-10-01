@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpenCheck, Menu, UploadCloud, type LucideIcon } from 'lucide-react';
+import { BookOpenCheck, FileText, Menu, UploadCloud, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
@@ -18,11 +18,12 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
-export type NavIconKey = 'book-open-check' | 'upload-cloud';
+export type NavIconKey = 'book-open-check' | 'upload-cloud' | 'file-text';
 
 const iconRegistry: Record<NavIconKey, LucideIcon> = {
   'book-open-check': BookOpenCheck,
-  'upload-cloud': UploadCloud
+  'upload-cloud': UploadCloud,
+  'file-text': FileText
 };
 
 const defaultNavIcon = BookOpenCheck;
@@ -63,7 +64,7 @@ export function AdminShell({
 
       <div className="relative flex min-h-screen flex-col">
         <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 md:px-6">
+          <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-6 py-4 md:px-8">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-primary-foreground shadow-sm">
                 EN
@@ -158,7 +159,7 @@ export function AdminShell({
         </header>
 
         <main className="relative flex-1">
-          <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-12 md:px-6 md:py-16">
+          <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:py-12 md:px-8 md:py-16">
             {children}
           </div>
         </main>

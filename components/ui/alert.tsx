@@ -2,11 +2,11 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = {
-  default: "bg-background text-foreground",
-  destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-  success: "border-emerald-500/40 text-emerald-600 dark:border-emerald-500/60 dark:text-emerald-400",
-  warning: "border-amber-500/40 text-amber-600 dark:border-amber-500/60 dark:text-amber-400",
-  info: "border-sky-500/40 text-sky-600 dark:border-sky-500/60 dark:text-sky-400"
+  default: "border-border/60 bg-background text-foreground",
+  destructive: "border-destructive/40 bg-destructive/5 text-destructive dark:border-destructive/50",
+  success: "border-emerald-500/40 bg-emerald-500/[0.08] text-emerald-600 dark:border-emerald-500/50 dark:bg-emerald-500/[0.05] dark:text-emerald-400",
+  warning: "border-amber-500/50 bg-amber-500/[0.08] text-amber-600 dark:border-amber-500/60 dark:bg-amber-500/[0.05] dark:text-amber-400",
+  info: "border-sky-500/40 bg-sky-500/[0.08] text-sky-600 dark:border-sky-500/60 dark:bg-sky-500/[0.05] dark:text-sky-400"
 };
 
 type AlertVariant = keyof typeof alertVariants;
@@ -17,9 +17,8 @@ const Alert = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEleme
       ref={ref}
       role="alert"
       className={cn(
-        "relative w-full rounded-lg border px-4 py-3 [&>svg+div]:translate-y-[-2px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-3.5 [&>svg]:text-foreground",
+  "relative flex w-full items-start gap-3 rounded-lg border p-4 text-sm shadow-sm [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg]:text-current [&>svg~*]:flex-1",
         alertVariants[variant],
-        variant !== "default" && "border px-4",
         className
       )}
       {...props}

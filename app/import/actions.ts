@@ -25,11 +25,16 @@ export const importWordsAction = actionClient(importWordsSchema, async (input) =
     throw new ActionError("导入数据必须是数组，每个元素代表一个单词。请确认格式。");
   }
 
-  const summary = await importWords(parsed, { dryRun, sourceName: sourceName ?? null });
+  try {
+    const summary = await importWords(parsed, { dryRun, sourceName: sourceName ?? null });
 
-  if (!dryRun) {
-    revalidatePath("/words");
+    if (!dryRun) {
+      revalidatePath("/words");
+    }
+
+    return summary;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "导入失败，请稍后再试。";
+    throw new ActionError(message);
   }
-
-  return summary;
 });

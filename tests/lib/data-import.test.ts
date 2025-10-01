@@ -247,6 +247,39 @@ describe("importWords", () => {
     );
   });
 
+  it("skips duplicate entries sharing headword and bookId", async () => {
+    const prismaMock = getPrismaMock();
+    const wordServiceMock = getWordServiceMock();
+
+    prismaMock.dict_import_batch.create.mockResolvedValue({ id: "batch-dup" });
+    prismaMock.dict_import_batch.update.mockResolvedValue({});
+    prismaMock._tx.dict_word.findFirst.mockResolvedValue(null);
+    wordServiceMock.createWordWithinTransaction.mockResolvedValue("word-dup");
+
+    const duplicateWord: NormalizedWord = {
+      ...sampleWord,
+      rank: 2
+    };
+
+    const summary = await importWords([sampleWord, duplicateWord], { dryRun: false });
+
+    expect(summary.success).toBe(1);
+    expect(summary.skipped).toBe(1);
+    expect(summary.errors).toEqual([
+      expect.objectContaining({
+        status: "skipped",
+        headword: sampleWord.headword,
+        reason: expect.stringContaining("word/book_id")
+      })
+    ]);
+    expect(wordServiceMock.createWordWithinTransaction).toHaveBeenCalledTimes(1);
+    expect(prismaMock.dict_import_log.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: "skipped" })
+      })
+    );
+  });
+
   it("auto-normalizes raw dataset entry", async () => {
     const prismaMock = getPrismaMock();
 

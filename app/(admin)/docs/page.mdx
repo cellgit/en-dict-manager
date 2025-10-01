@@ -1,0 +1,143 @@
+export const metadata = {
+  title: "使用文档",
+  description: "词汇管理后台的操作指南、导入规范与常见问题解答。"
+};
+
+import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { WorkflowTabs } from "@/components/docs/workflow-tabs";
+
+# 使用文档
+
+<Alert variant="info">
+  <AlertTitle>快速提醒</AlertTitle>
+  <AlertDescription>
+    所有写入操作都会通过 Server Action 执行事务并记录导入日志。Dry Run 永远不会落库，正式导入会刷新单词列表并生成批次 ID。
+  </AlertDescription>
+</Alert>
+
+## 快速入门
+
+1. 使用导航栏进入「单词管理」或「批量导入」模块。
+2. 在单词列表中搜索目标词头，选中后即可浏览完整释义、例句、近义词与导入记录。
+3. 需要新增词条时点击「新建词条」，填写规范化结构后提交；提交成功会自动刷新列表。
+4. 大批量更新时进入「批量导入」，粘贴或上传 JSON，先执行 Dry Run 确认结果，再执行正式导入。
+5. 导入结束后检查汇总卡片与错误表，必要时下载原始数据重新修复。
+
+<Separator className="my-10" />
+
+## 核心工作流
+
+<WorkflowTabs />
+
+<Separator className="my-10" />
+
+## JSON 结构示例
+
+```json
+[
+  {
+    "headword": "abandon",
+    "rank": 203,
+    "bookId": "PEPXiaoXue3_1",
+    "phoneticUs": "əˈbændən",
+    "definitions": [
+      {
+        "partOfSpeech": "v.",
+        "meaningCn": "放弃；抛弃",
+        "examples": [
+          {
+            "source": "The climbers had to abandon the mission.",
+            "translation": "登山队只得放弃行动。"
+          }
+        ]
+      }
+    ],
+    "synonymGroups": [
+      {
+        "items": ["quit", "desert"]
+      }
+    ],
+    "phrases": [
+      {
+        "content": "abandon oneself to",
+        "meaningCn": "沉迷于"
+      }
+    ]
+  }
+]
+```
+
+> 字段命名需与 <code>NormalizedWord</code> 保持一致，缺失字段可省略或置为空字符串，系统会自动归一化为空值。
+
+<Separator className="my-10" />
+
+## 导入结果状态说明
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead className="w-32">状态</TableHead>
+      <TableHead>含义</TableHead>
+      <TableHead className="w-40">常见原因</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell><Badge variant="outline">success</Badge></TableCell>
+      <TableCell>词条已写入或更新成功，并记录至导入日志。</TableCell>
+      <TableCell>——</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge variant="outline">skipped</Badge></TableCell>
+      <TableCell>跳过的条目保留在错误表中，不会写库。</TableCell>
+      <TableCell>字段校验失败、无法识别的结构。</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge variant="outline">failed</Badge></TableCell>
+      <TableCell>条目已进入写库流程，但事务报错（例如唯一约束）。</TableCell>
+      <TableCell>数据库约束冲突、事务异常。</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Separator className="my-10" />
+
+## 常见问题
+
+### Hydration 报错
+
+- 刷新时如遇到「Hydration failed」提示，可确认浏览器本地缓存是否存在旧版本脚本，必要时执行强制刷新。
+- 应用内部已经统一使用 `formatDateTime` 工具固定在 Asia/Shanghai 时区，若仍遇问题，请记录具体词条并反馈给开发团队。
+
+### Dry Run 一直失败
+
+- 检查 JSON 根节点是否是数组。
+- 确认每个词条至少包含 `headword`、`definitions` 或可被归一化的字段。
+- 若数据量过大，可拆分为多批并开启 Dry Run 校验。
+
+### 如何回溯导入批次？
+
+- 正式导入成功后，结果卡片会显示批次 ID。
+- 在词条详情页底部的「导入记录」中可以按时间查看写库状态与原始词头。
+
+<Separator className="my-10" />
+
+## 进一步阅读
+
+<div className="flex flex-wrap gap-3">
+  <Button asChild variant="secondary" size="sm">
+    <Link href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-technical.md" target="_blank" rel="noopener noreferrer">
+      查看技术实现说明
+    </Link>
+  </Button>
+  <Button asChild variant="outline" size="sm">
+    <Link href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-prd.md" target="_blank" rel="noopener noreferrer">
+      查看产品背景 PRD
+    </Link>
+  </Button>
+</div>
