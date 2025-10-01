@@ -1,0 +1,805 @@
+[
+  {
+    "book_id": "CET4luan_1",
+    "content": {
+      "word": {
+        "content": {
+          "exam": [
+            {
+              "answer": {
+                "explain": " have access to sth.：  有权利、  机会进入(享用、  使用)…。句意：  据估计， 超过三分之一的人得不到健康服务。assessment：  估价， 评估； assignment：  分配； 职位， 工作； exception：  除外， 例外。",
+                "right_index": 4
+              },
+              "choices": [
+                {
+                  "choice": "assessment",
+                  "choice_index": 1
+                },
+                {
+                  "choice": "assignment",
+                  "choice_index": 2
+                },
+                {
+                  "choice": "exception",
+                  "choice_index": 3
+                },
+                {
+                  "choice": "access",
+                  "choice_index": 4
+                }
+              ],
+              "exam_type": 1,
+              "question": "Over a third of the population was estimated to have no _______ to the health service."
+            },
+            {
+              "answer": {
+                "explain": "这条主路没有通往那栋房子的通道。avenue： 林荫道， 大街； 途径， 渠道； exposure： 暴露； 曝光； edge： 边， 边缘。",
+                "right_index": 1
+              },
+              "choices": [
+                {
+                  "choice": "access",
+                  "choice_index": 1
+                },
+                {
+                  "choice": "avenue",
+                  "choice_index": 2
+                },
+                {
+                  "choice": "exposure",
+                  "choice_index": 3
+                },
+                {
+                  "choice": "edge",
+                  "choice_index": 4
+                }
+              ],
+              "exam_type": 1,
+              "question": "There is no _______ to the house from the main road."
+            }
+          ],
+          "phone": "'ækses, 'æksəs, æk'ses",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "访问控制",
+                "p_content": "access control"
+              },
+              {
+                "p_cn": "使用；接近；可以利用",
+                "p_content": "have access to"
+              },
+              {
+                "p_cn": "互联网接入",
+                "p_content": "internet access"
+              },
+              {
+                "p_cn": "便于检修；容易接近",
+                "p_content": "easy access"
+              },
+              {
+                "p_cn": "市场准入；进入市场；开放市场",
+                "p_content": "market access"
+              },
+              {
+                "p_cn": "数据存取",
+                "p_content": "data access"
+              },
+              {
+                "p_cn": "[电脑]多路存取；多路访问",
+                "p_content": "multiple access"
+              },
+              {
+                "p_cn": "开放存取；开架阅览",
+                "p_content": "open access"
+              },
+              {
+                "p_cn": "[计]直接存取",
+                "p_content": "direct access"
+              },
+              {
+                "p_cn": "接入网；接取网络",
+                "p_content": "access network"
+              },
+              {
+                "p_cn": "宽带接入；宽频存取；宽带通信",
+                "p_content": "broadband access"
+              },
+              {
+                "p_cn": "网络接入；网络访问",
+                "p_content": "network access"
+              },
+              {
+                "p_cn": "获得访问权限",
+                "p_content": "gain access"
+              },
+              {
+                "p_cn": "自由访问；自由存取；自由入口",
+                "p_content": "free access"
+              },
+              {
+                "p_cn": "[计]远程访问；远程存取",
+                "p_content": "remote access"
+              },
+              {
+                "p_cn": "获得；接近；可以使用",
+                "p_content": "get access to"
+              },
+              {
+                "p_cn": "码分多址联接方式",
+                "p_content": "code division multiple access"
+              },
+              {
+                "p_cn": "随机存取",
+                "p_content": "random access"
+              },
+              {
+                "p_cn": "公共存取",
+                "p_content": "public access"
+              },
+              {
+                "p_cn": "数据库存取",
+                "p_content": "database access"
+              }
+            ]
+          },
+          "picture": "http://ydschool-online.nos.netease.com/CET4luan_1_1_access_1523504930159000002_access_JY.png",
+          "real_exam_sentence": {
+            "desc": "真题例句",
+            "sentences": [
+              {
+                "s_content": "...This process improves access to relevant information...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第二套",
+                  "type": "阅读理解",
+                  "year": "2017.6"
+                }
+              },
+              {
+                "s_content": "...in part because of my inability to access the information as quickly...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "阅读理解",
+                  "year": "2017.12"
+                }
+              },
+              {
+                "s_content": "...Department of Education is making efforts to ensure that all students have equal access to a quality education...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...assume that people consciously and rationally choose what and how much they eat and therefore focus on providing information and more access to heal thier foods...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "阅读理解",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...Today's announcement is another important step forward in improving access to a quality education...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...access to public housing...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2015.12"
+                }
+              },
+              {
+                "s_content": "...smartphones and　other devices into the hands of medical staff for instant access to patient data...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第二套",
+                  "type": "阅读理解",
+                  "year": "2014.6"
+                }
+              },
+              {
+                "s_content": "...the technology　has helped reduce medical error by providing instant access to patient data or prescription details...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第二套",
+                  "type": "阅读理解",
+                  "year": "2014.6"
+                }
+              },
+              {
+                "s_content": "...largely because they no longer had access to affordable health care...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第二套",
+                  "type": "阅读理解",
+                  "year": "2014.12"
+                }
+              },
+              {
+                "s_content": "...Perhaps the most profound changes will come when the five billion people worldwide who currently lack Internet access get online...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2014.12"
+                }
+              },
+              {
+                "s_content": "...Over two billion people worldwide now have access to vastly more information than ever before...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2014.12"
+                }
+              },
+              {
+                "s_content": "...That means users have access to notes from not only their classmates and Facebook friends...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2013.6"
+                }
+              },
+              {
+                "s_content": "...To access your rights under the DDA and to request \"reasonable adjustments\" to your working conditions or your workplace requires disclosure...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "阅读理解",
+                  "year": "2012.12"
+                }
+              },
+              {
+                "s_content": "...Yet he also empowered millions of people by giving them access to cutting-edge technology...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2012.12"
+                }
+              },
+              {
+                "s_content": "...online customers have access to commodities of such a huge variety and number...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "写作题",
+                  "year": "2011.6"
+                }
+              },
+              {
+                "s_content": "...A US study suggested that when a school gave children access to a natural environment...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "阅读理解",
+                  "year": "2010.12"
+                }
+              },
+              {
+                "s_content": "...The life of old people is measurably better when they have access to nature...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "阅读理解",
+                  "year": "2010.12"
+                }
+              },
+              {
+                "s_content": "...Only with free access to this live 'database’...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "写作题",
+                  "year": "2009.6"
+                }
+              },
+              {
+                "s_content": "...With access to the Internet...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "写作题",
+                  "year": "2008.6"
+                }
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "accessible",
+                    "tran": "易接近的；可进入的；可理解的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "accessibility",
+                    "tran": "易接近；可亲；可以得到"
+                  },
+                  {
+                    "hwd": "accession",
+                    "tran": "增加；就职；到达"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": "ac ＋ cess(去) → 来去要走通道 → 通道"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "用户可以远程获取语音邮件。",
+                "s_content": "Users can access their voice mail remotely."
+              },
+              {
+                "s_cn": "只有高级管理层才有权查阅这些文件。",
+                "s_content": "Access to the papers is restricted to senior management."
+              }
+            ]
+          },
+          "speech": "access",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "make use of"
+                  },
+                  {
+                    "w": "fashion"
+                  },
+                  {
+                    "w": "employ"
+                  },
+                  {
+                    "w": "border"
+                  },
+                  {
+                    "w": "exercise"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "使用；[计]存取；接近"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "opening"
+                  },
+                  {
+                    "w": "admittance"
+                  }
+                ],
+                "pos": "n",
+                "tran": "进入；使用权；[电]通路"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "获取",
+              "tran_other": "to find information, especially on a computer"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "接近，入口",
+              "tran_other": "the right to enter a place, use something, see someone etc"
+            }
+          ],
+          "ukphone": "'ækses",
+          "ukspeech": "access&type=1",
+          "usphone": "'æksɛs",
+          "usspeech": "access&type=2"
+        },
+        "word_head": "access",
+        "word_id": "CET4luan_1_1"
+      }
+    },
+    "head_word": "access",
+    "word_rank": 1
+  },
+  {
+    "book_id": "CET4luan_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "英 [prəˈdʒekt] 美 [prəˈdʒɛkt",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "表现自己；突出自己",
+                "p_content": "project oneself"
+              },
+              {
+                "p_cn": "项目管理；专案管理",
+                "p_content": "project management"
+              },
+              {
+                "p_cn": "建筑计划，建设项目；基建计划",
+                "p_content": "construction project"
+              },
+              {
+                "p_cn": "工程项目成本；施工费用",
+                "p_content": "project cost"
+              },
+              {
+                "p_cn": "工程项目",
+                "p_content": "engineering project"
+              },
+              {
+                "p_cn": "项目经理",
+                "p_content": "project manager"
+              },
+              {
+                "p_cn": "研究项目",
+                "p_content": "research project"
+              },
+              {
+                "p_cn": "开发项目；发展计划",
+                "p_content": "development project"
+              },
+              {
+                "p_cn": "项目工作组；攻关队伍",
+                "p_content": "project team"
+              },
+              {
+                "p_cn": "投资项目；投资计划",
+                "p_content": "investment project"
+              },
+              {
+                "p_cn": "三峡工程",
+                "p_content": "three gorges project"
+              },
+              {
+                "p_cn": "项目规划；工程规划；计划图编制",
+                "p_content": "project planning"
+              },
+              {
+                "p_cn": "项目执行；项目实现",
+                "p_content": "project implementation"
+              },
+              {
+                "p_cn": "项目融资；项目资金筹措",
+                "p_content": "project financing"
+              },
+              {
+                "p_cn": "重点项目，关键项目；枢纽工程",
+                "p_content": "key project"
+              },
+              {
+                "p_cn": "n. 项目规划；工程计划",
+                "p_content": "project plan"
+              },
+              {
+                "p_cn": "试点项目，试点工程；样板工程，样板设计",
+                "p_content": "pilot project"
+              },
+              {
+                "p_cn": "毕业设计",
+                "p_content": "graduation project"
+              },
+              {
+                "p_cn": "项目评估；工程评定",
+                "p_content": "project evaluation"
+              },
+              {
+                "p_cn": "动力工程",
+                "p_content": "power project"
+              }
+            ]
+          },
+          "picture": "http://ydschool-online.nos.netease.com/CET4luan_1_2_project_1523504930937000003_project_MT.png",
+          "real_exam_sentence": {
+            "desc": "真题例句",
+            "sentences": [
+              {
+                "s_content": "...this is the first time a panel has been designed to be laid directly on top existing roads and the first project to install the panels on public highways...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "听力题",
+                  "year": "2017.12"
+                }
+              },
+              {
+                "s_content": "...They project the image of confidence...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "听力题",
+                  "year": "2017.12"
+                }
+              },
+              {
+                "s_content": "...The total park project will need more plantings in the following years...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...The project is a growing one and has spread from the park to the school and the shopping center...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...Why do the 4-H girls agree to follow the park project through to completion...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...Members of the 4-H club agreed to follow the project through to completion...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...Participation in this project helped the girls developed a new attitude towards their appearance of their own homes;they've learned how to work with tools...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...tell me about the special project you mentioned on the phone...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第三套",
+                  "type": "听力题",
+                  "year": "2015.6"
+                }
+              },
+              {
+                "s_content": "...they had participants organize different activities-from project planning...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "阅读理解",
+                  "year": "2015.12"
+                }
+              },
+              {
+                "s_content": "...The total park project needed more plantings in the following years...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "听力题",
+                  "year": "2013.6"
+                }
+              },
+              {
+                "s_content": "...we experienced a library that was as busy as science-fair project week...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第二套",
+                  "type": "阅读理解",
+                  "year": "2013.6"
+                }
+              },
+              {
+                "s_content": "...Participation in this project helped the girls developed a new attitude towards their parents of their own homes; they've learned how to work with tools...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "听力题",
+                  "year": "2013.6"
+                }
+              },
+              {
+                "s_content": "...The project is a growing one and is spread from the park to the school and the shopping center...",
+                "source_info": {
+                  "level": "CET4",
+                  "paper": "第一套",
+                  "type": "听力题",
+                  "year": "2013.6"
+                }
+              },
+              {
+                "s_content": "...after that I could apply for project work with the company I used to work for...",
+                "source_info": {
+                  "level": "CET4",
+                  "type": "听力题",
+                  "year": "2008.12"
+                }
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "projecting",
+                    "tran": "突出的；伸出的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "projection",
+                    "tran": "投射；规划；突出；发射；推测"
+                  },
+                  {
+                    "hwd": "projector",
+                    "tran": "[仪] 投影仪；放映机；探照灯；设计者"
+                  },
+                  {
+                    "hwd": "projectionist",
+                    "tran": "放映员；电视技师；地图绘制员；电影放映师"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "projecting",
+                    "tran": "使突出（project的现在分词）；计划；发射"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": "pro(向前) ＋ ject(扔) → 向前扔 → 投射"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "该计划旨在对儿童情绪作出分析。",
+                "s_content": "The project aims to provide an analysis of children’s emotions."
+              },
+              {
+                "s_cn": "一项为期三年的研究计划",
+                "s_content": "a three-year research project"
+              },
+              {
+                "s_cn": "试行成功后，该方案现在将得到推广。",
+                "s_content": "The scheme will now be extended after a successful pilot project (= a small trial to test if an idea will be successful ) ."
+              },
+              {
+                "s_cn": "这个项目由威康公司资助。",
+                "s_content": "The project is funded by Wellcome plc."
+              },
+              {
+                "s_cn": "项目经理",
+                "s_content": "a project manager"
+              },
+              {
+                "s_cn": "一个地理课题",
+                "s_content": "a geography project"
+              }
+            ]
+          },
+          "speech": "project",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "design"
+                  },
+                  {
+                    "w": "engineer"
+                  }
+                ],
+                "pos": "vi",
+                "tran": "设计；计划；表达；投射"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "design"
+                  },
+                  {
+                    "w": "schedule"
+                  },
+                  {
+                    "w": "engineer"
+                  },
+                  {
+                    "w": "style"
+                  },
+                  {
+                    "w": "frame"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "设计；计划；发射；放映"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "engineering"
+                  },
+                  {
+                    "w": "career"
+                  },
+                  {
+                    "w": "enterprise"
+                  },
+                  {
+                    "w": "plan"
+                  },
+                  {
+                    "w": "scheme"
+                  }
+                ],
+                "pos": "n",
+                "tran": "工程；计划；事业"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "工程；课题、作业",
+              "tran_other": "a carefully planned piece of work to get information about something, to build something, to improve something etc"
+            }
+          ],
+          "ukphone": "prəˈdʒekt",
+          "ukspeech": "project&type=1",
+          "usphone": "prəˈdʒɛkt; prɑdʒɛkt",
+          "usspeech": "project&type=2"
+        },
+        "word_head": "project",
+        "word_id": "CET4luan_1_2"
+      }
+    },
+    "head_word": "project",
+    "word_rank": 2
+  }
+]

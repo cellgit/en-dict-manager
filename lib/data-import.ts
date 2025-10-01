@@ -118,6 +118,51 @@ export async function importWords(
     summary.skipped += 1;
   }
 
+  // 自动创建缺失的 book_id 记录
+  const uniqueBookIds = new Set<string>();
+  for (const item of deduplicatedWords) {
+    if (item.word.bookId) {
+      uniqueBookIds.add(item.word.bookId);
+    }
+  }
+
+  if (uniqueBookIds.size > 0) {
+    const existingBooks = await prisma.dict_book.findMany({
+      where: {
+        book_id: {
+          in: Array.from(uniqueBookIds)
+        }
+      },
+      select: {
+        book_id: true
+      }
+    });
+
+    const existingBookIds = new Set(existingBooks.map((b) => b.book_id));
+    const missingBookIds = Array.from(uniqueBookIds).filter(
+      (bookId) => !existingBookIds.has(bookId)
+    );
+
+    // 批量创建缺失的 book 记录
+    if (missingBookIds.length > 0) {
+      await prisma.dict_book.createMany({
+        data: missingBookIds.map((bookId) => ({
+          book_id: bookId,
+          name: bookId, // 使用 book_id 作为默认名称
+          description: null,
+          cover_url: null,
+          grade: null,
+          level: null,
+          publisher: null,
+          tags: [],
+          sort_order: null,
+          is_active: true
+        })),
+        skipDuplicates: true
+      });
+    }
+  }
+
   // Check database for existing words before processing
   const existingWordsInDb = await prisma.dict_word.findMany({
     where: {
