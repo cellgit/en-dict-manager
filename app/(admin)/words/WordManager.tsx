@@ -11,7 +11,9 @@ import {
   Plus,
   Search,
   Trash2,
-  Volume2
+  Volume2,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 import {
@@ -346,6 +348,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
     pageSize: PAGE_SIZE
   });
   const [pendingPage, setPendingPage] = useState(0);
+  const [pendingPageSize, setPendingPageSize] = useState(PAGE_SIZE);
   const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
   const [selectedWord, setSelectedWord] = useState<WordWithRelations | null>(null);
   const [formMode, setFormMode] = useState<FormMode | null>(null);
@@ -379,7 +382,7 @@ export default function WordManager({ initialList }: WordManagerProps) {
         items: result.items,
         total: result.total,
         page: pendingPage,
-        pageSize: PAGE_SIZE
+        pageSize: pendingPageSize
       });
 
       if (result.items.length === 0) {
@@ -466,15 +469,21 @@ export default function WordManager({ initialList }: WordManagerProps) {
   const deleting = deleteAction.status === "executing";
 
   const refreshList = useCallback(
-    async (options?: { query?: string; page?: number }) => {
+    async (options?: { query?: string; page?: number; pageSize?: number }) => {
       const nextQuery = options?.query ?? query;
-      const nextPage = options?.page ?? listState.page;
+      const sizeOverride = options?.pageSize;
+      const nextPageSize = sizeOverride ?? listState.pageSize;
+      const nextPage = options?.page ?? (sizeOverride !== undefined ? 0 : listState.page);
+      setPendingPageSize(nextPageSize);
       setPendingPage(nextPage);
       setQuery(nextQuery);
+      if (sizeOverride !== undefined) {
+        setListState((prev) => ({ ...prev, pageSize: nextPageSize }));
+      }
       await listAction.execute({
         query: nextQuery ? nextQuery : undefined,
-        skip: nextPage * listState.pageSize,
-        take: listState.pageSize
+        skip: nextPage * nextPageSize,
+        take: nextPageSize
       });
     },
     [listAction, listState.page, listState.pageSize, query]
@@ -504,6 +513,20 @@ export default function WordManager({ initialList }: WordManagerProps) {
     void refreshList({ page: 0, query });
     setListSheetOpen(true);
   }, [query, refreshList]);
+
+  const handlePageChange = useCallback(
+    (nextPage: number) => {
+      void refreshList({ page: nextPage });
+    },
+    [refreshList]
+  );
+
+  const handlePageSizeChange = useCallback(
+    (nextSize: number) => {
+      void refreshList({ page: 0, pageSize: nextSize });
+    },
+    [refreshList]
+  );
 
   const handleEdit = useCallback(() => {
     if (!selectedWord) {
@@ -668,6 +691,8 @@ export default function WordManager({ initialList }: WordManagerProps) {
                   onCreate={handleCreate}
                   loading={loadingList}
                   selectedId={selectedId}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
                 />
               </div>
 
@@ -734,6 +759,8 @@ export default function WordManager({ initialList }: WordManagerProps) {
                   onCreate={handleCreate}
                   loading={loadingList}
                   selectedId={selectedId}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
                   variant="plain"
                 />
               </div>
@@ -764,6 +791,8 @@ function WordListPanel({
   onCreate,
   loading,
   selectedId,
+  onPageChange,
+  onPageSizeChange,
   variant = "card"
 }: {
   state: WordListState;
@@ -774,9 +803,77 @@ function WordListPanel({
   onCreate: () => void;
   loading: boolean;
   selectedId: string | null;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   variant?: "card" | "plain";
 }) {
   const isPlain = variant === "plain";
+  const totalPages = Math.max(1, Math.ceil(state.total / Math.max(1, state.pageSize)));
+  const canGoPrev = state.page > 0;
+  const canGoNext = state.page + 1 < totalPages;
+  const rangeStart = state.total === 0 ? 0 : state.page * state.pageSize + 1;
+  const rangeEnd = state.total === 0 ? 0 : Math.min(state.total, rangeStart + state.pageSize - 1);
+  const defaultPageSizes = [10, 20, 50, 100] as const;
+  const pageSizes = Array.from(new Set([...defaultPageSizes, state.pageSize])).sort((a, b) => a - b);
+
+  const footerContent = (
+    <div
+      className={cn(
+        "flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between",
+        isPlain && "rounded-lg border border-dashed border-border/60 bg-background/50 p-3"
+      )}
+    >
+      <div>
+        {state.total === 0 ? "暂无数据" : `显示第 ${rangeStart}-${rangeEnd} 条，共 ${state.total} 条`}
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-xs">
+          <span>每页</span>
+          <select
+            className="rounded-md border border-border/60 bg-background px-2 py-1 text-xs shadow-sm focus:outline-none focus:ring-2 focus:ring-ring/50"
+            value={state.pageSize}
+            onChange={(event) => {
+              const next = Number.parseInt(event.target.value, 10);
+              if (!Number.isNaN(next) && next !== state.pageSize) {
+                onPageSizeChange(next);
+              }
+            }}
+          >
+            {pageSizes.map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="flex items-center gap-2 text-xs">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            disabled={!canGoPrev}
+            onClick={() => onPageChange(Math.max(0, state.page - 1))}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="min-w-[6rem] text-center font-medium">
+            第 {Math.min(state.page + 1, totalPages)} / {totalPages} 页
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            disabled={!canGoNext}
+            onClick={() => onPageChange(Math.min(totalPages - 1, state.page + 1))}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Card
@@ -866,14 +963,7 @@ function WordListPanel({
           </div>
         </ScrollArea>
       </CardContent>
-      {isPlain ? null : (
-        <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>共 {state.total} 条记录</span>
-          <span>
-            每页 {state.pageSize} 条 · 第 {state.page + 1} 页
-          </span>
-        </CardFooter>
-      )}
+      {isPlain ? <div className="mt-4">{footerContent}</div> : <CardFooter>{footerContent}</CardFooter>}
     </Card>
   );
 }

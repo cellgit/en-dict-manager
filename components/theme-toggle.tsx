@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
@@ -47,6 +48,8 @@ export function ThemeToggle() {
     }
   }, [activeKey]);
 
+  const menuValue = mounted ? theme ?? "system" : "system";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -60,18 +63,16 @@ export function ThemeToggle() {
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
-        {themeOptions.map(({ key, label, Icon }) => (
-          <DropdownMenuItem
-            key={key}
-            onClick={() => setTheme(key)}
-            className="flex items-center gap-2"
-          >
-            <Icon className="h-4 w-4" />
-            <span className="flex-1 text-sm">{label}</span>
-            {activeKey === key ? <ActiveIcon className="h-3 w-3 text-primary" /> : null}
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuRadioGroup value={menuValue} onValueChange={setTheme}>
+          {themeOptions.map(({ key, label, Icon }) => (
+            <DropdownMenuRadioItem key={key} value={key} className="flex items-center gap-2">
+              <Icon className="h-4 w-4" />
+              <span className="flex-1 text-sm">{label}</span>
+              {activeKey === key ? <ActiveIcon className="h-3 w-3 text-primary" /> : null}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
