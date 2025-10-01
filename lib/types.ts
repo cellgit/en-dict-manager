@@ -52,6 +52,7 @@ export interface NormalizedWord {
 
 export interface ListWordsParams {
   query?: string;
+  bookId?: string;
   skip?: number;
   take?: number;
 }

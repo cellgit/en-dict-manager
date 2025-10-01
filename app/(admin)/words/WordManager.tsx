@@ -65,6 +65,7 @@ import { cn, formatDateTime } from "@/lib/utils";
 
 type WordManagerProps = {
   readonly initialList: ListWordsResult;
+  readonly filterBookId?: string;
 };
 
 type FormMode = "create" | "edit";
@@ -339,7 +340,7 @@ const mapWordToViewModel = (word: WordWithRelations): WordViewModel => ({
   }))
 });
 
-export default function WordManager({ initialList }: WordManagerProps) {
+export default function WordManager({ initialList, filterBookId }: WordManagerProps) {
   const initialSelectedId = initialList.items[0]?.id ?? null;
 
   const [query, setQuery] = useState<string>("");
@@ -495,11 +496,12 @@ export default function WordManager({ initialList }: WordManagerProps) {
       setQuery(nextQuery);
       await listAction.execute({
         query: nextQuery ? nextQuery : undefined,
+        bookId: filterBookId,
         skip: nextPage * nextPageSize,
         take: nextPageSize
       });
     },
-    [listAction, listState.page, listState.pageSize, query]
+    [listAction, listState.page, listState.pageSize, query, filterBookId]
   );
 
   const handleSelect = useCallback(

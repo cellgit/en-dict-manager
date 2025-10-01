@@ -113,7 +113,7 @@ type RelatedWordWriteModel = {
 };
 
 type PreparedWordData = {
-  baseData: Prisma.dict_wordCreateInput;
+  baseData: Prisma.dict_wordUncheckedCreateInput;
   definitions: DefinitionWriteModel[];
   examples: ExampleWriteModel[];
   synonymGroups: SynonymGroupWriteModel[];
@@ -256,7 +256,7 @@ const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
       audio_us: toNullableString(input.audioUs ?? undefined),
       audio_uk: toNullableString(input.audioUk ?? undefined),
       memory_tip: toNullableString(input.memoryTip ?? undefined)
-    } satisfies Prisma.dict_wordCreateInput,
+    } satisfies Prisma.dict_wordUncheckedCreateInput,
     definitions,
     examples: exampleSentences,
     synonymGroups,
@@ -378,14 +378,20 @@ export async function listWords(params: ListWordsParams = {}): Promise<ListWords
   const takeCandidate = params.take ?? DEFAULT_TAKE;
   const take = Math.min(Math.max(takeCandidate, 1), MAX_TAKE);
 
-  const where = params.query
-    ? {
-        headword: {
-          contains: params.query.trim(),
-          mode: "insensitive" as const
-        }
-      }
-    : undefined;
+  const where: Prisma.dict_wordWhereInput = {};
+
+  // 搜索条件
+  if (params.query) {
+    where.headword = {
+      contains: params.query.trim(),
+      mode: "insensitive" as const
+    };
+  }
+
+  // bookId 筛选
+  if (params.bookId) {
+    where.book_id = params.bookId;
+  }
 
   const [items, total] = await prisma.$transaction([
     prisma.dict_word.findMany({

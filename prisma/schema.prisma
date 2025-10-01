@@ -11,6 +11,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// 单词书表，管理不同的教材或单词集合。
+model dict_book {
+  id          String    @id @default(uuid()) @db.Uuid
+  book_id     String    @unique @db.VarChar(255)
+  name        String    @db.VarChar(255)
+  description String?   @db.Text
+  cover_url   String?   @db.Text
+  grade       String?   @db.VarChar(64)
+  level       String?   @db.VarChar(64)
+  publisher   String?   @db.VarChar(255)
+  tags        String[]  @default([])
+  sort_order  Int?      @db.Integer
+  is_active   Boolean   @default(true)
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime  @updatedAt @db.Timestamptz(6)
+
+  /// 一对多：该书的所有单词。
+  words       dict_word[]
+
+  @@index([book_id])
+  @@index([is_active])
+  @@index([sort_order])
+}
+
 /// 主词表，存储词头与基础信息。
 model dict_word {
   id          String               @id @default(uuid()) @db.Uuid
@@ -25,6 +49,8 @@ model dict_word {
   created_at  DateTime             @default(now()) @db.Timestamptz(6)
   updated_at  DateTime             @updatedAt @db.Timestamptz(6)
 
+  /// 多对一：所属单词书。
+  book              dict_book?              @relation(fields: [book_id], references: [book_id])
   /// 一对多：释义集合。
   definitions       dict_definition[]
   /// 一对多：独立例句（非绑定释义时使用）。
@@ -40,6 +66,7 @@ model dict_word {
 
   @@unique([headword, book_id])
   @@index([headword])
+  @@index([book_id])
 }
 
 /// 释义表，记录词性、中文释义、英文解释等信息。

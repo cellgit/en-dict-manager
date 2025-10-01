@@ -53,6 +53,7 @@ export const normalizedWordSchema = z.object({
 
 export const listWordsInputSchema = z.object({
   query: z.string().trim().optional(),
+  bookId: z.string().trim().optional(),
   skip: z.number().int().nonnegative().default(0),
   take: z.number().int().positive().max(100).default(20)
 });

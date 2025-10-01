@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpenCheck, FileText, Menu, UploadCloud, type LucideIcon } from 'lucide-react';
+import { BookOpenCheck, FileText, Library, Menu, UploadCloud, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
@@ -18,12 +18,13 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
-export type NavIconKey = 'book-open-check' | 'upload-cloud' | 'file-text';
+export type NavIconKey = 'book-open-check' | 'upload-cloud' | 'file-text' | 'library';
 
 const iconRegistry: Record<NavIconKey, LucideIcon> = {
   'book-open-check': BookOpenCheck,
   'upload-cloud': UploadCloud,
-  'file-text': FileText
+  'file-text': FileText,
+  'library': Library
 };
 
 const defaultNavIcon = BookOpenCheck;
