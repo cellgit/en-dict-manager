@@ -8,7 +8,9 @@ const withMDX = createMDX({
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverActions: {}
+    serverActions: {
+      bodySizeLimit: '10mb' // 增加到 10MB 以支持大数据导入
+    }
   },
   pageExtensions: ["ts", "tsx", "js", "jsx", "mdx"]
 };

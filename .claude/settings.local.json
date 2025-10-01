@@ -5,7 +5,12 @@
       "Bash(npx prisma migrate:*)",
       "Bash(npx prisma db push:*)",
       "Bash(psql:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn add:*)",
+      "Bash(bash:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(npm run dev:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

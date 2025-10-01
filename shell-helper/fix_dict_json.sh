@@ -84,15 +84,34 @@ sed \
 sed -E 's/<[^>]*>//g' "$step2" > "$step3" || { echo "✖ 去标签失败（sed 出错）" >&2; exit 102; }
 
 # 3) 解常见 HTML 实体（注意安全处理 &apos;）
-#    这里用三段拼接来安全地注入单引号字符
+#    重要：&amp; 必须最先解码，因为可能存在双重编码如 &amp;lt;
+#    解码顺序：&amp; → &lt;/&gt; → 其他
+#    扩展实体列表以覆盖更多场景
 apos="'"
 sed \
-  -e 's/&quot;/'"\""'"/g' \
-  -e "s/&apos;/${apos}/g" \
+  -e 's/&amp;/\&/g' \
   -e 's/&lt;/</g' \
   -e 's/&gt;/>/g' \
+  -e 's/&quot;/'"\""'"/g' \
+  -e "s/&apos;/${apos}/g" \
   -e 's/&nbsp;/ /g' \
-  -e 's/&amp;/\&/g' \
+  -e 's/&ndash;/-/g' \
+  -e 's/&mdash;/—/g' \
+  -e 's/&hellip;/.../g' \
+  -e 's/&ldquo;/"/g' \
+  -e 's/&rdquo;/"/g' \
+  -e 's/&lsquo;/'\''/g' \
+  -e 's/&rsquo;/'\''/g' \
+  -e 's/&times;/×/g' \
+  -e 's/&divide;/÷/g' \
+  -e 's/&copy;/©/g' \
+  -e 's/&reg;/®/g' \
+  -e 's/&trade;/™/g' \
+  -e 's/&deg;/°/g' \
+  -e 's/&plusmn;/±/g' \
+  -e 's/&frac14;/¼/g' \
+  -e 's/&frac12;/½/g' \
+  -e 's/&frac34;/¾/g' \
   -- "$step3" > "$step4" || { echo "✖ HTML 实体解码失败（sed 出错）" >&2; exit 103; }
 
 # 4) 逐行严格解析：必须是 JSON 对象
@@ -239,8 +258,13 @@ fi
 echo "✓ 无残留法语字母"
 
 # 6) 无未解码 HTML 实体（&word;）
-if jq -r '.' "$final_tmp" | grep -E '&[A-Za-z]{2,};' >/dev/null 2>&1; then
+#    更严格的检测：只匹配 & 后紧跟字母且以分号结束的模式
+#    排除数字实体如 &#39; (会匹配 &#[0-9]+;)
+if jq -r '.' "$final_tmp" | grep -E '&[A-Za-z][A-Za-z0-9]*;' >/dev/null 2>&1; then
   echo "✖ 可能存在未解码的 HTML 实体（例如 &xxxx;）" >&2
+  # 输出具体的实体供调试
+  echo "  发现的实体示例：" >&2
+  jq -r '.' "$final_tmp" | grep -oE '&[A-Za-z][A-Za-z0-9]*;' | head -5 | sed 's/^/    /' >&2
   exit 5
 fi
 echo "✓ 未发现未解码的 HTML 实体"

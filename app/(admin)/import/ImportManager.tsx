@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useAction } from 'next-safe-action/hooks';
-import { AlertCircle, CheckCircle2, FileWarning, Trash2, UploadCloud } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileWarning, Loader2, Sparkles, Trash2, UploadCloud } from 'lucide-react';
 
 import { importWordsAction } from '@/app/import/actions';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import type { ImportSummary } from '@/lib/data-import';
+import type { CleanResult } from '@/lib/clean-data';
 
 const formatFileSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -35,29 +38,90 @@ export default function ImportManager() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [readingFile, setReadingFile] = useState(false);
 
+  // 清洗功能相关状态
+  const [needsCleaning, setNeedsCleaning] = useState(false);
+  const [cleaning, setCleaning] = useState(false);
+  const [cleanLogs, setCleanLogs] = useState<string[]>([]);
+  const [cleanError, setCleanError] = useState<string | null>(null);
+  const [cleanedData, setCleanedData] = useState<string | null>(null); // 保存清洗后的数据
+
   const importAction = useAction(importWordsAction, {
     onSuccess: (summary, ctx) => {
       setLastSummary(summary);
       setLastModeDryRun(ctx?.input?.dryRun ?? false);
       setClientError(null);
       setPendingMode(null);
+      setCleaning(false);
     },
     onError: () => {
       setPendingMode(null);
+      setCleaning(false);
     }
   });
 
-  const handleSubmit = useCallback(
-    (dryRun: boolean) => {
-      const trimmed = payload.trim();
+  // 执行清洗数据（独立按钮触发）
+  const executeClean = useCallback(async () => {
+    const trimmed = payload.trim();
+    if (!trimmed) {
+      setClientError('请先粘贴或上传要清洗的 JSON 数据。');
+      return;
+    }
 
-      if (!trimmed) {
-        setClientError('请先粘贴或上传要导入的 JSON 数据。');
-        return;
+    setCleaning(true);
+    setCleanError(null);
+    setCleanLogs([]);
+    setCleanedData(null);
+    setClientError(null);
+
+    try {
+      const response = await fetch('/api/clean-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawData: trimmed })
+      });
+
+      const result: CleanResult = await response.json();
+
+      setCleanLogs(result.logs);
+
+      if (result.success) {
+        setCleanedData(result.cleanedData);
+        setCleanError(null);
+      } else {
+        setCleanError(result.error);
+        setCleanedData(null);
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : '清洗数据时发生网络错误';
+      setCleanError(errorMsg);
+      setCleanedData(null);
+    } finally {
+      setCleaning(false);
+    }
+  }, [payload]);
+
+  const handleSubmit = useCallback(
+    async (dryRun: boolean) => {
+      setClientError(null);
+      setLastSummary(null);
+      setLastModeDryRun(null);
+
+      // 决定使用哪份数据：如果开启清洗且有清洗后的数据，使用清洗数据；否则使用原始 payload
+      let dataToImport = '';
+      if (needsCleaning && cleanedData) {
+        dataToImport = cleanedData;
+      } else {
+        const trimmed = payload.trim();
+        if (!trimmed) {
+          setClientError('请先粘贴或上传要导入的 JSON 数据。');
+          return;
+        }
+        dataToImport = trimmed;
       }
 
+      // 验证 JSON 格式
       try {
-        const parsed = JSON.parse(trimmed);
+        const parsed = JSON.parse(dataToImport);
         if (!Array.isArray(parsed)) {
           setClientError('导入数据必须是数组，每个元素代表一个单词。');
           return;
@@ -67,24 +131,24 @@ export default function ImportManager() {
         return;
       }
 
-      setClientError(null);
-      setLastSummary(null);
-      setLastModeDryRun(null);
       setPendingMode(dryRun ? 'dry-run' : 'import');
       void importAction.execute({
-        payload: trimmed,
+        payload: dataToImport,
         dryRun,
         sourceName: sourceName.trim().length > 0 ? sourceName.trim() : null
       });
     },
-    [importAction, payload, sourceName]
+    [cleanedData, importAction, needsCleaning, payload, sourceName]
   );
 
   const isLoading = importAction.status === 'executing';
   const serverError = importAction.result?.serverError;
   const validationErrors = importAction.result?.validationErrors;
   const hasPayload = payload.trim().length > 0;
-  const disableSubmission = isLoading || readingFile;
+  const disableSubmission = isLoading || readingFile || cleaning;
+
+  // 如果开启清洗但还没有清洗成功的数据，禁用 Dry Run 和正式导入按钮
+  const disableImportButtons = disableSubmission || !hasPayload || (needsCleaning && !cleanedData);
 
   const handlePayloadChange = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -92,6 +156,9 @@ export default function ImportManager() {
       setClientError(null);
       setLastSummary(null);
       setLastModeDryRun(null);
+      setCleanedData(null); // 数据改变时清除清洗结果
+      setCleanError(null);
+      setCleanLogs([]);
       if (fileMeta) {
         setFileMeta(null);
       }
@@ -109,6 +176,9 @@ export default function ImportManager() {
     setPayload('');
     setLastSummary(null);
     setLastModeDryRun(null);
+    setCleanedData(null);
+    setCleanError(null);
+    setCleanLogs([]);
   }, []);
 
   const handleFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +196,9 @@ export default function ImportManager() {
         setFileMeta({ name: file.name, size: file.size });
         setLastSummary(null);
         setLastModeDryRun(null);
+        setCleanedData(null);
+        setCleanError(null);
+        setCleanLogs([]);
         setSourceName((prev) => {
           if (prev.trim().length > 0) {
             return prev;
@@ -275,6 +348,82 @@ export default function ImportManager() {
 
             <Separator />
 
+            {/* 数据清洗开关 */}
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="md:col-span-1 space-y-2">
+                <div className="text-sm font-medium text-muted-foreground">数据清洗</div>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  开启后需要先执行清洗，清洗成功后才能进行 Dry Run 或正式导入。清洗会处理法语字母、HTML标签、实体编码等。
+                </p>
+              </div>
+              <div className="md:col-span-2 space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="needs-cleaning"
+                    checked={needsCleaning}
+                    onCheckedChange={(checked) => {
+                      setNeedsCleaning(checked);
+                      if (!checked) {
+                        // 关闭清洗时清除清洗状态
+                        setCleanedData(null);
+                        setCleanError(null);
+                        setCleanLogs([]);
+                      }
+                    }}
+                    disabled={disableSubmission}
+                  />
+                  <Label htmlFor="needs-cleaning" className="cursor-pointer">
+                    {needsCleaning ? (
+                      <span className="flex items-center gap-2 text-sm">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <span>已启用数据清洗</span>
+                      </span>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">
+                        数据已是合法 JSON（默认）
+                      </span>
+                    )}
+                  </Label>
+                </div>
+                {needsCleaning ? (
+                  <div className="space-y-2">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={executeClean}
+                      disabled={disableSubmission || !hasPayload}
+                      className="w-full sm:w-auto"
+                    >
+                      {cleaning ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          清洗中...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          执行清洗
+                        </>
+                      )}
+                    </Button>
+                    {!cleaning && !cleanedData && !cleanError ? (
+                      <p className="text-xs text-amber-600">
+                        ⚠️ 清洗过程可能需要几分钟，请耐心等待。清洗成功后才能进行后续操作。
+                      </p>
+                    ) : null}
+                    {cleanedData ? (
+                      <p className="text-xs text-emerald-600">
+                        ✓ 清洗完成，数据大小：{formatFileSize(cleanedData.length)}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            <Separator />
+
             <div className="grid gap-4 md:grid-cols-3">
               <div className="md:col-span-1 space-y-2">
                 <div className="text-sm font-medium text-muted-foreground">JSON 数据</div>
@@ -295,6 +444,80 @@ export default function ImportManager() {
                 </p>
               </div>
             </div>
+
+            {/* 清洗进度和日志 */}
+            {cleaning ? (
+              <Alert className="border-blue-500/40 bg-blue-50/50">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <div className="space-y-1">
+                  <AlertTitle>数据清洗中...</AlertTitle>
+                  <AlertDescription>
+                    <p className="mb-2">正在执行清洗脚本，请稍候</p>
+                    {cleanLogs.length > 0 ? (
+                      <div className="mt-2 max-h-40 overflow-y-auto rounded border border-border/50 bg-background p-2 font-mono text-xs">
+                        {cleanLogs.map((log, idx) => (
+                          <div key={idx} className="text-muted-foreground">
+                            {log}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                  </AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
+
+            {/* 清洗成功日志 */}
+            {!cleaning && cleanLogs.length > 0 && !cleanError ? (
+              <Alert className="border-emerald-500/40 bg-emerald-50/50">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <div className="space-y-1">
+                  <AlertTitle>数据清洗完成</AlertTitle>
+                  <AlertDescription>
+                    <p className="mb-2">数据已成功清洗并验证，可以继续导入</p>
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                        查看清洗日志
+                      </summary>
+                      <div className="mt-2 max-h-40 overflow-y-auto rounded border border-border/50 bg-background p-2 font-mono text-xs">
+                        {cleanLogs.map((log, idx) => (
+                          <div key={idx} className="text-muted-foreground">
+                            {log}
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  </AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
+
+            {/* 清洗错误 */}
+            {cleanError ? (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <div className="space-y-1">
+                  <AlertTitle>数据清洗失败</AlertTitle>
+                  <AlertDescription>
+                    <p className="whitespace-pre-wrap">{cleanError}</p>
+                    {cleanLogs.length > 0 ? (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer text-xs hover:underline">
+                          查看执行日志
+                        </summary>
+                        <div className="mt-2 max-h-40 overflow-y-auto rounded border border-border/50 bg-background p-2 font-mono text-xs">
+                          {cleanLogs.map((log, idx) => (
+                            <div key={idx} className="text-muted-foreground">
+                              {log}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    ) : null}
+                  </AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
 
             {showClientError ? (
               <Alert variant="warning">
@@ -334,24 +557,45 @@ export default function ImportManager() {
             ) : null}
           </CardContent>
           <CardFooter className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs text-muted-foreground">
-              Dry Run 输出校验报告但不写入数据库；正式导入会生成批次 ID、刷新词条列表并记录导入日志。
-            </p>
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">
+                Dry Run 输出校验报告但不写入数据库；正式导入会生成批次 ID、刷新词条列表并记录导入日志。
+              </p>
+              {needsCleaning && !cleanedData ? (
+                <p className="text-xs text-amber-600">
+                  ⚠️ 请先执行清洗后才能进行 Dry Run 或正式导入
+                </p>
+              ) : null}
+            </div>
             <div className="flex flex-wrap gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleSubmit(true)}
-                disabled={disableSubmission || !hasPayload}
+                disabled={disableImportButtons}
               >
-                {isLoading && pendingMode === 'dry-run' ? '校验中…' : 'Dry Run 校验'}
+                {isLoading && pendingMode === 'dry-run' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    校验中…
+                  </>
+                ) : (
+                  'Dry Run 校验'
+                )}
               </Button>
               <Button
                 type="button"
                 onClick={() => handleSubmit(false)}
-                disabled={disableSubmission || !hasPayload}
+                disabled={disableImportButtons}
               >
-                {isLoading && pendingMode === 'import' ? '导入中…' : '正式导入'}
+                {isLoading && pendingMode === 'import' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    导入中…
+                  </>
+                ) : (
+                  '正式导入'
+                )}
               </Button>
             </div>
           </CardFooter>
