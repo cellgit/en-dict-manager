@@ -81,15 +81,8 @@ sed \
   -e 's/ÿ/y/g' \
   -- "$step1" > "$step2" || { echo "✖ 法语字母清洗失败（sed 出错）" >&2; exit 101; }
 
-# 2) 去标签（保留 <b> 和 </b>，去除其他 HTML/XML 标签）
-#    使用负向预查的替代方案：先标记 <b> 标签，清理其他标签，再恢复 <b>
-sed -E \
-  -e 's|<b>|__BOLD_START__|g' \
-  -e 's|</b>|__BOLD_END__|g' \
-  -e 's/<[^>]*>//g' \
-  -e 's|__BOLD_START__|<b>|g' \
-  -e 's|__BOLD_END__|</b>|g' \
-  "$step2" > "$step3" || { echo "✖ 去标签失败（sed 出错）" >&2; exit 102; }
+# 2) 去标签（HTML/XML，自闭合也会去掉）
+sed -E 's/<[^>]*>//g' "$step2" > "$step3" || { echo "✖ 去标签失败（sed 出错）" >&2; exit 102; }
 
 # 3) 解常见 HTML 实体（注意安全处理 &apos;）
 #    重要：&amp; 必须最先解码，因为可能存在双重编码如 &amp;lt;
@@ -143,14 +136,8 @@ sed \
   -e 's/&iquest;/¿/g' \
   -- "$step3" > "$step4" || { echo "✖ HTML 实体解码失败（sed 出错）" >&2; exit 103; }
 
-# 4) 再次去标签（去除实体解码后出现的 HTML 标签，但保留 <b> 标签）
-sed -E \
-  -e 's|<b>|__BOLD_START__|g' \
-  -e 's|</b>|__BOLD_END__|g' \
-  -e 's/<[^>]*>//g' \
-  -e 's|__BOLD_START__|<b>|g' \
-  -e 's|__BOLD_END__|</b>|g' \
-  "$step4" > "$step5" || { echo "✖ 二次去标签失败（sed 出错）" >&2; exit 104; }
+# 4) 二次去标签（去除实体解码后出现的所有 HTML 标签）
+sed -E 's/<[^>]*>//g' "$step4" > "$step5" || { echo "✖ 二次去标签失败（sed 出错）" >&2; exit 104; }
 
 # 6) 逐行严格解析：必须是 JSON 对象
 : > "$lines_ok"
@@ -281,13 +268,12 @@ if $BAD_KEYS; then
 fi
 echo "✓ 所有键均为 snake_case"
 
-# 4) 无残留 HTML 标签（允许 <b> 和 </b>）
-if jq -r '.' "$final_tmp" | grep -E '<(?!/?b>)[^>]+>' >/dev/null 2>&1; then
+# 4) 无残留 HTML 标签
+if jq -r '.' "$final_tmp" | grep -E '<[^>]+>' >/dev/null 2>&1; then
   echo "✖ 检测到残留 HTML 标签（形如 <...>）" >&2
-  echo "  允许的标签: <b>, </b>" >&2
   exit 3
 fi
-echo "✓ 无残留 HTML 标签（已保留 <b> 标签）"
+echo "✓ 无残留 HTML 标签"
 
 # 5) 无残留法语字母
 if jq -r '.' "$final_tmp" | grep -E '[éêèëàâçîïôùûüÿ]' >/dev/null 2>&1; then
