@@ -73,7 +73,7 @@ export default function DeleteAllWordsButton({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                您即将删除单词书 <strong className="text-foreground">"{bookName}"</strong> 中的{" "}
+                您即将删除单词书 <strong className="text-foreground">「{bookName}」</strong> 中的{" "}
                 <strong className="text-destructive">{wordCount} 个单词</strong>。
               </p>
               <p className="text-destructive font-medium">

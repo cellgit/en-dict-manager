@@ -352,18 +352,6 @@ export default function WordManager({ initialList, filterBookId }: WordManagerPr
   });
   const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
 
-  // 当 initialList 变化时（如删除所有单词后页面刷新），同步更新 listState
-  useEffect(() => {
-    setListState({
-      items: initialList.items,
-      total: initialList.total,
-      page: 0,
-      pageSize: PAGE_SIZE
-    });
-    // 如果当前选中的单词不在新列表中，则选中第一个或清空
-    const newSelectedId = initialList.items[0]?.id ?? null;
-    setSelectedId(newSelectedId);
-  }, [initialList]);
   const [selectedWord, setSelectedWord] = useState<WordWithRelations | null>(null);
   const [formMode, setFormMode] = useState<FormMode | null>(null);
   const [formData, setFormData] = useState<NormalizedWordInput>(emptyWord());
@@ -393,6 +381,36 @@ export default function WordManager({ initialList, filterBookId }: WordManagerPr
       setError(message);
     }
   });
+
+  const detailExecuteRef = useRef(detailAction.execute);
+  useEffect(() => {
+    detailExecuteRef.current = detailAction.execute;
+  }, [detailAction.execute]);
+
+  // 当 initialList 变化时（如删除所有单词后页面刷新），同步更新列表与详情视图
+  useEffect(() => {
+    setListState({
+      items: initialList.items,
+      total: initialList.total,
+      page: 0,
+      pageSize: PAGE_SIZE
+    });
+
+    const newSelectedId = initialList.items[0]?.id ?? null;
+
+    setSelectedId((previous) => (previous === newSelectedId ? previous : newSelectedId));
+
+    if (!newSelectedId) {
+      setSelectedWord(null);
+      setFormData(emptyWord());
+      return;
+    }
+
+    if (selectedIdRef.current !== newSelectedId) {
+      setSelectedWord(null);
+      void detailExecuteRef.current({ id: newSelectedId });
+    }
+  }, [initialList]);
 
   const listAction = useAction(listWordsAction, {
     onSuccess: (result) => {
