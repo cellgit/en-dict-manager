@@ -7,6 +7,7 @@ import { listWords } from "@/lib/word-service";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import WordListForBook from "@/app/(admin)/books/[bookId]/WordListForBook";
+import DeleteAllWordsButton from "@/app/(admin)/books/[bookId]/DeleteAllWordsButton";
 
 type PageProps = {
   params: Promise<{ bookId: string }>;
@@ -38,9 +39,16 @@ export default async function BookDetailPage(props: PageProps) {
                 <h1 className="text-2xl font-semibold tracking-tight">{book.name}</h1>
                 <p className="text-sm text-muted-foreground">{book.bookId}</p>
               </div>
-              <Badge variant="secondary" className="text-base">
-                {book.wordCount} 个单词
-              </Badge>
+              <div className="flex items-center gap-3">
+                <Badge variant="secondary" className="text-base">
+                  {book.wordCount} 个单词
+                </Badge>
+                <DeleteAllWordsButton
+                  bookId={book.bookId}
+                  bookName={book.name}
+                  wordCount={book.wordCount}
+                />
+              </div>
             </div>
 
             {book.description ? (

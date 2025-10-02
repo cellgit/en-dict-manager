@@ -351,6 +351,19 @@ export default function WordManager({ initialList, filterBookId }: WordManagerPr
     pageSize: PAGE_SIZE
   });
   const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
+
+  // 当 initialList 变化时（如删除所有单词后页面刷新），同步更新 listState
+  useEffect(() => {
+    setListState({
+      items: initialList.items,
+      total: initialList.total,
+      page: 0,
+      pageSize: PAGE_SIZE
+    });
+    // 如果当前选中的单词不在新列表中，则选中第一个或清空
+    const newSelectedId = initialList.items[0]?.id ?? null;
+    setSelectedId(newSelectedId);
+  }, [initialList]);
   const [selectedWord, setSelectedWord] = useState<WordWithRelations | null>(null);
   const [formMode, setFormMode] = useState<FormMode | null>(null);
   const [formData, setFormData] = useState<NormalizedWordInput>(emptyWord());

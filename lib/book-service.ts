@@ -287,3 +287,26 @@ export async function bookExists(bookId: string): Promise<boolean> {
   });
   return count > 0;
 }
+
+/**
+ * 删除单词书中的所有单词
+ * 注意：由于 schema 中设置了 onDelete: Cascade，删除单词会自动级联删除所有关联数据
+ */
+export async function deleteAllWordsInBook(bookId: string): Promise<number> {
+  // 先检查单词书是否存在
+  const book = await prisma.dict_book.findUnique({
+    where: { book_id: bookId },
+    select: { id: true, name: true }
+  });
+
+  if (!book) {
+    throw new NotFoundError("单词书不存在或已被删除");
+  }
+
+  // 批量删除该书的所有单词（级联删除相关数据）
+  const result = await prisma.dict_word.deleteMany({
+    where: { book_id: bookId }
+  });
+
+  return result.count;
+}

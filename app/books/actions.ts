@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
 import {
   listBooks,
@@ -8,6 +9,7 @@ import {
   createBook,
   updateBook,
   deleteBook,
+  deleteAllWordsInBook,
   type BookWithStats,
   type BookListItem
 } from "@/lib/book-service";
@@ -15,7 +17,8 @@ import {
   bookInputSchema,
   bookUpdateSchema,
   getBookSchema,
-  deleteBookSchema
+  deleteBookSchema,
+  deleteAllWordsSchema
 } from "@/app/books/schemas";
 import { z } from "zod";
 
@@ -68,3 +71,20 @@ export const updateBookAction = actionClient(
 export const deleteBookAction = actionClient(deleteBookSchema, async (input): Promise<void> => {
   await deleteBook(input.id);
 });
+
+/**
+ * 删除单词书中的所有单词
+ */
+export const deleteAllWordsInBookAction = actionClient(
+  deleteAllWordsSchema,
+  async (input): Promise<{ deletedCount: number }> => {
+    const count = await deleteAllWordsInBook(input.bookId);
+
+    // 清除缓存，确保页面数据立即更新
+    revalidatePath(`/books/${input.bookId}`);  // 刷新单词书详情页
+    revalidatePath("/books");                   // 刷新单词书列表页
+    revalidatePath("/words");                   // 刷新单词列表页
+
+    return { deletedCount: count };
+  }
+);

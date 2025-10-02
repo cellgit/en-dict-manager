@@ -15,7 +15,8 @@
       "Bash(chmod:*)",
       "Bash(tree:*)",
       "Bash(cat:*)",
-      "Bash(./shell-helper/fix_dict_json.sh:*)"
+      "Bash(./shell-helper/fix_dict_json.sh:*)",
+      "Bash(npx shadcn:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

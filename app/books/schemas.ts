@@ -35,5 +35,12 @@ export const deleteBookSchema = z.object({
   id: z.string().uuid("无效的单词书 ID")
 });
 
+/**
+ * 删除单词书所有单词参数
+ */
+export const deleteAllWordsSchema = z.object({
+  bookId: z.string().min(1, "单词书 ID 不能为空")
+});
+
 export type BookInput = z.infer<typeof bookInputSchema>;
 export type BookUpdate = z.infer<typeof bookUpdateSchema>;
