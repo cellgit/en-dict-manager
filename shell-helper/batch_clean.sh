@@ -57,6 +57,10 @@ if [[ ! -d "$CLEANED_DIR" ]]; then
   echo -e "${GREEN}✓ 已创建输出目录: $CLEANED_DIR${NC}"
 fi
 
+# 创建日志目录
+LOG_DIR="./cleaned/logs"
+mkdir -p "$LOG_DIR"
+
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}批量 JSON 数据清洗工具${NC}"
 echo -e "${BLUE}========================================${NC}"
@@ -111,7 +115,8 @@ for i in "${!JSON_FILES[@]}"; do
   cp "$file" "$backup_file"
 
   # 执行清洗（就地覆盖）
-  if "$CLEAN_SCRIPT" -i "$file" > /dev/null 2>&1; then
+  error_log="$LOG_DIR/${filename}.error.log"
+  if "$CLEAN_SCRIPT" -i "$file" > /dev/null 2>"$error_log"; then
     echo -e "${GREEN}✓${NC}"
     SUCCESS_FILES+=("$filename")
     ((SUCCESS_COUNT++))
@@ -121,10 +126,10 @@ for i in "${!JSON_FILES[@]}"; do
       echo -e "  ${YELLOW}警告: 无法移动到 cleaned 目录${NC}" >&2
     }
 
-    # 删除备份
-    rm -f "$backup_file"
+    # 删除备份和错误日志
+    rm -f "$backup_file" "$error_log"
   else
-    echo -e "${RED}✖${NC}"
+    echo -e "${RED}✖${NC} (错误日志: $error_log)"
     FAILED_FILES+=("$filename")
     ((FAILED_COUNT++))
 
@@ -164,7 +169,8 @@ if [[ $FAILED_COUNT -gt 0 ]]; then
     echo "  - $file"
   done
   echo ""
-  echo -e "${YELLOW}提示: 失败的文件已恢复原样，请手动检查错误原因${NC}"
+  echo -e "${YELLOW}提示: 失败的文件已恢复原样，错误日志位于: $LOG_DIR${NC}"
+  echo -e "${YELLOW}查看具体错误: ls $LOG_DIR/*.error.log${NC}"
   exit 1
 fi
 
