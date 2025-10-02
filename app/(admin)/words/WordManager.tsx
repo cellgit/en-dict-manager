@@ -62,6 +62,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
 import { cn, formatDateTime } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 type WordManagerProps = {
   readonly initialList: ListWordsResult;
@@ -582,14 +583,11 @@ export default function WordManager({ initialList, filterBookId }: WordManagerPr
     setError(null);
   }, [selectedWord]);
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
     if (!selectedId) {
       return;
     }
-    // eslint-disable-next-line no-alert
-    if (globalThis.confirm?.("确定要删除该词条吗？操作不可撤销。")) {
-      void deleteAction.execute({ id: selectedId });
-    }
+    await deleteAction.execute({ id: selectedId });
   }, [deleteAction, selectedId]);
 
   const handleSubmit = useCallback(
@@ -1302,9 +1300,41 @@ function WordDetailPanel({
             <Button type="button" variant="outline" size="sm" onClick={onEdit}>
               <Edit3 className="mr-2 h-4 w-4" />编辑
             </Button>
-            <Button type="button" variant="destructive" size="sm" onClick={onDelete} disabled={deleting}>
-              {deleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}删除
-            </Button>
+            <ConfirmDialog
+              title="确认删除该词条？"
+              description={(
+                <div className="space-y-2 text-sm">
+                  <p>
+                    您即将删除词条 <strong className="text-foreground">{word.headword}</strong>。
+                  </p>
+                  <p className="text-muted-foreground">
+                    此操作不可撤销，将移除该词条的所有释义、例句、近义词及导入记录。
+                  </p>
+                </div>
+              )}
+              confirmLabel="确认删除"
+              loadingText="删除中..."
+              renderTrigger={({ disabled }) => {
+                const triggerDisabled = disabled || deleting;
+                const showSpinner = deleting || disabled;
+                return (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    disabled={triggerDisabled}
+                  >
+                    {showSpinner ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="mr-2 h-4 w-4" />
+                    )}
+                    删除
+                  </Button>
+                );
+              }}
+              onConfirm={onDelete}
+            />
           </div>
         </div>
       </CardHeader>

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { formatDateTime } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 type BookManagerProps = {
   readonly initialBooks: BookListItem[];
@@ -131,16 +132,13 @@ export default function BookManager({ initialBooks }: BookManagerProps) {
   }, []);
 
   const handleDelete = useCallback(
-    (book: BookListItem) => {
+    async (book: BookListItem) => {
       if (book.wordCount > 0) {
         setError(`无法删除：该单词书还有 ${book.wordCount} 个单词。请先删除或转移单词。`);
         return;
       }
 
-      // eslint-disable-next-line no-alert
-      if (globalThis.confirm?.(`确定要删除单词书"${book.name}"吗？`)) {
-        void deleteAction.execute({ id: book.id });
-      }
+      await deleteAction.execute({ id: book.id });
     },
     [deleteAction]
   );
@@ -275,18 +273,47 @@ export default function BookManager({ initialBooks }: BookManagerProps) {
                     <Button size="sm" variant="outline" onClick={() => handleEdit(book)}>
                       <Edit3 className="h-3.5 w-3.5" />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDelete(book)}
-                      disabled={deleteAction.status === "executing"}
-                    >
-                      {deleteAction.status === "executing" ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-3.5 w-3.5" />
+                    <ConfirmDialog
+                      title="确认删除单词书？"
+                      description={(
+                        <div className="space-y-2 text-sm">
+                          <p>
+                            您即将删除单词书 <strong className="text-foreground">{book.name}</strong>。
+                          </p>
+                          {book.wordCount > 0 ? (
+                            <p className="text-destructive font-medium">
+                              当前还有 {book.wordCount} 个单词，请先清空单词书再尝试删除。
+                            </p>
+                          ) : (
+                            <p className="text-muted-foreground">
+                              此操作不可撤销，将移除该单词书的所有配置与统计数据。
+                            </p>
+                          )}
+                        </div>
                       )}
-                    </Button>
+                      confirmLabel="确认删除"
+                      loadingText="删除中..."
+                      confirmDisabled={book.wordCount > 0}
+                      renderTrigger={({ disabled }) => {
+                        const isExecuting = deleteAction.status === "executing";
+                        const triggerDisabled = disabled || isExecuting;
+                        return (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            disabled={triggerDisabled}
+                            title={book.wordCount > 0 ? "请先清空该单词书中的单词" : undefined}
+                          >
+                            {isExecuting ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+                        );
+                      }}
+                      onConfirm={() => handleDelete(book)}
+                    />
                   </div>
                 </CardContent>
               </Card>
