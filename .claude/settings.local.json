@@ -12,7 +12,8 @@
       "Bash(kill:*)",
       "Bash(npm run dev:*)",
       "Bash(xargs kill:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(tree:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

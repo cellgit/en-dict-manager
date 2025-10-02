@@ -50,8 +50,5 @@ npx prisma db push
 echo "生成 Prisma Client..."
 npx prisma generate
 
-echo "执行数据库种子数据..."
-npx prisma db seed
-
 echo "启动 Next.js 开发服务器..."
 npm run dev:next
