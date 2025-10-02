@@ -112,6 +112,27 @@ sed \
   -e 's/&frac14;/¼/g' \
   -e 's/&frac12;/½/g' \
   -e 's/&frac34;/¾/g' \
+  -e 's/&pound;/£/g' \
+  -e 's/&euro;/€/g' \
+  -e 's/&yen;/¥/g' \
+  -e 's/&cent;/¢/g' \
+  -e 's/&curren;/¤/g' \
+  -e 's/&sect;/§/g' \
+  -e 's/&para;/¶/g' \
+  -e 's/&micro;/µ/g' \
+  -e 's/&middot;/·/g' \
+  -e 's/&bull;/•/g' \
+  -e 's/&dagger;/†/g' \
+  -e 's/&Dagger;/‡/g' \
+  -e 's/&permil;/‰/g' \
+  -e 's/&laquo;/«/g' \
+  -e 's/&raquo;/»/g' \
+  -e 's/&sup1;/¹/g' \
+  -e 's/&sup2;/²/g' \
+  -e 's/&sup3;/³/g' \
+  -e 's/&not;/¬/g' \
+  -e 's/&iexcl;/¡/g' \
+  -e 's/&iquest;/¿/g' \
   -- "$step3" > "$step4" || { echo "✖ HTML 实体解码失败（sed 出错）" >&2; exit 103; }
 
 # 4) 逐行严格解析：必须是 JSON 对象
