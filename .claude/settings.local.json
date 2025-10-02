@@ -14,7 +14,8 @@
       "Bash(xargs kill:*)",
       "Bash(chmod:*)",
       "Bash(tree:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(./shell-helper/fix_dict_json.sh:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
