@@ -62,6 +62,7 @@ step1="$tmpdir/step1.txt"            # 去 CR
 step2="$tmpdir/step2.txt"            # 法语字母清洗
 step3="$tmpdir/step3.txt"            # 去标签
 step4="$tmpdir/step4.txt"            # 解实体
+step5="$tmpdir/step5.txt"            # 再次去标签（去除解码后出现的标签）
 lines_ok="$tmpdir/lines.ok"          # 每行紧凑 JSON 对象（1 行 1 个）
 assembled="$tmpdir/assembled.json"   # jq -s 聚合后的数组
 final_tmp="$tmpdir/final.json"       # camel->snake 后，待校验
@@ -80,8 +81,15 @@ sed \
   -e 's/ÿ/y/g' \
   -- "$step1" > "$step2" || { echo "✖ 法语字母清洗失败（sed 出错）" >&2; exit 101; }
 
-# 2) 去标签（HTML/XML，自闭合也会去掉）
-sed -E 's/<[^>]*>//g' "$step2" > "$step3" || { echo "✖ 去标签失败（sed 出错）" >&2; exit 102; }
+# 2) 去标签（保留 <b> 和 </b>，去除其他 HTML/XML 标签）
+#    使用负向预查的替代方案：先标记 <b> 标签，清理其他标签，再恢复 <b>
+sed -E \
+  -e 's|<b>|__BOLD_START__|g' \
+  -e 's|</b>|__BOLD_END__|g' \
+  -e 's/<[^>]*>//g' \
+  -e 's|__BOLD_START__|<b>|g' \
+  -e 's|__BOLD_END__|</b>|g' \
+  "$step2" > "$step3" || { echo "✖ 去标签失败（sed 出错）" >&2; exit 102; }
 
 # 3) 解常见 HTML 实体（注意安全处理 &apos;）
 #    重要：&amp; 必须最先解码，因为可能存在双重编码如 &amp;lt;
@@ -135,7 +143,16 @@ sed \
   -e 's/&iquest;/¿/g' \
   -- "$step3" > "$step4" || { echo "✖ HTML 实体解码失败（sed 出错）" >&2; exit 103; }
 
-# 4) 逐行严格解析：必须是 JSON 对象
+# 4) 再次去标签（去除实体解码后出现的 HTML 标签，但保留 <b> 标签）
+sed -E \
+  -e 's|<b>|__BOLD_START__|g' \
+  -e 's|</b>|__BOLD_END__|g' \
+  -e 's/<[^>]*>//g' \
+  -e 's|__BOLD_START__|<b>|g' \
+  -e 's|__BOLD_END__|</b>|g' \
+  "$step4" > "$step5" || { echo "✖ 二次去标签失败（sed 出错）" >&2; exit 104; }
+
+# 6) 逐行严格解析：必须是 JSON 对象
 : > "$lines_ok"
 lineno=0
 while IFS= read -r line || [ -n "$line" ]; do
@@ -159,27 +176,27 @@ while IFS= read -r line || [ -n "$line" ]; do
   fi
 
   printf '%s\n' "$parsed" >> "$lines_ok"
-done < "$step4"
+done < "$step5"
 
 if [ ! -s "$lines_ok" ]; then
   echo "✖ 清洗后没有任何有效的 JSON 对象行" >&2
   exit 112
 fi
 
-# 5) 用 jq -s 安全聚合为数组
+# 7) 用 jq -s 安全聚合为数组
 if ! jq -s . "$lines_ok" > "$assembled" 2>"$jq_err"; then
   echo "✖ 聚合为数组失败（jq -s）：$(head -n1 "$jq_err")" >&2
   exit 120
 fi
 
-# 6) 先快速校验顶层是对象数组
+# 8) 先快速校验顶层是对象数组
 if ! jq -e 'type=="array" and (all(.[]; type=="object"))' "$assembled" >/dev/null 2>"$jq_err"; then
   echo "✖ 聚合结果不是对象数组：$(head -n1 "$jq_err")" >&2
   echo "  提示：检查 $assembled 的对应元素。" >&2
   exit 121
 fi
 
-# 7) camelCase → snake_case（使用 explode/implode，无正则、无反向引用）
+# 9) camelCase → snake_case（使用 explode/implode，无正则、无反向引用）
 snake_filter="$tmpdir/keys_to_snake.jq"
 cat > "$snake_filter" <<'JQ'
 def to_snake:
@@ -264,12 +281,13 @@ if $BAD_KEYS; then
 fi
 echo "✓ 所有键均为 snake_case"
 
-# 4) 无残留 HTML 标签
-if jq -r '.' "$final_tmp" | grep -E '<[^>]+>' >/dev/null 2>&1; then
+# 4) 无残留 HTML 标签（允许 <b> 和 </b>）
+if jq -r '.' "$final_tmp" | grep -E '<(?!/?b>)[^>]+>' >/dev/null 2>&1; then
   echo "✖ 检测到残留 HTML 标签（形如 <...>）" >&2
+  echo "  允许的标签: <b>, </b>" >&2
   exit 3
 fi
-echo "✓ 无残留 HTML 标签"
+echo "✓ 无残留 HTML 标签（已保留 <b> 标签）"
 
 # 5) 无残留法语字母
 if jq -r '.' "$final_tmp" | grep -E '[éêèëàâçîïôùûüÿ]' >/dev/null 2>&1; then

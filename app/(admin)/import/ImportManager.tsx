@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useAction } from 'next-safe-action/hooks';
 import { AlertCircle, CheckCircle2, FileWarning, Loader2, Sparkles, Trash2, UploadCloud } from 'lucide-react';
 
@@ -45,6 +45,10 @@ export default function ImportManager() {
   const [cleanError, setCleanError] = useState<string | null>(null);
   const [cleanedData, setCleanedData] = useState<string | null>(null); // 保存清洗后的数据
 
+  // 导入计时相关状态
+  const [importStartTime, setImportStartTime] = useState<number | null>(null);
+  const [importElapsedSeconds, setImportElapsedSeconds] = useState(0);
+
   const importAction = useAction(importWordsAction, {
     onSuccess: (summary, ctx) => {
       setLastSummary(summary);
@@ -52,12 +56,29 @@ export default function ImportManager() {
       setClientError(null);
       setPendingMode(null);
       setCleaning(false);
+      setImportStartTime(null); // 停止计时
     },
     onError: () => {
       setPendingMode(null);
       setCleaning(false);
+      setImportStartTime(null); // 停止计时
     }
   });
+
+  // 导入计时器
+  useEffect(() => {
+    if (importStartTime === null) {
+      setImportElapsedSeconds(0);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - importStartTime) / 1000);
+      setImportElapsedSeconds(elapsed);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [importStartTime]);
 
   // 执行清洗数据（独立按钮触发）
   const executeClean = useCallback(async () => {
@@ -132,6 +153,7 @@ export default function ImportManager() {
       }
 
       setPendingMode(dryRun ? 'dry-run' : 'import');
+      setImportStartTime(Date.now()); // 开始计时
       void importAction.execute({
         payload: dataToImport,
         dryRun,
@@ -181,9 +203,38 @@ export default function ImportManager() {
     setCleanLogs([]);
   }, []);
 
+  // 清空整个表单（重新开始）
+  const resetAllStates = useCallback(() => {
+    setPayload('');
+    setSourceName('');
+    setFileMeta(null);
+    setClientError(null);
+    setLastSummary(null);
+    setLastModeDryRun(null);
+    setCleanedData(null);
+    setCleanError(null);
+    setCleanLogs([]);
+    setNeedsCleaning(false);
+    setImportStartTime(null);
+    setImportElapsedSeconds(0);
+  }, []);
+
   const handleFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
+    // 立即清理所有相关状态（即使用户取消选择文件）
+    setClientError(null);
+    setLastSummary(null);
+    setLastModeDryRun(null);
+    setCleanedData(null);
+    setCleanError(null);
+    setCleanLogs([]);
+
     if (!file) {
+      // 用户取消了文件选择，清空当前文件信息
+      setFileMeta(null);
+      setPayload('');
+      event.target.value = '';
       return;
     }
 
@@ -192,23 +243,14 @@ export default function ImportManager() {
       .text()
       .then((text) => {
         setPayload(text);
-        setClientError(null);
         setFileMeta({ name: file.name, size: file.size });
-        setLastSummary(null);
-        setLastModeDryRun(null);
-        setCleanedData(null);
-        setCleanError(null);
-        setCleanLogs([]);
-        setSourceName((prev) => {
-          if (prev.trim().length > 0) {
-            return prev;
-          }
-          return file.name.replace(/\.json$/i, '') || prev;
-        });
+        // 每次选择新文件时都更新数据来源为新文件名
+        setSourceName(file.name.replace(/\.json$/i, ''));
       })
       .catch(() => {
         setClientError('读取文件失败，请重试或检查文件权限。');
         setFileMeta(null);
+        setPayload('');
       })
       .finally(() => {
         setReadingFile(false);
@@ -227,6 +269,26 @@ export default function ImportManager() {
       { label: '失败', value: lastSummary.failed }
     ];
   }, [lastSummary]);
+
+  // 格式化导入时间
+  const formatElapsedTime = useCallback((seconds: number) => {
+    if (seconds < 60) return `${seconds}秒`;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}分${secs}秒`;
+  }, []);
+
+  // 计算总条目数（用于进度显示）
+  const totalItemsToImport = useMemo(() => {
+    try {
+      const dataToUse = needsCleaning && cleanedData ? cleanedData : payload.trim();
+      if (!dataToUse) return 0;
+      const parsed = JSON.parse(dataToUse);
+      return Array.isArray(parsed) ? parsed.length : 0;
+    } catch {
+      return 0;
+    }
+  }, [payload, needsCleaning, cleanedData]);
 
   const showClientError = Boolean(clientError) && !lastSummary;
 
@@ -279,10 +341,26 @@ export default function ImportManager() {
       <div className="grid gap-8">
         <Card className="border-border/60 shadow-sm">
           <CardHeader className="space-y-4">
-            <CardTitle className="text-xl font-semibold">准备导入数据</CardTitle>
-            <CardDescription>
-              粘贴或上传 JSON 数组，选择 Dry Run 先行校验或直接执行正式导入。我们会自动识别数据结构并在必要时进行格式转换。
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <CardTitle className="text-xl font-semibold">准备导入数据</CardTitle>
+                <CardDescription>
+                  粘贴或上传 JSON 数组，选择 Dry Run 先行校验或直接执行正式导入。我们会自动识别数据结构并在必要时进行格式转换。
+                </CardDescription>
+              </div>
+              {(hasPayload || lastSummary) && !disableSubmission ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={resetAllStates}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  清空表单
+                </Button>
+              ) : null}
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4">
@@ -575,10 +653,10 @@ export default function ImportManager() {
                 disabled={disableImportButtons}
               >
                 {isLoading && pendingMode === 'dry-run' ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    校验中…
-                  </>
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>校验中… ({formatElapsedTime(importElapsedSeconds)})</span>
+                  </div>
                 ) : (
                   'Dry Run 校验'
                 )}
@@ -589,10 +667,15 @@ export default function ImportManager() {
                 disabled={disableImportButtons}
               >
                 {isLoading && pendingMode === 'import' ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    导入中…
-                  </>
+                  <div className="flex flex-col items-start gap-0.5">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>导入中…</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      共 {totalItemsToImport} 条 · {formatElapsedTime(importElapsedSeconds)}
+                    </span>
+                  </div>
                 ) : (
                   '正式导入'
                 )}
