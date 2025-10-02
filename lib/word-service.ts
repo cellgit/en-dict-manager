@@ -3,6 +3,7 @@
  */
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { toNullableInt, toNullableString } from "@/lib/word-normalizer";
 import {
   type ListWordsParams,
   type ListWordsResult,
@@ -119,21 +120,6 @@ type PreparedWordData = {
   synonymGroups: SynonymGroupWriteModel[];
   phrases: PhraseWriteModel[];
   relatedWords: RelatedWordWriteModel[];
-};
-
-const toNullableString = (value?: string | null): string | null => {
-  if (value === undefined || value === null) {
-    return null;
-  }
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
-};
-
-const toNullableInt = (value?: number | null): number | null => {
-  if (value === undefined || value === null) {
-    return null;
-  }
-  return Number.isFinite(value) ? Math.trunc(value) : null;
 };
 
 const mapExample = (example: NormalizedExampleSentence): ExampleWriteModel => {
