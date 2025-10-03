@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpenCheck, UploadCloud } from "lucide-react";
+import { ArrowRight, BookOpenCheck, UploadCloud, FileText } from "lucide-react";
 import type { ComponentType } from "react";
 
 import { AdminShell } from "@/components/layout/admin-shell";
@@ -10,8 +10,20 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { adminNavItems } from "@/lib/admin-nav";
 
 export default function HomePage() {
+  const headerActions = (
+    <>
+      <ThemeToggle />
+      <Button asChild variant="outline" size="sm" className="gap-1">
+        <Link href="/docs/usage">
+          使用文档
+          <FileText className="h-4 w-4" />
+        </Link>
+      </Button>
+    </>
+  );
+
   return (
-    <AdminShell navItems={adminNavItems} headerActions={<ThemeToggle />}>
+    <AdminShell navItems={adminNavItems} headerActions={headerActions}>
       <section className="space-y-12">
         <div className="grid gap-8 rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-background p-8 shadow-sm md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-12">
           <div className="space-y-6">

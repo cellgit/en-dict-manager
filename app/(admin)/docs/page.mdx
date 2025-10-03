@@ -1,143 +1,236 @@
 export const metadata = {
-  title: "使用文档",
-  description: "词汇管理后台的操作指南、导入规范与常见问题解答。"
+  title: "文档中心",
+  description: "词汇管理后台的多维文档入口。"
 };
 
 import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  ArrowUpRight,
+  BookOpenText,
+  Braces,
+  Compass,
+  Layers,
+  LifeBuoy
+} from "lucide-react";
+
+import { WorkflowTabs } from "@/components/docs/workflow-tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { WorkflowTabs } from "@/components/docs/workflow-tabs";
 
-# 使用文档
+<section className="space-y-12">
+  <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-primary/15 via-background to-background p-8 shadow-sm transition dark:from-primary/25 lg:p-12">
+    <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="space-y-4">
+        <Badge variant="outline" className="w-max bg-background/70 px-3 py-1 text-xs">
+          文档中心
+        </Badge>
+        <div className="space-y-3">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            词汇管理后台知识库
+          </h1>
+          <div className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <span className="block">
+              根据角色与任务设计的使用说明集合。无论是运营、教研还是研发，都能快速定位到所需的指南、流程与接口规范。
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-2 rounded-full bg-background/70 px-3 py-1">
+            <BookOpenText className="h-4 w-4 text-primary" />
+            操作流程
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-background/70 px-3 py-1">
+            <Layers className="h-4 w-4 text-primary" />
+            业务架构
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-background/70 px-3 py-1">
+            <Braces className="h-4 w-4 text-primary" />
+            API 契约
+          </span>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button asChild>
+            <Link href="/docs/usage" className="inline-flex items-center gap-2">
+              立即上手
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/docs/api" className="inline-flex items-center gap-2">
+              接口速览
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+      <div className="grid gap-3 text-xs text-muted-foreground">
+        <div className="rounded-2xl border border-border/80 bg-background/80 p-4 shadow-sm">
+          <p className="font-medium text-foreground">滚动导航</p>
+          <p className="mt-1 leading-relaxed">阅读任何文档时左侧会实时高亮当前章节，支持快捷跳转。</p>
+        </div>
+        <div className="rounded-2xl border border-border/80 bg-background/80 p-4 shadow-sm">
+          <p className="font-medium text-foreground">一键分享</p>
+          <p className="mt-1 leading-relaxed">复制页面或章节链接，便于在沟通中快速定位关键内容。</p>
+        </div>
+      </div>
+    </div>
 
-<Alert variant="info">
-  <AlertTitle>快速提醒</AlertTitle>
-  <AlertDescription>
-    所有写入操作都会通过 Server Action 执行事务并记录导入日志。Dry Run 永远不会落库，正式导入会刷新单词列表并生成批次 ID。
-  </AlertDescription>
-</Alert>
+    <div className="pointer-events-none absolute -right-24 -top-20 h-48 w-48 rounded-full bg-primary/10 blur-3xl dark:bg-primary/20" />
+    <div className="pointer-events-none absolute -bottom-24 right-12 h-44 w-44 rounded-full bg-primary/5 blur-3xl dark:bg-primary/15" />
+  </div>
 
-## 快速入门
-
-1. 使用导航栏进入「单词管理」或「批量导入」模块。
-2. 在单词列表中搜索目标词头，选中后即可浏览完整释义、例句、近义词与导入记录。
-3. 需要新增词条时点击「新建词条」，填写规范化结构后提交；提交成功会自动刷新列表。
-4. 大批量更新时进入「批量导入」，粘贴或上传 JSON，先执行 Dry Run 确认结果，再执行正式导入。
-5. 导入结束后检查汇总卡片与错误表，必要时下载原始数据重新修复。
-
-<Separator className="my-10" />
-
-## 核心工作流
-
-<WorkflowTabs />
-
-<Separator className="my-10" />
-
-## JSON 结构示例
-
-```json
-[
-  {
-    "headword": "abandon",
-    "rank": 203,
-    "bookId": "PEPXiaoXue3_1",
-    "phoneticUs": "əˈbændən",
-    "definitions": [
-      {
-        "partOfSpeech": "v.",
-        "meaningCn": "放弃；抛弃",
-        "examples": [
-          {
-            "source": "The climbers had to abandon the mission.",
-            "translation": "登山队只得放弃行动。"
-          }
-        ]
-      }
-    ],
-    "synonymGroups": [
-      {
-        "items": ["quit", "desert"]
-      }
-    ],
-    "phrases": [
-      {
-        "content": "abandon oneself to",
-        "meaningCn": "沉迷于"
-      }
-    ]
-  }
-]
-```
-
-> 字段命名需与 <code>NormalizedWord</code> 保持一致，缺失字段可省略或置为空字符串，系统会自动归一化为空值。
-
-<Separator className="my-10" />
-
-## 导入结果状态说明
-
-<Table>
-  <TableHeader>
-    <TableRow>
-      <TableHead className="w-32">状态</TableHead>
-      <TableHead>含义</TableHead>
-      <TableHead className="w-40">常见原因</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    <TableRow>
-      <TableCell><Badge variant="outline">success</Badge></TableCell>
-      <TableCell>词条已写入或更新成功，并记录至导入日志。</TableCell>
-      <TableCell>——</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell><Badge variant="outline">skipped</Badge></TableCell>
-      <TableCell>跳过的条目保留在错误表中，不会写库。</TableCell>
-      <TableCell>字段校验失败、无法识别的结构。</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell><Badge variant="outline">failed</Badge></TableCell>
-      <TableCell>条目已进入写库流程，但事务报错（例如唯一约束）。</TableCell>
-      <TableCell>数据库约束冲突、事务异常。</TableCell>
-    </TableRow>
-  </TableBody>
-</Table>
-
-<Separator className="my-10" />
-
-## 常见问题
-
-### Hydration 报错
-
-- 刷新时如遇到「Hydration failed」提示，可确认浏览器本地缓存是否存在旧版本脚本，必要时执行强制刷新。
-- 应用内部已经统一使用 `formatDateTime` 工具固定在 Asia/Shanghai 时区，若仍遇问题，请记录具体词条并反馈给开发团队。
-
-### Dry Run 一直失败
-
-- 检查 JSON 根节点是否是数组。
-- 确认每个词条至少包含 `headword`、`definitions` 或可被归一化的字段。
-- 若数据量过大，可拆分为多批并开启 Dry Run 校验。
-
-### 如何回溯导入批次？
-
-- 正式导入成功后，结果卡片会显示批次 ID。
-- 在词条详情页底部的「导入记录」中可以按时间查看写库状态与原始词头。
-
-<Separator className="my-10" />
-
-## 进一步阅读
-
-<div className="flex flex-wrap gap-3">
-  <Button asChild variant="secondary" size="sm">
-    <Link href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-technical.md" target="_blank" rel="noopener noreferrer">
-      查看技术实现说明
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <Link href="/docs/api" className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden border border-border/60 transition duration-200 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-xl">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Braces className="h-5 w-5" />
+            </span>
+            <CardTitle>API 文档</CardTitle>
+          </div>
+          <CardDescription>面向移动端与集成服务的统一接口规范、响应结构与示例。</CardDescription>
+        </CardHeader>
+        <CardContent className="text-xs leading-relaxed text-muted-foreground">
+          覆盖词书、单词、导入工具与数据清洗接口，并提供 Swagger 导出方式。
+        </CardContent>
+        <CardFooter className="mt-auto flex items-center justify-between text-sm text-primary">
+          <span className="font-medium">进入详情</span>
+          <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </CardFooter>
+      </Card>
     </Link>
-  </Button>
-  <Button asChild variant="outline" size="sm">
-    <Link href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-prd.md" target="_blank" rel="noopener noreferrer">
-      查看产品背景 PRD
+
+    <Link href="/docs/prd" className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden border border-border/60 transition duration-200 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-xl">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Compass className="h-5 w-5" />
+            </span>
+            <CardTitle>产品 PRD 文档</CardTitle>
+          </div>
+          <CardDescription>产品定位、角色画像与关键指标，帮助新成员理解业务背景。</CardDescription>
+        </CardHeader>
+        <CardContent className="text-xs leading-relaxed text-muted-foreground">
+          汇总 PRD 核心章节并链接完整文档，支持快速对齐产品动机与范围。
+        </CardContent>
+        <CardFooter className="mt-auto flex items-center justify-between text-sm text-primary">
+          <span className="font-medium">进入详情</span>
+          <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </CardFooter>
+      </Card>
     </Link>
-  </Button>
+
+    <Link href="/docs/usage" className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden border border-border/60 transition duration-200 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-xl">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <BookOpenText className="h-5 w-5" />
+            </span>
+            <CardTitle>使用文档</CardTitle>
+          </div>
+          <CardDescription>包含操作指引、导入规范与典型问题排查，适用于日常运营。</CardDescription>
+        </CardHeader>
+        <CardContent className="text-xs leading-relaxed text-muted-foreground">
+          涵盖从登录、词条管理到导入流程的完整过程，附带 JSON 示例与导入状态解释。
+        </CardContent>
+        <CardFooter className="mt-auto flex items-center justify-between text-sm text-primary">
+          <span className="font-medium">进入详情</span>
+          <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </CardFooter>
+      </Card>
+    </Link>
+
+    <Link href="/docs/features" className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden border border-border/60 transition duration-200 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-xl">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Layers className="h-5 w-5" />
+            </span>
+            <CardTitle>功能架构说明</CardTitle>
+          </div>
+          <CardDescription>系统分层、模块职责与未来扩展方向一目了然。</CardDescription>
+        </CardHeader>
+        <CardContent className="text-xs leading-relaxed text-muted-foreground">
+          分析服务层、数据结构与日志策略，帮助研发团队快速理解实现细节。
+        </CardContent>
+        <CardFooter className="mt-auto flex items-center justify-between text-sm text-primary">
+          <span className="font-medium">进入详情</span>
+          <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </CardFooter>
+      </Card>
+    </Link>
+
+    <Link href="/docs/web" className="group block h-full">
+      <Card className="flex h-full flex-col overflow-hidden border border-border/60 transition duration-200 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-xl">
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <LifeBuoy className="h-5 w-5" />
+            </span>
+            <CardTitle>排障手册</CardTitle>
+          </div>
+          <CardDescription>收录常见故障、异常排查步骤与导入状态释义。</CardDescription>
+        </CardHeader>
+        <CardContent className="text-xs leading-relaxed text-muted-foreground">
+          结合导入日志与提示组件，总结日常支持场景，帮助快速定位问题根因。
+        </CardContent>
+        <CardFooter className="mt-auto flex items-center justify-between text-sm text-primary">
+          <span className="font-medium">进入详情</span>
+          <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </CardFooter>
+      </Card>
+    </Link>
+  </div>
+</section>
+
+<Separator className="my-12" />
+
+<section className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+  <div className="space-y-6">
+    <div className="space-y-2">
+      <h2 className="text-xl font-semibold text-foreground">推荐阅读路径</h2>
+      <p className="text-sm text-muted-foreground">
+        根据常见工作流分为单词维护与批量导入两条路径，可在下方 Tab 中快速浏览重点步骤。
+      </p>
+    </div>
+    <WorkflowTabs />
+  </div>
+
+  <Card className="h-full border border-primary/30 bg-primary/5 shadow-sm">
+    <CardHeader>
+      <CardTitle>新功能速递</CardTitle>
+      <CardDescription>文档模块新增实时章节高亮、回到顶部与一键复制分享，体验更顺滑。</CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-4 text-sm text-muted-foreground">
+      <p>
+        使用侧边导航定位当前段落，避免长文档滚动迷路；分享时可直接复制具体章节链接，跨团队沟通也能对齐上下文。
+      </p>
+      <p>
+        在暗色模式下同步优化渐变与阴影，保持清晰的层次感与对比度，适配不同光线环境。
+      </p>
+    </CardContent>
+  </Card>
+</section>
+
+<Separator className="my-12" />
+
+<div className="rounded-2xl border bg-muted/20 p-6 shadow-sm">
+  <h3 className="text-base font-semibold text-foreground">离线资料</h3>
+  <p className="mt-2 text-sm text-muted-foreground">
+    若需更详细的产品背景或技术方案，可在项目根目录查看以下补充材料：
+  </p>
+  <ul className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+    <li>
+      <code>word-admin-prd.md</code>：完整产品需求文档，包含角色画像、指标体系与未来规划。
+    </li>
+    <li>
+      <code>word-admin-technical.md</code>：技术架构、部署方式与数据流详解，适合研发快速上手。
+    </li>
+  </ul>
 </div>

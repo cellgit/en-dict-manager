@@ -21,6 +21,13 @@ jest.mock("@/lib/prisma", () => {
 
   return {
     prisma: {
+      dict_book: {
+        findMany: jest.fn(),
+        createMany: jest.fn()
+      },
+      dict_word: {
+        findMany: jest.fn()
+      },
       dict_import_batch: {
         create: jest.fn(),
         update: jest.fn()
@@ -112,24 +119,32 @@ const rawDatasetEntry = {
   }
 };
 
-const getPrismaMock = () => prisma as unknown as {
-  dict_import_batch: {
-    create: jest.Mock;
-    update: jest.Mock;
-  };
-  dict_import_log: {
-    create: jest.Mock;
-  };
-  $transaction: jest.Mock;
-  _tx: {
+const getPrismaMock = () =>
+  prisma as unknown as {
+    dict_book: {
+      findMany: jest.Mock;
+      createMany: jest.Mock;
+    };
     dict_word: {
-      findFirst: jest.Mock;
+      findMany: jest.Mock;
+    };
+    dict_import_batch: {
+      create: jest.Mock;
+      update: jest.Mock;
     };
     dict_import_log: {
       create: jest.Mock;
     };
+    $transaction: jest.Mock;
+    _tx: {
+      dict_word: {
+        findFirst: jest.Mock;
+      };
+      dict_import_log: {
+        create: jest.Mock;
+      };
+    };
   };
-};
 
 const getWordServiceMock = () => ({
   createWordWithinTransaction: createWordWithinTransaction as jest.Mock,
@@ -141,6 +156,12 @@ const resetMocks = () => {
   prismaMock.dict_import_batch.create.mockReset();
   prismaMock.dict_import_batch.update.mockReset();
   prismaMock.dict_import_log.create.mockReset();
+  prismaMock.dict_book.findMany.mockReset();
+  prismaMock.dict_book.findMany.mockResolvedValue([]);
+  prismaMock.dict_book.createMany.mockReset();
+  prismaMock.dict_book.createMany.mockResolvedValue({ count: 0 });
+  prismaMock.dict_word.findMany.mockReset();
+  prismaMock.dict_word.findMany.mockResolvedValue([]);
   prismaMock.$transaction.mockImplementation((callback) => callback(prismaMock._tx));
   prismaMock._tx.dict_word.findFirst.mockReset();
   prismaMock._tx.dict_import_log.create.mockReset();
@@ -229,7 +250,7 @@ describe("importWords", () => {
     prismaMock.dict_import_batch.create.mockResolvedValue({ id: "batch-fail" });
     prismaMock.dict_import_batch.update.mockResolvedValue({});
     prismaMock._tx.dict_word.findFirst.mockResolvedValue({ id: "existing" });
-    wordServiceMock.replaceWordWithinTransaction.mockRejectedValue(new Error("boom"));
+    wordServiceMock.createWordWithinTransaction.mockRejectedValue(new Error("boom"));
 
     const summary = await importWords([sampleWord], { dryRun: false });
 

@@ -1,0 +1,70 @@
+export const metadata = {
+  title: "产品 PRD 文档",
+  description: "词汇管理后台 PRD 精简版"
+};
+
+import { DocLayout, DocSection } from "@/components/docs/doc-layout";
+import Link from "next/link";
+
+<DocLayout
+  title="产品 PRD 总览"
+  introduction="提炼 word-admin-prd.md 中的核心要点，便于快速了解项目目标与业务场景。"
+  sections={[
+    { id: "vision", label: "产品定位", description: "解决的问题与角色画像" },
+    { id: "metrics", label: "目标指标", description: "成功衡量方式" },
+    { id: "journey", label: "用户旅程", description: "主要操作流程" },
+    { id: "scope", label: "功能范围", description: "版本范围与交付内容" },
+    { id: "risks", label: "风险与依赖", description: "上线风险、技术依赖" },
+    { id: "full", label: "完整文档", description: "跳转到详细 PRD" }
+  ]}
+>
+  <DocSection id="vision" title="产品定位">
+    <ul className="list-disc space-y-2 pl-6">
+      <li>定位为 <strong>教辅词汇资产的一站式管理平台</strong>，覆盖词条清洗、导入、维护与质检。</li>
+      <li>目标用户包括教研编辑、内容运营、技术支持与产品质量团队。</li>
+      <li>解决 Excel 导入分散、字段缺失及导入失败难以追踪等问题。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="metrics" title="目标指标">
+    <ul className="list-disc space-y-2 pl-6">
+      <li>词条维护效率：单词创建 / 更新时间 &le; 2 分钟。</li>
+      <li>批量导入成功率：Dry Run + 正式导入首轮成功率 &ge; 90%。</li>
+      <li>数据一致性：释义、例句缺失率 &le; 5%。</li>
+      <li>质检追踪：导入批次与日志覆盖率 100%。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="journey" title="用户旅程">
+    <ol className="list-decimal space-y-2 pl-6">
+      <li>登录后台，浏览仪表概览（后续阶段）。</li>
+      <li>通过词条搜索进入详情侧栏，查看释义、例句、近义词等信息。</li>
+      <li>根据需要创建或编辑词条，提交后立即刷新列表。</li>
+      <li>批量更新时先执行 Dry Run，确认无误后执行正式导入。</li>
+      <li>导入完成后查看成功 / 失败统计与日志，必要时回溯批次。</li>
+    </ol>
+  </DocSection>
+
+  <DocSection id="scope" title="功能范围">
+    <ul className="list-disc space-y-2 pl-6">
+      <li><strong>词条管理</strong>：列表搜索、详情预览、创建、更新、删除。</li>
+      <li><strong>批量导入</strong>：Dry Run 校验、正式导入、批次与日志记录。</li>
+      <li><strong>系统审计</strong>：导入日志、错误提示、质量指标（后续扩展）。</li>
+      <li><strong>非功能性</strong>：性能 &lt; 500ms，事务保障可回滚，可扩展多语言。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="risks" title="风险与依赖">
+    <ul className="list-disc space-y-2 pl-6">
+      <li>原始数据格式不一致导致导入失败，需要依赖清洗流程。</li>
+      <li>批量导入大规模数据时的性能瓶颈，需通过批次与事务控制。</li>
+      <li>权限控制尚未实现，需在部署阶段接入网络或身份限制。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="full" title="完整文档">
+    <p>
+      完整 PRD 请参考仓库根目录的 <Link href="https://github.com/cellgit/en-dict-manager/blob/dev/word-admin-prd.md" target="_blank" rel="noopener noreferrer" className="text-primary underline">word-admin-prd.md</Link>。
+    </p>
+  </DocSection>
+</DocLayout>

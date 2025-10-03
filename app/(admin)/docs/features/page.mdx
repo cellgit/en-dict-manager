@@ -1,0 +1,83 @@
+export const metadata = {
+  title: "功能架构说明",
+  description: "模块职责与扩展计划"
+};
+
+import { DocLayout, DocSection } from "@/components/docs/doc-layout";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+<DocLayout
+  title="功能架构与实现说明"
+  introduction="从系统架构、服务能力到未来规划，帮助研发快速掌握全局。"
+  sections={[
+    { id: "layers", label: "系统分层" },
+    { id: "services", label: "服务能力" },
+    { id: "data", label: "数据结构" },
+    { id: "logging", label: "日志与审计" },
+    { id: "extension", label: "扩展方向" }
+  ]}
+>
+  <DocSection id="layers" title="系统分层">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-40">层级</TableHead>
+          <TableHead>主要职责</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell>UI 层 (app/(admin))</TableCell>
+          <TableCell>提供词条管理、导入管理界面，使用客户端组件处理交互。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Server Actions</TableCell>
+          <TableCell>封装 Zod 校验与缓存刷新，调用服务层执行写操作。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>服务层 (lib/*-service)</TableCell>
+          <TableCell>组织 Prisma 事务、数据归一化与聚合查询。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Prisma ORM</TableCell>
+          <TableCell>映射 PostgreSQL 数据库，提供类型安全的数据访问。</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </DocSection>
+
+  <DocSection id="services" title="服务能力">
+    <ul className="list-disc space-y-2 pl-6">
+      <li><strong>词书服务</strong>：增删改查、批量删除词条、检测 bookId 是否存在。</li>
+      <li><strong>单词服务</strong>：词条创建、更新、删除、分页查询、详情查询，自动处理释义、例句、近义词等子表。</li>
+      <li><strong>导入服务</strong>：Dry Run、正式导入、批次与日志写入、自动补齐缺失的词书。</li>
+      <li><strong>工具链</strong>：数据清洗（clean-data）、dataset-normalizer、word-normalizer。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="data" title="数据结构">
+    <p>
+      Prisma schema 以 <code>dict_*</code> 前缀划分词汇域。核心表包括 <code>dict_word</code>、<code>dict_definition</code>、<code>dict_example_sentence</code>、<code>dict_synonym_group</code> 等。
+    </p>
+    <p>
+      API 层提供序列化器，将 Date 转换为 ISO 字符串并输出 camelCase 字段，确保客户端直接使用。
+    </p>
+  </DocSection>
+
+  <DocSection id="logging" title="日志与审计">
+    <ul className="list-disc space-y-2 pl-6">
+      <li>导入流程会创建 <code>dict_import_batch</code>，并通过 <code>dict_import_log</code> 记录逐条状态。</li>
+      <li>Server Action 捕获 <code>NotFoundError</code>、<code>ValidationError</code> 并映射到统一响应。</li>
+      <li>API 接口通过 <code>lib/api/errors.ts</code> 输出一致的 envelope，便于接入观测平台。</li>
+    </ul>
+  </DocSection>
+
+  <DocSection id="extension" title="未来扩展方向">
+    <ul className="list-disc space-y-2 pl-6">
+      <li>接入权限控制（JWT 或 API Key），实现更精细的角色划分。</li>
+      <li>开放更多查询端点，例如按同根词、短语逆向查询等。</li>
+      <li>将导入异常推送到消息通道，形成实时告警。</li>
+      <li>在 Swagger 文档基础上自动生成 SDK 或契约测试。</li>
+    </ul>
+  </DocSection>
+</DocLayout>

@@ -1,0 +1,348 @@
+export const metadata = {
+  title: "API 文档",
+  description: "词汇管理后台开放接口说明"
+};
+
+import { DocLayout, DocSection } from "@/components/docs/doc-layout";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+
+<DocLayout
+  title="API 接口文档"
+  introduction="所有接口均返回统一的 { code, data, message } 三段式 JSON。下面按业务域划分请求与响应示例。"
+  sections={[
+    { id: "overview", label: "快速概览", description: "接口列表与域名说明" },
+    { id: "response", label: "响应结构", description: "统一 envelope 与错误码" },
+    { id: "books", label: "词书管理", description: "书籍 CRUD 与批量清理" },
+    { id: "words", label: "单词管理", description: "词条检索与编辑" },
+    { id: "imports", label: "导入流程", description: "Dry Run 与正式导入" },
+    { id: "tools", label: "工具接口", description: "数据清洗等辅助能力" },
+    { id: "swagger", label: "Swagger", description: "OpenAPI 导出方式" }
+  ]}
+>
+  <DocSection id="overview" title="快速概览">
+    <p>
+      所有接口部署于 Next.js App Router，默认基于同域调用。生产环境建议通过 HTTPS 暴露，以确保数据在传输过程中加密。
+    </p>
+
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-28">方法</TableHead>
+          <TableHead className="w-80">路径</TableHead>
+          <TableHead>描述</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/v1/books</code></TableCell>
+          <TableCell>获取全部激活词书列表及单词数。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>POST</TableCell>
+          <TableCell><code>/api/v1/books</code></TableCell>
+          <TableCell>创建词书。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/v1/books/{'{'}bookId{'}'}</code></TableCell>
+          <TableCell>按业务 ID 获取词书详情。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>PUT</TableCell>
+          <TableCell><code>/api/v1/books/{'{'}bookId{'}'}</code></TableCell>
+          <TableCell>更新词书信息。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>DELETE</TableCell>
+          <TableCell><code>/api/v1/books/{'{'}bookId{'}'}</code></TableCell>
+          <TableCell>删除词书（需无关联单词）。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/v1/books/{'{'}bookId{'}'}/words</code></TableCell>
+          <TableCell>分页获取指定词书下的词条。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>DELETE</TableCell>
+          <TableCell><code>/api/v1/books/{'{'}bookId{'}'}/words</code></TableCell>
+          <TableCell>批量删除词书内所有词条。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/v1/words</code></TableCell>
+          <TableCell>按关键字、词书筛选词条列表。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>POST</TableCell>
+          <TableCell><code>/api/v1/words</code></TableCell>
+          <TableCell>创建词条。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/v1/words/{'{'}id{'}'}</code></TableCell>
+          <TableCell>获取词条详情。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>PUT</TableCell>
+          <TableCell><code>/api/v1/words/{'{'}id{'}'}</code></TableCell>
+          <TableCell>更新词条。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>DELETE</TableCell>
+          <TableCell><code>/api/v1/words/{'{'}id{'}'}</code></TableCell>
+          <TableCell>删除词条。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>POST</TableCell>
+          <TableCell><code>/api/v1/imports/dry-run</code></TableCell>
+          <TableCell>Dry Run 校验导入数据，不落库。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>POST</TableCell>
+          <TableCell><code>/api/v1/imports</code></TableCell>
+          <TableCell>正式导入词条，生成批次与日志。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>POST</TableCell>
+          <TableCell><code>/api/clean-data</code></TableCell>
+          <TableCell>清洗第三方词典 JSON，输出标准化结构。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>GET</TableCell>
+          <TableCell><code>/api/swagger</code></TableCell>
+          <TableCell>下载 OpenAPI 3.0 JSON（Swagger 文档）。</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </DocSection>
+
+  <DocSection id="response" title="响应结构">
+    <p>
+      所有接口均使用相同的 envelope，以便客户端统一处理成功与失败场景。
+    </p>
+
+```json
+{
+  "code": 200,
+  "data": { "items": [] },
+  "message": "成功"
+}
+```
+
+    <p>
+      <Badge variant="outline">code</Badge> 对应业务状态码，默认与 HTTP 状态一致；
+      <Badge variant="outline">data</Badge> 承载业务数据；
+      <Badge variant="outline">message</Badge> 提供中文提示。
+    </p>
+
+    <p>
+      当入参校验失败时将返回 <code>422</code>，并在 <code>data</code> 中附带 Zod issues；未找到资源时返回 <code>404</code>。
+    </p>
+  </DocSection>
+
+  <DocSection id="books" title="词书管理">
+    <h3 className="text-lg font-semibold">查询词书列表</h3>
+    <p>GET <code>/api/v1/books</code></p>
+
+```json
+{
+  "code": 200,
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "bookId": "PEPXiaoXue3_1",
+        "name": "PEP 小学三年级上册",
+        "wordCount": 1200,
+        "createdAt": "2024-01-01T10:00:00.000Z",
+        "updatedAt": "2024-01-08T10:00:00.000Z"
+      }
+    ],
+    "total": 1
+  },
+  "message": "成功"
+}
+```
+
+    <h3 className="text-lg font-semibold">创建词书</h3>
+    <p>POST <code>/api/v1/books</code></p>
+
+```jsonc
+// 请求
+{
+  "bookId": "Oxford-01",
+  "name": "牛津英语·Starter",
+  "description": "牛津英语 Starter 版词汇",
+  "isActive": true
+}
+```
+
+```jsonc
+// 响应
+{
+  "code": 200,
+  "data": {
+    "id": "uuid",
+    "bookId": "Oxford-01",
+    "name": "牛津英语·Starter",
+    "wordCount": 0,
+    "createdAt": "2024-01-01T12:00:00.000Z",
+    "updatedAt": "2024-01-01T12:00:00.000Z"
+  },
+  "message": "创建成功"
+}
+```
+
+    <p>
+      更新、删除与批量清理接口遵循相同 envelope，若词书不存在将返回 <code>404</code>。
+    </p>
+  </DocSection>
+
+  <DocSection id="words" title="单词管理">
+    <h3 className="text-lg font-semibold">分页查询单词</h3>
+    <p>
+      GET <code>/api/v1/words</code> 支持 <code>query</code>、<code>bookId</code>、<code>page</code>、<code>pageSize</code> 参数。
+    </p>
+
+```json
+{
+  "code": 200,
+  "data": {
+    "items": [
+      {
+        "id": "word-uuid",
+        "headword": "abandon",
+        "bookId": "Oxford-01",
+        "phoneticUs": "əˈbændən",
+        "updatedAt": "2024-01-03T09:00:00.000Z"
+      }
+    ],
+    "total": 120,
+    "page": 1,
+    "pageSize": 20
+  },
+  "message": "成功"
+}
+```
+
+    <h3 className="text-lg font-semibold">创建 / 更新单词</h3>
+    <p>
+      POST <code>/api/v1/words</code> 与 PUT <code>/api/v1/words/{'{'}id{'}'}</code> 接受 <code>normalizedWordSchema</code> 结构。
+    </p>
+
+```jsonc
+// 请求 (节选)
+{
+  "word": {
+    "headword": "abandon",
+    "bookId": "Oxford-01",
+    "definitions": [
+      {
+        "partOfSpeech": "v.",
+        "meaningCn": "放弃",
+        "examples": [
+          {
+            "source": "They had to abandon the project.",
+            "translation": "他们不得不放弃该项目。"
+          }
+        ]
+      }
+    ],
+    "synonymGroups": [],
+    "phrases": [],
+    "relatedWords": []
+  }
+}
+```
+
+    <p>
+      成功时返回完整词条（含释义、例句、同义词、短语、相关词、导入日志）。删除接口返回 <code>&#123;&quot;success&quot;: true&#125;</code>。
+    </p>
+  </DocSection>
+
+  <DocSection id="imports" title="导入流程">
+    <p>
+      两个导入接口共享请求体：<code>&#123; words: unknown[], sourceName?: string &#125;</code>。
+    </p>
+
+    <ul className="list-disc space-y-1 pl-6">
+      <li><strong>POST /api/v1/imports/dry-run</strong>：仅执行校验与归一化，响应为导入总结，不创建批次。</li>
+      <li><strong>POST /api/v1/imports</strong>：写库并生成导入批次、日志，响应含 <code>batchId</code>。</li>
+    </ul>
+
+```json
+{
+  "code": 200,
+  "data": {
+    "total": 10,
+    "success": 8,
+    "skipped": 2,
+    "failed": 0,
+    "batchId": "batch-uuid",
+    "errors": [
+      {
+        "index": 1,
+        "headword": "abandon",
+        "reason": "headword/bookId 重复",
+        "status": "skipped"
+      }
+    ]
+  },
+  "message": "导入完成"
+}
+```
+  </DocSection>
+
+  <DocSection id="tools" title="工具接口">
+    <p>
+      <strong>POST /api/clean-data</strong> 接受原始 JSON 字符串，返回清洗结果。
+    </p>
+
+```jsonc
+// 请求
+{
+  "rawData": "[{\\"head_word\\":\\"ruler\\"}]"
+}
+```
+
+```jsonc
+// 响应 (成功)
+{
+  "code": 200,
+  "data": {
+    "success": true,
+    "cleaned": [ ... ],
+    "logs": []
+  },
+  "message": "成功"
+}
+```
+
+    <p>
+      若解析失败或结构不合法，将返回 <code>400</code> / <code>422</code>，message 包含错误描述。
+    </p>
+  </DocSection>
+
+  <DocSection id="swagger" title="Swagger 与 OpenAPI">
+    <p>
+      访问 <code>/api/swagger</code> 可直接下载 OpenAPI 3.0 文档，供 Swagger UI 或 Postman 导入。
+    </p>
+
+```bash
+curl https://your-domain/api/swagger -o api-schema.json
+```
+
+    <p>
+      文档内包含所有路径、请求体与 schema，可用于生成客户端 SDK 或自动化测试。
+    </p>
+  </DocSection>
+</DocLayout>

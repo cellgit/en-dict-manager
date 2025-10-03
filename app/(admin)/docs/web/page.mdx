@@ -1,0 +1,140 @@
+export const metadata = {
+  title: "Web 前端使用指南",
+  description: "中后台操作流程与排障"
+};
+
+import { DocLayout, DocSection } from "@/components/docs/doc-layout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+<DocLayout
+  title="Web 前端用户使用指南"
+  introduction="面向运营与教研同学，涵盖常用操作步骤、导入规范与故障排查。"
+  sections={[
+    { id: "tips", label: "快速提醒" },
+    { id: "start", label: "快速入门" },
+    { id: "workflow", label: "核心工作流" },
+    { id: "json", label: "JSON 结构示例" },
+    { id: "import-status", label: "导入状态" },
+    { id: "faq", label: "常见问题" }
+  ]}
+>
+  <DocSection id="tips" title="快速提醒">
+    <Alert variant="info">
+      <AlertTitle>写入操作全部走 Server Action</AlertTitle>
+      <AlertDescription>
+        Server Action 内置事务与日志记录，Dry Run 永不落库，正式导入会刷新单词列表并写入导入批次。
+      </AlertDescription>
+    </Alert>
+  </DocSection>
+
+  <DocSection id="start" title="快速入门">
+    <ol className="list-decimal space-y-2 pl-6">
+      <li>通过左侧导航进入「单词管理」或「批量导入」。</li>
+      <li>在单词列表搜索目标词头，选中后右侧显示完整详情。</li>
+      <li>点击「新建词条」填写表单并提交；成功后自动刷新列表并选中新词。</li>
+      <li>批量更新时先执行 Dry Run，确认无误后执行正式导入以写入数据库。</li>
+      <li>导入完成后查看摘要卡片和错误列表，根据需要重新清洗数据。</li>
+    </ol>
+  </DocSection>
+
+  <DocSection id="workflow" title="核心工作流">
+    <ol className="list-decimal space-y-2 pl-6">
+      <li><strong>列表检索</strong>：支持按词头、书籍筛选；分页大小默认为 20。</li>
+      <li><strong>详情预览</strong>：展示释义、例句、近义词组、短语、相关词、导入日志。</li>
+      <li><strong>表单编辑</strong>：采用规范化结构，空字符串自动归一化为 <code>null</code>。</li>
+      <li><strong>导入流程</strong>：Dry Run 可多次执行；正式导入会生成批次 ID 并写日志。</li>
+    </ol>
+  </DocSection>
+
+  <DocSection id="json" title="JSON 结构示例">
+```json
+[
+  {
+    "headword": "abandon",
+    "rank": 203,
+    "bookId": "PEPXiaoXue3_1",
+    "phoneticUs": "əˈbændən",
+    "definitions": [
+      {
+        "partOfSpeech": "v.",
+        "meaningCn": "放弃；抛弃",
+        "examples": [
+          {
+            "source": "The climbers had to abandon the mission.",
+            "translation": "登山队只得放弃行动。"
+          }
+        ]
+      }
+    ],
+    "synonymGroups": [
+      {
+        "items": ["quit", "desert"]
+      }
+    ],
+    "phrases": [
+      {
+        "content": "abandon oneself to",
+        "meaningCn": "沉迷于"
+      }
+    ]
+  }
+]
+```
+
+    <p>
+      字段命名须与 <code>NormalizedWord</code> 类型一致，缺失字段可以省略。
+    </p>
+  </DocSection>
+
+  <DocSection id="import-status" title="导入状态解释">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-28">状态</TableHead>
+          <TableHead>含义</TableHead>
+          <TableHead className="w-44">常见原因</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell><Badge variant="outline">success</Badge></TableCell>
+          <TableCell>词条写库成功，并在导入日志中记录。</TableCell>
+          <TableCell>预期行为</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell><Badge variant="outline">skipped</Badge></TableCell>
+          <TableCell>条目被跳过，保留在错误列表，不会写库。</TableCell>
+          <TableCell>结构不可识别、校验失败、重复词头。</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell><Badge variant="outline">failed</Badge></TableCell>
+          <TableCell>写库过程中发生错误，事务回滚。</TableCell>
+          <TableCell>唯一约束冲突、数据库异常。</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </DocSection>
+
+  <DocSection id="faq" title="常见问题">
+    <h3 className="text-base font-semibold">Hydration 报错</h3>
+    <ul className="list-disc space-y-1 pl-6">
+      <li>强制刷新浏览器缓存，确保加载最新脚本。</li>
+      <li>应用内部采用固定时区的 <code>formatDateTime</code>，如持续出现问题请记录词条并反馈。</li>
+    </ul>
+
+    <h3 className="text-base font-semibold">Dry Run 失败</h3>
+    <ul className="list-disc space-y-1 pl-6">
+      <li>确认 JSON 根节点为数组，每个元素表示一个单词。</li>
+      <li>至少提供 <code>headword</code> 和可归一化的释义数据。</li>
+      <li>如数据量过大，可拆分多次 Dry Run。</li>
+    </ul>
+
+    <h3 className="text-base font-semibold">如何回溯导入批次？</h3>
+    <ul className="list-disc space-y-1 pl-6">
+      <li>正式导入后摘要卡片会显示批次 ID。</li>
+      <li>词条详情最底部的导入记录按时间倒序显示最近 10 条日志。</li>
+    </ul>
+  </DocSection>
+</DocLayout>

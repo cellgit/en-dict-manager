@@ -1,44 +1,40 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cleanJsonData, type CleanResult } from "@/lib/clean-data";
+import { NextRequest } from "next/server";
 
-/**
- * POST /api/clean-data
- * 清洗原始 JSON 数据
- */
+import { failure, success } from "@/lib/api/response";
+import { cleanJsonData } from "@/lib/clean-data";
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { rawData } = body;
+    const { rawData } = body ?? {};
 
-    if (!rawData || typeof rawData !== "string") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "缺少 rawData 参数或参数类型错误",
-          logs: []
-        } satisfies CleanResult,
-        { status: 400 }
-      );
+    if (typeof rawData !== "string" || rawData.trim().length === 0) {
+      return failure({
+        status: 400,
+        code: 400,
+        message: "缺少 rawData 参数或参数类型错误",
+        data: null
+      });
     }
 
-    // 执行清洗
     const result = await cleanJsonData(rawData);
 
     if (result.success) {
-      return NextResponse.json(result, { status: 200 });
-    } else {
-      return NextResponse.json(result, { status: 422 }); // Unprocessable Entity
+      return success(result, { status: 200, code: 200 });
     }
-  } catch (error) {
-    console.error("[clean-data] Unexpected error:", error);
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "清洗数据时发生未知错误",
-        logs: []
-      } satisfies CleanResult,
-      { status: 500 }
-    );
+    return failure({
+      status: 422,
+      code: 422,
+      message: result.error ?? "清洗数据失败",
+      data: result
+    });
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return failure({ status: 400, code: 400, message: "请求体解析失败" });
+    }
+
+    console.error("[clean-data] Unexpected error:", error);
+    return failure({ status: 500, code: 500, message: "清洗数据时发生未知错误" });
   }
 }
