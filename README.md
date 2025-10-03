@@ -6,7 +6,7 @@
  
      * 使用 **Next.js 全栈** 实现前后端一体化。
      * 后端通过 **Next.js API Routes / App Router Server Actions** 处理请求。
-     * 数据库使用 **PostgreSQL（本地开发环境）**，通过 **Prisma** 进行 ORM 管理。
+  * 数据库使用 **PostgreSQL（默认连接阿里云 RDS 实例）**，通过 **Prisma** 进行 ORM 管理。
      * Next.js最新版本是15.5.4, 请使用最新版本的Next.js: https://github.com/vercel/next.js
 
   2. **数据库设计**：
@@ -27,18 +27,27 @@
 
 ## 快速开始
 
-1. **准备依赖**：请确保本地已安装 [Node.js 18+](https://nodejs.org/) 与 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
+1. **准备依赖**：请确保本地已安装 [Node.js 18+](https://nodejs.org/)。如需改用本地数据库（而非默认的阿里云实例），请额外安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
 2. **安装依赖**：在项目根目录执行 `npm install`。
 3. **一键启动**：运行 `npm run dev`。
 
    该命令会自动完成以下动作：
 
-   - 生成默认 `.env`（如不存在），内置可直接使用的 `DATABASE_URL`；
-   - 启动 Docker 中的 PostgreSQL 服务并等待就绪；
-   - 推送 Prisma Schema、生成 Prisma Client，并执行 `PEPXiaoXue3_1.json` 中的真实词典数据种子；
+  - 生成默认 `.env`（如不存在），预置指向阿里云 RDS 的 `DATABASE_URL`；
+  - 当 `.env` 中的 `DATABASE_URL` 指向 `localhost/127.0.0.1/0.0.0.0` 等本地地址时，自动启动 Docker 中的 PostgreSQL 并等待就绪；
+  - 仅在本地数据库模式下执行 `prisma db push` 与（可选的）数据种子；
+  - 无论数据库模式，都会生成 Prisma Client；
    - 启动 Next.js Dev Server，浏览器访问 <http://localhost:3000> 即可体验完整中后台功能。
 
    若仅需启动 Next.js 服务，可使用隐藏脚本 `npm run dev:next`（要求数据库已就绪）。
+
+> ℹ️ **关于线上数据库**：默认 `.env` 指向阿里云 PostgreSQL（`bear_dict` 库，账号 `Bear_translate`）。脚本会检测并跳过 Prisma schema 推送与种子，以避免误改线上数据。若需在远程数据库上同步最新 Schema ，请执行：
+>
+> ```bash
+> FORCE_REMOTE_DB_SYNC=1 npm run db:sync
+> ```
+>
+> 可选变量：`DB_SYNC_MODE=push`（默认 `migrate`）、`RUN_DB_SEED=1`。若需继续使用本地 Docker 数据库，只需将 `.env` 中的 `DATABASE_URL` 改回本地地址即可。
 
 
 6. **PRD文档和技术实现文档**：

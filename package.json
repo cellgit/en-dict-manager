@@ -14,7 +14,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate deploy"
+    "prisma:migrate": "prisma migrate deploy",
+    "db:sync": "bash ./scripts/sync-db.sh"
   },
   "dependencies": {
     "@mdx-js/react": "3.1.0",

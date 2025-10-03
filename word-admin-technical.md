@@ -78,6 +78,8 @@
 
 ## 8. 依赖与风险
 - **依赖**：PostgreSQL 数据库、Prisma Client、Next.js 部署环境；需要内容团队提供清洗过的数据格式模板。
+- **数据库托管**：默认连接阿里云 PostgreSQL（`pgm-uf60twss3ymh9bv4qo.pg.rds.aliyuncs.com:5432/bear_dict`，`Bear_translate`）。本地开发可改写 `DATABASE_URL` 使用 Docker。
+- **Schema 同步**：远程数据库首次部署需执行 `FORCE_REMOTE_DB_SYNC=1 npm run db:sync`（可选 `DB_SYNC_MODE=push`、`RUN_DB_SEED=1`）。
 - **风险**：
   - 原始数据格式不一致导致导入失败率升高；需借助 `dict-cleaner` 预处理。
   - 导入规模大时的性能瓶颈；应通过批次与事务封装控制。

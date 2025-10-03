@@ -37,6 +37,8 @@
 
 ## 3. 环境与配置
 - `.env` 关键变量：`DATABASE_URL` 指向 PostgreSQL 实例。
+- 默认 `DATABASE_URL` 已配置为阿里云 RDS（库名 `bear_dict`，账号 `Bear_translate`）；如需本地 Docker 数据库可自行覆盖。
+- 若远程数据库首次使用，需执行 `FORCE_REMOTE_DB_SYNC=1 npm run db:sync` 同步 Prisma Schema。
 - Prisma 由 `prisma/schema.prisma` 定义；运行 `npx prisma migrate deploy` 应用迁移。
 - Tailwind 配置、Next.js 配置保持默认；部署到 Vercel 或自建 Node 环境均可。
 

@@ -5,6 +5,16 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { NotFoundError } from "@/lib/errors";
 
+const ensureDictBookTable = (error: unknown): never => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021") {
+    throw new Error(
+      "数据库缺少表 public.dict_book。请在具备权限的环境执行 `FORCE_REMOTE_DB_SYNC=1 npm run db:sync`（可选 DB_SYNC_MODE、RUN_DB_SEED）以同步 Prisma Schema。"
+    );
+  }
+
+  throw error;
+};
+
 export type BookWithStats = {
   id: string;
   bookId: string;
@@ -56,20 +66,22 @@ const toNullableInt = (value?: number | null): number | null => {
  * 查询所有单词书列表（带单词统计）
  */
 export async function listBooks(): Promise<BookListItem[]> {
-  const books = await prisma.dict_book.findMany({
-    where: {
-      is_active: true
-    },
-    orderBy: [
-      { sort_order: "asc" },
-      { created_at: "desc" }
-    ],
-    include: {
-      _count: {
-        select: { words: true }
+  const books = await prisma.dict_book
+    .findMany({
+      where: {
+        is_active: true
+      },
+      orderBy: [
+        { sort_order: "asc" },
+        { created_at: "desc" }
+      ],
+      include: {
+        _count: {
+          select: { words: true }
+        }
       }
-    }
-  });
+    })
+    .catch(ensureDictBookTable);
 
   return books.map((book) => ({
     id: book.id,
@@ -91,14 +103,16 @@ export async function listBooks(): Promise<BookListItem[]> {
  * 根据 bookId 获取单词书详情
  */
 export async function getBookByBookId(bookId: string): Promise<BookWithStats> {
-  const book = await prisma.dict_book.findUnique({
-    where: { book_id: bookId },
-    include: {
-      _count: {
-        select: { words: true }
+  const book = await prisma.dict_book
+    .findUnique({
+      where: { book_id: bookId },
+      include: {
+        _count: {
+          select: { words: true }
+        }
       }
-    }
-  });
+    })
+    .catch(ensureDictBookTable);
 
   if (!book) {
     throw new NotFoundError("单词书不存在或已被删除");
@@ -126,14 +140,16 @@ export async function getBookByBookId(bookId: string): Promise<BookWithStats> {
  * 根据 UUID 获取单词书详情
  */
 export async function getBookById(id: string): Promise<BookWithStats> {
-  const book = await prisma.dict_book.findUnique({
-    where: { id },
-    include: {
-      _count: {
-        select: { words: true }
+  const book = await prisma.dict_book
+    .findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: { words: true }
+        }
       }
-    }
-  });
+    })
+    .catch(ensureDictBookTable);
 
   if (!book) {
     throw new NotFoundError("单词书不存在或已被删除");
@@ -161,25 +177,27 @@ export async function getBookById(id: string): Promise<BookWithStats> {
  * 创建新单词书
  */
 export async function createBook(input: BookInput): Promise<BookWithStats> {
-  const created = await prisma.dict_book.create({
-    data: {
-      book_id: input.bookId.trim(),
-      name: input.name.trim(),
-      description: toNullableString(input.description),
-      cover_url: toNullableString(input.coverUrl),
-      grade: toNullableString(input.grade),
-      level: toNullableString(input.level),
-      publisher: toNullableString(input.publisher),
-      tags: input.tags ?? [],
-      sort_order: toNullableInt(input.sortOrder),
-      is_active: input.isActive ?? true
-    },
-    include: {
-      _count: {
-        select: { words: true }
+  const created = await prisma.dict_book
+    .create({
+      data: {
+        book_id: input.bookId.trim(),
+        name: input.name.trim(),
+        description: toNullableString(input.description),
+        cover_url: toNullableString(input.coverUrl),
+        grade: toNullableString(input.grade),
+        level: toNullableString(input.level),
+        publisher: toNullableString(input.publisher),
+        tags: input.tags ?? [],
+        sort_order: toNullableInt(input.sortOrder),
+        is_active: input.isActive ?? true
+      },
+      include: {
+        _count: {
+          select: { words: true }
+        }
       }
-    }
-  });
+    })
+    .catch(ensureDictBookTable);
 
   return {
     id: created.id,
