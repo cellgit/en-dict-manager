@@ -19,7 +19,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, getYoudaoDictVoicePair } from "@/lib/utils";
 import type { WordViewModel } from "@/app/(admin)/words/types";
 import {
   Clock,
@@ -71,6 +71,8 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
     );
   }
 
+  const { us: audioUsUrl, uk: audioUkUrl } = getYoudaoDictVoicePair(word.headword);
+
   const partsOfSpeech = word.definitions
     .map((definition) => definition.partOfSpeech)
     .filter(Boolean)
@@ -95,11 +97,11 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
     },
     {
       label: "美式音频链接",
-      value: word.audioUs ?? "未提供"
+      value: audioUsUrl ?? "未能生成（检查词头）"
     },
     {
       label: "英式音频链接",
-      value: word.audioUk ?? "未提供"
+      value: audioUkUrl ?? "未能生成（检查词头）"
     },
     {
       label: "创建时间",
@@ -282,20 +284,20 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {word.audioUs ? (
+            {audioUsUrl ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button type="button" variant="outline" size="sm" onClick={() => playAudio(word.audioUs)}>
+                  <Button type="button" variant="outline" size="sm" onClick={() => playAudio(audioUsUrl)}>
                     <Volume2 className="mr-2 h-4 w-4" />美音
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>播放美式读音</TooltipContent>
               </Tooltip>
             ) : null}
-            {word.audioUk ? (
+            {audioUkUrl ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button type="button" variant="outline" size="sm" onClick={() => playAudio(word.audioUk)}>
+                  <Button type="button" variant="outline" size="sm" onClick={() => playAudio(audioUkUrl)}>
                     <Volume2 className="mr-2 h-4 w-4" />英音
                   </Button>
                 </TooltipTrigger>

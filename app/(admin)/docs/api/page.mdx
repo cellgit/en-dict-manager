@@ -267,6 +267,9 @@ import {
     <p>
       成功时返回完整词条（含释义、例句、同义词、短语、相关词、导入日志）。删除接口返回 <code>&#123;&quot;success&quot;: true&#125;</code>。
     </p>
+    <p className="mt-3 text-sm text-muted-foreground">
+      音频字段由系统基于有道 DictVoice 接口自动生成，格式 <code>https://dict.youdao.com/dictvoice?audio=单词&type=1|2</code>，无需在请求体中手动维护。
+    </p>
   </DocSection>
 
   <DocSection id="imports" title="导入流程">

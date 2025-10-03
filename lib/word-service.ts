@@ -15,6 +15,7 @@ import {
   type NormalizedWordDefinition
 } from "@/lib/types";
 import { NotFoundError } from "@/lib/errors";
+import { getYoudaoDictVoicePair } from "@/lib/utils";
 
 const DEFAULT_TAKE = 20;
 const MAX_TAKE = 100;
@@ -214,6 +215,7 @@ const prepareRelatedWord = (related: NormalizedRelatedWord): RelatedWordWriteMod
 };
 
 const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
+  const voice = getYoudaoDictVoicePair(input.headword);
   const definitions = (input.definitions ?? [])
     .map(prepareDefinition)
     .filter((definition): definition is DefinitionWriteModel => Boolean(definition));
@@ -239,8 +241,8 @@ const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
       book_id: toNullableString(input.bookId ?? undefined),
       phonetic_us: toNullableString(input.phoneticUs ?? undefined),
       phonetic_uk: toNullableString(input.phoneticUk ?? undefined),
-      audio_us: toNullableString(input.audioUs ?? undefined),
-      audio_uk: toNullableString(input.audioUk ?? undefined),
+      audio_us: voice.us,
+      audio_uk: voice.uk,
       memory_tip: toNullableString(input.memoryTip ?? undefined)
     } satisfies Prisma.dict_wordUncheckedCreateInput,
     definitions,

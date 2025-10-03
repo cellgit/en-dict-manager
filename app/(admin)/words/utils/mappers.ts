@@ -1,16 +1,19 @@
 import type { NormalizedWordInput } from "@/app/words/schemas";
 import type { WordWithRelations } from "@/lib/word-service";
 import type { WordViewModel } from "@/app/(admin)/words/types";
+import { getYoudaoDictVoicePair } from "@/lib/utils";
 
-export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => ({
-  headword: word.headword,
-  rank: word.rank,
-  bookId: word.book_id,
-  phoneticUs: word.phonetic_us,
-  phoneticUk: word.phonetic_uk,
-  audioUs: word.audio_us,
-  audioUk: word.audio_uk,
-  memoryTip: word.memory_tip,
+export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => {
+  const voice = getYoudaoDictVoicePair(word.headword);
+  return {
+    headword: word.headword,
+    rank: word.rank,
+    bookId: word.book_id,
+    phoneticUs: word.phonetic_us,
+    phoneticUk: word.phonetic_uk,
+    audioUs: voice.us,
+    audioUk: voice.uk,
+    memoryTip: word.memory_tip,
   definitions: word.definitions.map((definition) => ({
     partOfSpeech: definition.part_of_speech,
     meaningCn: definition.meaning_cn,
@@ -43,18 +46,21 @@ export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => (
     partOfSpeech: related.part_of_speech,
     meaningCn: related.meaning_cn
   }))
-});
+  };
+};
 
-export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => ({
-  id: word.id,
-  headword: word.headword,
-  rank: word.rank,
-  bookId: word.book_id,
-  phoneticUs: word.phonetic_us,
-  phoneticUk: word.phonetic_uk,
-  audioUs: word.audio_us,
-  audioUk: word.audio_uk,
-  memoryTip: word.memory_tip,
+export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => {
+  const voice = getYoudaoDictVoicePair(word.headword);
+  return {
+    id: word.id,
+    headword: word.headword,
+    rank: word.rank,
+    bookId: word.book_id,
+    phoneticUs: word.phonetic_us,
+    phoneticUk: word.phonetic_uk,
+    audioUs: voice.us,
+    audioUk: voice.uk,
+    memoryTip: word.memory_tip,
   createdAt: new Date(word.created_at),
   updatedAt: new Date(word.updated_at),
   definitions: word.definitions.map((definition) => ({
@@ -94,4 +100,5 @@ export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => ({
     rawHeadword: log.raw_headword,
     createdAt: new Date(log.created_at)
   }))
-});
+  };
+};

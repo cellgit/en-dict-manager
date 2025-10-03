@@ -7,6 +7,7 @@ import type {
   NormalizedWord,
   NormalizedWordDefinition
 } from "@/lib/types";
+import { getYoudaoDictVoicePair } from "@/lib/utils";
 
 const toTrimmedString = (value: unknown): string | null => {
   if (typeof value !== "string") {
@@ -238,14 +239,16 @@ export const normalizeDictionaryEntry = (entry: unknown): NormalizationResult =>
     return { ok: false, reason: "缺少有效的 head_word 字段" };
   }
 
+  const voice = getYoudaoDictVoicePair(headword);
+
   const normalized: NormalizedWord = {
     headword,
     rank: toPositiveInt(raw.word_rank ?? null),
     bookId: toTrimmedString(raw.book_id ?? null),
     phoneticUs: toTrimmedString(content?.usphone ?? null),
     phoneticUk: toTrimmedString(content?.ukphone ?? null),
-    audioUs: toTrimmedString(content?.usspeech ?? null),
-    audioUk: toTrimmedString(content?.ukspeech ?? null),
+    audioUs: voice.us,
+    audioUk: voice.uk,
     memoryTip: toTrimmedString(content?.rem_method?.val ?? null),
     definitions: buildDefinitions(content),
     examples: buildExamples(content),

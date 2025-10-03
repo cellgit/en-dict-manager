@@ -274,8 +274,16 @@ export const openApiDocument: OpenAPIV3.Document = {
           bookId: { type: "string", nullable: true },
           phoneticUs: { type: "string", nullable: true },
           phoneticUk: { type: "string", nullable: true },
-          audioUs: { type: "string", nullable: true },
-          audioUk: { type: "string", nullable: true },
+          audioUs: {
+            type: "string",
+            nullable: true,
+            description: "美式读音播放链接，来自 https://dict.youdao.com/dictvoice?audio={word}&type=1"
+          },
+          audioUk: {
+            type: "string",
+            nullable: true,
+            description: "英式读音播放链接，来自 https://dict.youdao.com/dictvoice?audio={word}&type=2"
+          },
           memoryTip: { type: "string", nullable: true },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
@@ -327,8 +335,16 @@ export const openApiDocument: OpenAPIV3.Document = {
           bookId: { type: "string", nullable: true },
           phoneticUs: { type: "string", nullable: true },
           phoneticUk: { type: "string", nullable: true },
-          audioUs: { type: "string", nullable: true },
-          audioUk: { type: "string", nullable: true },
+          audioUs: {
+            type: "string",
+            nullable: true,
+            description: "可留空，服务端会按照 headword 生成 DictVoice 美式读音"
+          },
+          audioUk: {
+            type: "string",
+            nullable: true,
+            description: "可留空，服务端会按照 headword 生成 DictVoice 英式读音"
+          },
           memoryTip: { type: "string", nullable: true },
           definitions: {
             type: "array",

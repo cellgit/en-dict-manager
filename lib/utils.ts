@@ -33,3 +33,27 @@ export function formatDateTime(input: Date | string | number | null | undefined)
 
   return zhCnDateTimeFormatter.format(value);
 }
+
+export const YOUDAO_DICTVOICE_ENDPOINT = "https://dict.youdao.com/dictvoice" as const;
+
+export type DictVoiceAudioType = 1 | 2;
+
+export function buildYoudaoDictVoiceUrl(
+  headword: string | null | undefined,
+  type: DictVoiceAudioType
+): string | null {
+  const trimmed = headword?.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const params = new URLSearchParams({ audio: trimmed, type: String(type) });
+  return `${YOUDAO_DICTVOICE_ENDPOINT}?${params.toString()}`;
+}
+
+export function getYoudaoDictVoicePair(headword: string | null | undefined) {
+  return {
+    us: buildYoudaoDictVoiceUrl(headword, 1),
+    uk: buildYoudaoDictVoiceUrl(headword, 2)
+  } as const;
+}

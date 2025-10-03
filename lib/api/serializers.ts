@@ -2,6 +2,7 @@ import type { BookListItem, BookWithStats } from "@/lib/book-service";
 import type { ImportSummary } from "@/lib/data-import";
 import type { ListWordsResultItem } from "@/lib/types";
 import type { WordWithRelations } from "@/lib/word-service";
+import { getYoudaoDictVoicePair } from "@/lib/utils";
 
 const toISOString = (value: Date) => value.toISOString();
 
@@ -47,16 +48,18 @@ export const serializeWordListItem = (item: ListWordsResultItem) => ({
   updatedAt: toISOString(item.updatedAt)
 });
 
-export const serializeWord = (word: WordWithRelations) => ({
-  id: word.id,
-  headword: word.headword,
-  rank: word.rank,
-  bookId: word.book_id,
-  phoneticUs: word.phonetic_us,
-  phoneticUk: word.phonetic_uk,
-  audioUs: word.audio_us,
-  audioUk: word.audio_uk,
-  memoryTip: word.memory_tip,
+export const serializeWord = (word: WordWithRelations) => {
+  const voice = getYoudaoDictVoicePair(word.headword);
+  return {
+    id: word.id,
+    headword: word.headword,
+    rank: word.rank,
+    bookId: word.book_id,
+    phoneticUs: word.phonetic_us,
+    phoneticUk: word.phonetic_uk,
+    audioUs: voice.us,
+    audioUk: voice.uk,
+    memoryTip: word.memory_tip,
   createdAt: toISOString(word.created_at),
   updatedAt: toISOString(word.updated_at),
   definitions: word.definitions.map((definition) => ({
@@ -100,14 +103,15 @@ export const serializeWord = (word: WordWithRelations) => ({
     partOfSpeech: related.part_of_speech,
     meaningCn: related.meaning_cn
   })),
-  importLogs: (word.importLogs ?? []).map((log) => ({
-    id: log.id,
-    status: log.status,
-    message: log.message,
-    rawHeadword: log.raw_headword,
-    createdAt: toISOString(log.created_at)
-  }))
-});
+    importLogs: (word.importLogs ?? []).map((log) => ({
+      id: log.id,
+      status: log.status,
+      message: log.message,
+      rawHeadword: log.raw_headword,
+      createdAt: toISOString(log.created_at)
+    }))
+  };
+};
 
 export const serializeImportSummary = (summary: ImportSummary) => ({
   total: summary.total,

@@ -23,10 +23,23 @@ import type {
   PhraseForm,
   RelatedWordForm
 } from "@/app/(admin)/words/types";
+import { getYoudaoDictVoicePair } from "@/lib/utils";
 
 export function WordForm({ formData, setFormData }: WordFormProps) {
   const updateField = useCallback(
     <K extends keyof NormalizedWordInput>(key: K, value: NormalizedWordInput[K]) => {
+      if (key === "headword") {
+        const nextHeadword = typeof value === "string" ? value : String(value ?? "");
+        const voice = getYoudaoDictVoicePair(nextHeadword);
+        setFormData({
+          ...formData,
+          headword: nextHeadword,
+          audioUs: voice.us,
+          audioUk: voice.uk
+        });
+        return;
+      }
+
       setFormData({ ...formData, [key]: value });
     },
     [formData, setFormData]
@@ -156,8 +169,11 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
             <Input
               id="audioUs"
               value={formData.audioUs ?? ""}
-              onChange={(event) => updateField("audioUs", event.target.value)}
+              readOnly
             />
+            <p className="text-xs text-muted-foreground">
+              系统基于有道 DictVoice 接口自动生成，随词头更新。
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="audioUk" className="text-sm font-medium">
@@ -166,8 +182,11 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
             <Input
               id="audioUk"
               value={formData.audioUk ?? ""}
-              onChange={(event) => updateField("audioUk", event.target.value)}
+              readOnly
             />
+            <p className="text-xs text-muted-foreground">
+              类型参数为 2（英音），无需手动维护。
+            </p>
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="memoryTip" className="text-sm font-medium">
