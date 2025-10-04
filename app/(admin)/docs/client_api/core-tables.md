@@ -131,7 +131,7 @@ export class DictBookEntity {
 - `real_exam_sentence_desc`：真题例句描述。
 - `picture_url`：插图链接。
 - `created_at` / `updated_at`：时间戳。
-- 关系：`book`、`definitions`、`example_sentences`、`synonym_groups`、`phrases`、`related_words`、`antonyms`、`real_exam_sentences`、`exam_questions`、`import_logs`。
+- 关系：`book`、`definitions`、`exampleSentences`、`synonymGroups`、`phrases`、`relatedWords`、`antonyms`、`realExamSentences`、`examQuestions`、`importLogs`。
 
 ### TypeORM 实体
 ```ts
@@ -267,11 +267,11 @@ export class DictWordEntity {
 
   /** 例句列表 */
   @OneToMany(() => DictExampleSentenceEntity, (sentence) => sentence.word)
-  example_sentences: DictExampleSentenceEntity[];
+  exampleSentences: DictExampleSentenceEntity[];
 
   /** 近义词分组集合 */
   @OneToMany(() => DictSynonymGroupEntity, (group) => group.word)
-  synonym_groups: DictSynonymGroupEntity[];
+  synonymGroups: DictSynonymGroupEntity[];
 
   /** 短语集合 */
   @OneToMany(() => DictPhraseEntity, (phrase) => phrase.word)
@@ -279,7 +279,7 @@ export class DictWordEntity {
 
   /** 同根/相关词集合 */
   @OneToMany(() => DictRelatedWordEntity, (related) => related.word)
-  related_words: DictRelatedWordEntity[];
+  relatedWords: DictRelatedWordEntity[];
 
   /** 反义词集合 */
   @OneToMany(() => DictAntonymEntity, (antonym) => antonym.word)
@@ -287,21 +287,31 @@ export class DictWordEntity {
 
   /** 真题例句集合 */
   @OneToMany(() => DictRealExamSentenceEntity, (sentence) => sentence.word)
-  real_exam_sentences: DictRealExamSentenceEntity[];
+  realExamSentences: DictRealExamSentenceEntity[];
 
   /** 真题练习题集合 */
   @OneToMany(() => DictExamQuestionEntity, (question) => question.word)
-  exam_questions: DictExamQuestionEntity[];
+  examQuestions: DictExamQuestionEntity[];
 
   /** 导入日志集合 */
   @OneToMany(() => DictImportLogEntity, (log) => log.word)
-  import_logs: DictImportLogEntity[];
+  importLogs: DictImportLogEntity[];
 }
 ```
 
 ---
 
 ## dict_definition — 释义表
+
+### 字段
+- `id`：主键 UUID。
+- `word_id`：所属词条 ID。
+- `desc_cn`：中文描述（用于补充定义背景或语境）。
+- `desc_other`：其他语言描述。
+- `pos`：词性标签。
+- `tran_cn`：中文译文或核心释义。
+- `tran_other`：其他语言译文。
+- `created_at`：创建时间。
 
 ```ts
 import {
@@ -326,25 +336,25 @@ export class DictDefinitionEntity {
   @Column({ name: 'word_id', type: 'uuid' })
   word_id: string;
 
-  /** 词性 */
-  @Column({ name: 'part_of_speech', type: 'varchar', length: 64, nullable: true })
-  part_of_speech?: string | null;
+  /** 中文描述（解释性说明） */
+  @Column({ name: 'desc_cn', type: 'text', nullable: true })
+  desc_cn?: string | null;
 
-  /** POS 标签（原始字段） */
+  /** 其他语言描述 */
+  @Column({ name: 'desc_other', type: 'text', nullable: true })
+  desc_other?: string | null;
+
+  /** 词性标签 */
   @Column({ name: 'pos', type: 'varchar', length: 64, nullable: true })
   pos?: string | null;
 
-  /** 中文释义 */
-  @Column({ name: 'meaning_cn', type: 'text', nullable: true })
-  meaning_cn?: string | null;
+  /** 中文译文 */
+  @Column({ name: 'tran_cn', type: 'text', nullable: true })
+  tran_cn?: string | null;
 
-  /** 英文解释 */
-  @Column({ name: 'meaning_en', type: 'text', nullable: true })
-  meaning_en?: string | null;
-
-  /** 备注说明 */
-  @Column({ type: 'text', nullable: true })
-  note?: string | null;
+  /** 其他语言译文 */
+  @Column({ name: 'tran_other', type: 'text', nullable: true })
+  tran_other?: string | null;
 
   /** 创建时间 */
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz', precision: 6 })
@@ -359,7 +369,7 @@ export class DictDefinitionEntity {
 
   /** 绑定的例句集合 */
   @OneToMany(() => DictExampleSentenceEntity, (sentence) => sentence.definition)
-  example_sentences: DictExampleSentenceEntity[];
+  exampleSentences: DictExampleSentenceEntity[];
 }
 ```
 
@@ -411,14 +421,14 @@ export class DictExampleSentenceEntity {
   created_at: Date;
 
   /** 所属词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.example_sentences, {
+  @ManyToOne(() => DictWordEntity, (word) => word.exampleSentences, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'word_id' })
   word: DictWordEntity;
 
   /** 可选关联释义 */
-  @ManyToOne(() => DictDefinitionEntity, (definition) => definition.example_sentences, {
+  @ManyToOne(() => DictDefinitionEntity, (definition) => definition.exampleSentences, {
     nullable: true
   })
   @JoinColumn({ name: 'definition_id' })
@@ -453,8 +463,8 @@ export class DictSynonymGroupEntity {
   word_id: string;
 
   /** 词性 */
-  @Column({ name: 'part_of_speech', type: 'varchar', length: 64, nullable: true })
-  part_of_speech?: string | null;
+  @Column({ name: 'pos', type: 'varchar', length: 64, nullable: true })
+  pos?: string | null;
 
   /** 中文释义（概述） */
   @Column({ name: 'meaning_cn', type: 'text', nullable: true })
@@ -465,7 +475,7 @@ export class DictSynonymGroupEntity {
   note?: string | null;
 
   /** 所属词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.synonym_groups, {
+  @ManyToOne(() => DictWordEntity, (word) => word.synonymGroups, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'word_id' })
@@ -473,7 +483,7 @@ export class DictSynonymGroupEntity {
 
   /** 近义词条目集合 */
   @OneToMany(() => DictSynonymEntity, (synonym) => synonym.group)
-  synonym_items: DictSynonymEntity[];
+  synos: DictSynonymEntity[];
 }
 ```
 
@@ -507,7 +517,7 @@ export class DictSynonymEntity {
   value: string;
 
   /** 所属近义词分组 */
-  @ManyToOne(() => DictSynonymGroupEntity, (group) => group.synonym_items, {
+  @ManyToOne(() => DictSynonymGroupEntity, (group) => group.synos, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'group_id' })
@@ -587,8 +597,8 @@ export class DictRelatedWordEntity {
   word_id: string;
 
   /** 词性 */
-  @Column({ name: 'part_of_speech', type: 'varchar', length: 64, nullable: true })
-  part_of_speech?: string | null;
+  @Column({ name: 'pos', type: 'varchar', length: 64, nullable: true })
+  pos?: string | null;
 
   /** 同根词或相关词词头 */
   @Column({ type: 'varchar', length: 255 })
@@ -599,7 +609,7 @@ export class DictRelatedWordEntity {
   meaning_cn?: string | null;
 
   /** 所属词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.related_words, {
+  @ManyToOne(() => DictWordEntity, (word) => word.relatedWords, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'word_id' })
@@ -704,7 +714,7 @@ export class DictRealExamSentenceEntity {
   meta?: Record<string, any> | null;
 
   /** 所属词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.real_exam_sentences, {
+  @ManyToOne(() => DictWordEntity, (word) => word.realExamSentences, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'word_id' })
@@ -755,7 +765,7 @@ export class DictExamQuestionEntity {
   right_index?: number | null;
 
   /** 所属词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.exam_questions, {
+  @ManyToOne(() => DictWordEntity, (word) => word.examQuestions, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'word_id' })
@@ -855,7 +865,7 @@ export class DictImportBatchEntity {
 
   /** 包含的导入日志 */
   @OneToMany(() => DictImportLogEntity, (log) => log.batch)
-  import_logs: DictImportLogEntity[];
+  logs: DictImportLogEntity[];
 }
 ```
 
@@ -907,14 +917,14 @@ export class DictImportLogEntity {
   created_at: Date;
 
   /** 所属导入批次 */
-  @ManyToOne(() => DictImportBatchEntity, (batch) => batch.import_logs, {
+  @ManyToOne(() => DictImportBatchEntity, (batch) => batch.logs, {
     onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'batch_id' })
   batch: DictImportBatchEntity;
 
   /** 可选关联词条 */
-  @ManyToOne(() => DictWordEntity, (word) => word.import_logs, {
+  @ManyToOne(() => DictWordEntity, (word) => word.importLogs, {
     nullable: true
   })
   @JoinColumn({ name: 'word_id' })
