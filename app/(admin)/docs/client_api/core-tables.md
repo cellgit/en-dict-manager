@@ -114,11 +114,24 @@ export class DictBookEntity {
 - `rank`：词频或排名。
 - `headword`：词头。
 - `phonetic_us`、`phonetic_uk`：美式/英式音标。
-- `audio_us`、`audio_uk`：读音链接（使用有道 DictVoice 自动生成，type=1/2）。
+- `audio_us`、`audio_uk`：读音链接（可为空，默认按词头生成）。
+- `audio_us_raw`、`audio_uk_raw`：原始音频内容（Base64/二进制转文本）。
 - `book_id`：所属单词书业务 ID，可为空。
 - `memory_tip`：记忆提示。
+- `memory_tip_desc`：记忆提示补充说明。
+- `source_word_id`：来源词条 ID。
+- `phonetic`：综合音标（Youdao `phone` 字段）。
+- `speech_text`：读音提示文本。
+- `star`：星级（整数）。
+- `sentence_desc`：例句描述。
+- `synonym_desc`：近义词描述。
+- `phrase_desc`：固定搭配描述。
+- `related_desc`：相关词描述。
+- `antonym_desc`：反义词描述。
+- `real_exam_sentence_desc`：真题例句描述。
+- `picture_url`：插图链接。
 - `created_at` / `updated_at`：时间戳。
-- 关系：`book`（所属单词书）、`definitions`、`example_sentences`、`synonym_groups`、`phrases`、`related_words`、`import_logs`。
+- 关系：`book`、`definitions`、`example_sentences`、`synonym_groups`、`phrases`、`related_words`、`antonyms`、`real_exam_sentences`、`exam_questions`、`import_logs`。
 
 ### TypeORM 实体
 ```ts
@@ -137,6 +150,7 @@ import {
 @Index('dict_word_headword_idx', ['headword'])
 @Index('dict_word_book_id_idx', ['book_id'])
 @Index('dict_word_headword_book_id_uk', ['headword', 'book_id'], { unique: true })
+@Index('dict_word_source_word_id_idx', ['source_word_id'])
 @Entity({ name: 'dict_word' })
 export class DictWordEntity {
   /** 主键 UUID */
@@ -167,6 +181,14 @@ export class DictWordEntity {
   @Column({ name: 'audio_uk', type: 'text', nullable: true })
   audio_uk?: string | null;
 
+  /** 美式音频原始内容 */
+  @Column({ name: 'audio_us_raw', type: 'text', nullable: true })
+  audio_us_raw?: string | null;
+
+  /** 英式音频原始内容 */
+  @Column({ name: 'audio_uk_raw', type: 'text', nullable: true })
+  audio_uk_raw?: string | null;
+
   /** 所属单词书业务 ID，可为空 */
   @Column({ name: 'book_id', type: 'varchar', length: 255, nullable: true })
   book_id?: string | null;
@@ -174,6 +196,54 @@ export class DictWordEntity {
   /** 记忆提示 */
   @Column({ name: 'memory_tip', type: 'text', nullable: true })
   memory_tip?: string | null;
+
+  /** 记忆提示补充说明 */
+  @Column({ name: 'memory_tip_desc', type: 'text', nullable: true })
+  memory_tip_desc?: string | null;
+
+  /** 来源词条 ID */
+  @Column({ name: 'source_word_id', type: 'varchar', length: 255, nullable: true })
+  source_word_id?: string | null;
+
+  /** 综合音标 */
+  @Column({ name: 'phonetic', type: 'varchar', length: 255, nullable: true })
+  phonetic?: string | null;
+
+  /** 读音提示文本 */
+  @Column({ name: 'speech_text', type: 'varchar', length: 255, nullable: true })
+  speech_text?: string | null;
+
+  /** 星级 */
+  @Column({ name: 'star', type: 'integer', nullable: true })
+  star?: number | null;
+
+  /** 例句描述 */
+  @Column({ name: 'sentence_desc', type: 'text', nullable: true })
+  sentence_desc?: string | null;
+
+  /** 近义词描述 */
+  @Column({ name: 'synonym_desc', type: 'text', nullable: true })
+  synonym_desc?: string | null;
+
+  /** 固定搭配描述 */
+  @Column({ name: 'phrase_desc', type: 'text', nullable: true })
+  phrase_desc?: string | null;
+
+  /** 相关词描述 */
+  @Column({ name: 'related_desc', type: 'text', nullable: true })
+  related_desc?: string | null;
+
+  /** 反义词描述 */
+  @Column({ name: 'antonym_desc', type: 'text', nullable: true })
+  antonym_desc?: string | null;
+
+  /** 真题例句描述 */
+  @Column({ name: 'real_exam_sentence_desc', type: 'text', nullable: true })
+  real_exam_sentence_desc?: string | null;
+
+  /** 插图链接 */
+  @Column({ name: 'picture_url', type: 'text', nullable: true })
+  picture_url?: string | null;
 
   /** 创建时间 */
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz', precision: 6 })
@@ -211,6 +281,18 @@ export class DictWordEntity {
   @OneToMany(() => DictRelatedWordEntity, (related) => related.word)
   related_words: DictRelatedWordEntity[];
 
+  /** 反义词集合 */
+  @OneToMany(() => DictAntonymEntity, (antonym) => antonym.word)
+  antonyms: DictAntonymEntity[];
+
+  /** 真题例句集合 */
+  @OneToMany(() => DictRealExamSentenceEntity, (sentence) => sentence.word)
+  real_exam_sentences: DictRealExamSentenceEntity[];
+
+  /** 真题练习题集合 */
+  @OneToMany(() => DictExamQuestionEntity, (question) => question.word)
+  exam_questions: DictExamQuestionEntity[];
+
   /** 导入日志集合 */
   @OneToMany(() => DictImportLogEntity, (log) => log.word)
   import_logs: DictImportLogEntity[];
@@ -247,6 +329,10 @@ export class DictDefinitionEntity {
   /** 词性 */
   @Column({ name: 'part_of_speech', type: 'varchar', length: 64, nullable: true })
   part_of_speech?: string | null;
+
+  /** POS 标签（原始字段） */
+  @Column({ name: 'pos', type: 'varchar', length: 64, nullable: true })
+  pos?: string | null;
 
   /** 中文释义 */
   @Column({ name: 'meaning_cn', type: 'text', nullable: true })
@@ -523,6 +609,209 @@ export class DictRelatedWordEntity {
 
 ---
 
+## dict_antonym — 反义词表
+
+```ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Index,
+  JoinColumn
+} from 'typeorm';
+
+@Index('dict_antonym_word_id_idx', ['word_id'])
+@Entity({ name: 'dict_antonym' })
+export class DictAntonymEntity {
+  /** 主键 UUID */
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  /** 关联的词条 ID */
+  @Column({ name: 'word_id', type: 'uuid' })
+  word_id: string;
+
+  /** 反义词文本 */
+  @Column({ type: 'varchar', length: 255 })
+  value: string;
+
+  /** 附加元数据（JSON） */
+  @Column({ type: 'json', nullable: true })
+  meta?: Record<string, any> | null;
+
+  /** 所属词条 */
+  @ManyToOne(() => DictWordEntity, (word) => word.antonyms, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'word_id' })
+  word: DictWordEntity;
+}
+```
+
+---
+
+## dict_real_exam_sentence — 真题例句表
+
+```ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Index,
+  JoinColumn
+} from 'typeorm';
+
+@Index('dict_real_exam_sentence_word_id_idx', ['word_id'])
+@Index('dict_real_exam_sentence_order_idx', ['order'])
+@Entity({ name: 'dict_real_exam_sentence' })
+export class DictRealExamSentenceEntity {
+  /** 主键 UUID */
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  /** 关联的词条 ID */
+  @Column({ name: 'word_id', type: 'uuid' })
+  word_id: string;
+
+  /** 例句原文 */
+  @Column({ type: 'text' })
+  content: string;
+
+  /** 等级 */
+  @Column({ name: 'level', type: 'varchar', length: 64, nullable: true })
+  level?: string | null;
+
+  /** 真题试卷/出处 */
+  @Column({ name: 'paper', type: 'varchar', length: 128, nullable: true })
+  paper?: string | null;
+
+  /** 来源类型 */
+  @Column({ name: 'source_type', type: 'varchar', length: 128, nullable: true })
+  source_type?: string | null;
+
+  /** 年份 */
+  @Column({ name: 'year', type: 'varchar', length: 32, nullable: true })
+  year?: string | null;
+
+  /** 排序序号 */
+  @Column({ name: 'order', type: 'integer', nullable: true })
+  order?: number | null;
+
+  /** 附加来源信息 */
+  @Column({ name: 'meta', type: 'json', nullable: true })
+  meta?: Record<string, any> | null;
+
+  /** 所属词条 */
+  @ManyToOne(() => DictWordEntity, (word) => word.real_exam_sentences, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'word_id' })
+  word: DictWordEntity;
+}
+```
+
+---
+
+## dict_exam_question — 真题练习题表
+
+```ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  Index,
+  JoinColumn
+} from 'typeorm';
+
+@Index('dict_exam_question_word_id_idx', ['word_id'])
+@Entity({ name: 'dict_exam_question' })
+export class DictExamQuestionEntity {
+  /** 主键 UUID */
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  /** 关联的词条 ID */
+  @Column({ name: 'word_id', type: 'uuid' })
+  word_id: string;
+
+  /** 题干 */
+  @Column({ type: 'text' })
+  question: string;
+
+  /** 题型 */
+  @Column({ name: 'exam_type', type: 'integer', nullable: true })
+  exam_type?: number | null;
+
+  /** 解析 */
+  @Column({ name: 'explanation', type: 'text', nullable: true })
+  explanation?: string | null;
+
+  /** 正确选项序号 */
+  @Column({ name: 'right_index', type: 'integer', nullable: true })
+  right_index?: number | null;
+
+  /** 所属词条 */
+  @ManyToOne(() => DictWordEntity, (word) => word.exam_questions, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'word_id' })
+  word: DictWordEntity;
+
+  /** 选项集合 */
+  @OneToMany(() => DictExamChoiceEntity, (choice) => choice.question)
+  choices: DictExamChoiceEntity[];
+}
+```
+
+---
+
+## dict_exam_choice — 真题练习题选项表
+
+```ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Index,
+  JoinColumn
+} from 'typeorm';
+
+@Index('dict_exam_choice_question_id_idx', ['question_id'])
+@Index('dict_exam_choice_choice_index_idx', ['choice_index'])
+@Entity({ name: 'dict_exam_choice' })
+export class DictExamChoiceEntity {
+  /** 主键 UUID */
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  /** 关联的试题 ID */
+  @Column({ name: 'question_id', type: 'uuid' })
+  question_id: string;
+
+  /** 选项内容 */
+  @Column({ type: 'text' })
+  value: string;
+
+  /** 选项序号 */
+  @Column({ name: 'choice_index', type: 'integer', nullable: true })
+  choice_index?: number | null;
+
+  /** 所属试题 */
+  @ManyToOne(() => DictExamQuestionEntity, (question) => question.choices, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'question_id' })
+  question: DictExamQuestionEntity;
+}
+```
+
+---
+
 ## dict_import_batch — 导入批次
 
 ```ts
@@ -643,7 +932,7 @@ Prisma 中的 `@@index`、`@@unique` 需要在 TypeORM 额外声明，可在实�
 @Index('dict_word_headword_book_id_uk', ['headword', 'book_id'], { unique: true })
 ```
 
-请对照 `schema.prisma` 查看是否遗漏。当前整理的实体已覆盖全部 10 张表：
+请对照 `schema.prisma` 查看是否遗漏。当前整理的实体已覆盖全部 14 张表：
 
 1. `dict_book`
 2. `dict_word`
@@ -653,7 +942,11 @@ Prisma 中的 `@@index`、`@@unique` 需要在 TypeORM 额外声明，可在实�
 6. `dict_synonym`
 7. `dict_phrase`
 8. `dict_related_word`
-9. `dict_import_batch`
-10. `dict_import_log`
+9. `dict_antonym`
+10. `dict_real_exam_sentence`
+11. `dict_exam_question`
+12. `dict_exam_choice`
+13. `dict_import_batch`
+14. `dict_import_log`
 
 > 在 NestJS 中建议将这些实体集中到 `libs/database` 或各领域模块下，并在 `TypeOrmModule.forFeature([...])` 注册。若未来表结构调整，只需同步更新本文件及 Prisma 定义。
