@@ -29,13 +29,16 @@ export async function GET(
     const pageSizeRaw = parsePositiveInt(searchParams.get("pageSize"), DEFAULT_PAGE_SIZE);
     const pageSize = Math.min(pageSizeRaw, MAX_PAGE_SIZE);
     const query = searchParams.get("query") ?? undefined;
+    const exactParam = searchParams.get("exact");
+    const exact = exactParam === "true" || exactParam === "1";
     const skip = (page - 1) * pageSize;
 
     const result = await listWords({
       bookId: params.bookId,
       query,
       skip,
-      take: pageSize
+      take: pageSize,
+      exact
     });
 
     return success({

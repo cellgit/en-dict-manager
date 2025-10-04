@@ -31,8 +31,8 @@ const handleNotFound = async <T>(operation: () => Promise<T>) => {
 };
 
 export const listWordsAction = actionClient(listWordsInputSchema, async (input: ListWordsInput) => {
-  const { query, bookId, skip, take } = input;
-  return listWords({ query, bookId, skip, take });
+  const { query, bookId, skip, take, exact } = input;
+  return listWords({ query, bookId, skip, take, exact });
 });
 
 export const getWordDetailAction = actionClient(getWordInputSchema, async (input: GetWordInput) => {

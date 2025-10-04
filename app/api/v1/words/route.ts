@@ -28,12 +28,15 @@ export async function GET(request: NextRequest) {
 
     const query = searchParams.get("query") ?? undefined;
     const bookId = searchParams.get("bookId") ?? undefined;
+    const exactParam = searchParams.get("exact");
+    const exact = exactParam === "true" || exactParam === "1";
 
     const listResult = await listWords({
       query,
       bookId,
       skip,
-      take: pageSize
+      take: pageSize,
+      exact
     });
 
     return success({

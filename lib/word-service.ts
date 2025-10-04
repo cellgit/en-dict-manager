@@ -574,13 +574,69 @@ export async function listWords(params: ListWordsParams = {}): Promise<ListWords
   const skip = Math.max(0, params.skip ?? 0);
   const takeCandidate = params.take ?? DEFAULT_TAKE;
   const take = Math.min(Math.max(takeCandidate, 1), MAX_TAKE);
+  const exact = params.exact ?? false;
+  const normalizedQuery = params.query?.trim();
+
+  const mapListItem = (item: {
+    id: string;
+    headword: string;
+    rank: number | null;
+    book_id: string | null;
+    phonetic_us: string | null;
+    phonetic_uk: string | null;
+    updated_at: Date;
+  }) => ({
+    id: item.id,
+    headword: item.headword,
+    rank: item.rank,
+    bookId: item.book_id,
+    phoneticUs: item.phonetic_us,
+    phoneticUk: item.phonetic_uk,
+    updatedAt: item.updated_at
+  });
+
+  const listSelect = {
+    id: true,
+    headword: true,
+    rank: true,
+    book_id: true,
+    phonetic_us: true,
+    phonetic_uk: true,
+    updated_at: true
+  } satisfies Prisma.dict_wordSelect;
+
+  if (exact && normalizedQuery) {
+    const whereExact: Prisma.dict_wordWhereInput = {
+      headword: normalizedQuery
+    };
+
+    if (params.bookId) {
+      whereExact.book_id = params.bookId;
+    }
+
+    const record = await prisma.dict_word.findFirst({
+      where: whereExact,
+      orderBy: {
+        updated_at: "desc"
+      },
+      select: listSelect
+    });
+
+    const rows = record ? [record] : [];
+    const paginated = rows.slice(skip, skip + take);
+
+    return {
+      total: rows.length,
+      items: paginated.map(mapListItem)
+    } satisfies ListWordsResult;
+  }
 
   const where: Prisma.dict_wordWhereInput = {};
 
   // 搜索条件
-  if (params.query) {
+  if (normalizedQuery) {
     where.headword = {
-      contains: params.query.trim(),
+      contains: normalizedQuery,
       mode: "insensitive" as const
     };
   }
@@ -598,38 +654,14 @@ export async function listWords(params: ListWordsParams = {}): Promise<ListWords
       orderBy: {
         updated_at: "desc"
       },
-      select: {
-        id: true,
-        headword: true,
-        rank: true,
-        book_id: true,
-        phonetic_us: true,
-        phonetic_uk: true,
-        updated_at: true
-      }
+      select: listSelect
     }),
     prisma.dict_word.count({ where })
   ]);
 
   return {
     total,
-    items: items.map((item: {
-      id: string;
-      headword: string;
-      rank: number | null;
-      book_id: string | null;
-      phonetic_us: string | null;
-      phonetic_uk: string | null;
-      updated_at: Date;
-    }) => ({
-      id: item.id,
-      headword: item.headword,
-      rank: item.rank,
-      bookId: item.book_id,
-      phoneticUs: item.phonetic_us,
-      phoneticUk: item.phonetic_uk,
-      updatedAt: item.updated_at
-    }))
+    items: items.map(mapListItem)
   } satisfies ListWordsResult;
 }
 

@@ -101,6 +101,7 @@ export interface ListWordsParams {
   bookId?: string;
   skip?: number;
   take?: number;
+  exact?: boolean;
 }
 
 export interface ListWordsResultItem {
