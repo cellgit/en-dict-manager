@@ -1,0 +1,233 @@
+[
+  {
+    "book_id": "IELTS_2",
+    "content": {
+      "word": {
+        "content": {
+          "antos": {
+            "anto": [
+              {
+                "hwd": "reclaim"
+              }
+            ],
+            "desc": "反义"
+          },
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "恣意地，放纵地",
+                "p_content": "with abandon"
+              },
+              {
+                "p_cn": "弃船",
+                "p_content": "abandon ship"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 被抛弃的；无约束的；恣意放荡的；寡廉鲜耻的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abandonment",
+                    "tran": " 抛弃；放纵"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 抛弃（abandon的过去式和过去分词）"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " a + band(乐队) + on → 乐队解散， 放弃演出 → 放弃"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "她怎么能抛弃自己的孩子？",
+                "s_content": "How could she abandon her own child?"
+              }
+            ]
+          },
+          "speech": "abandon",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "loose"
+                  },
+                  {
+                    "w": "mania"
+                  }
+                ],
+                "pos": "n",
+                "tran": "狂热；放任"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "desert"
+                  },
+                  {
+                    "w": "yield"
+                  },
+                  {
+                    "w": "quit"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "遗弃；放弃"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "离弃；放弃",
+              "tran_other": "to leave someone, especially someone you are responsible for"
+            }
+          ],
+          "ukphone": "ə'bænd(ə)n",
+          "ukspeech": "abandon&type=1",
+          "usphone": "ə'bændən",
+          "usspeech": "abandon&type=2"
+        },
+        "word_head": "abandon",
+        "word_id": "IELTS_2_1"
+      }
+    },
+    "head_word": "abandon",
+    "word_rank": 1
+  },
+  {
+    "book_id": "IELTS_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "ə,bri:vi'eiʃən",
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abbreviated",
+                    "tran": " 简短的；小型的；服装超短的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abbreviator",
+                    "tran": " 缩写者；节略者"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "abbreviated",
+                    "tran": " 缩写；节略（abbreviate的过去分词）"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "abbreviate",
+                    "tran": " 使用缩写词"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "abbreviate",
+                    "tran": " 缩写，使省略；使简短"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "的缩写是。",
+                "s_content": "The abbreviation for Kansas is KS."
+              }
+            ]
+          },
+          "speech": "abbreviation",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "abridgement"
+                  },
+                  {
+                    "w": "sigillum"
+                  }
+                ],
+                "pos": "n",
+                "tran": "[语]缩写；缩写词"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "缩略语",
+              "tran_other": "a short form of a word or expression"
+            }
+          ],
+          "ukphone": "əbriːvɪ'eɪʃ(ə)n",
+          "ukspeech": "abbreviation&type=1",
+          "usphone": "əˌbrivɪ'eʃən",
+          "usspeech": "abbreviation&type=2"
+        },
+        "word_head": "abbreviation",
+        "word_id": "IELTS_2_2"
+      }
+    },
+    "head_word": "abbreviation",
+    "word_rank": 2
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "book_id": "SAT_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'fɑ:məsi",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "药学院；药剂学院",
+                "p_content": "college of pharmacy"
+              },
+              {
+                "p_cn": "药房设备",
+                "p_content": "pharmacy equipment"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "pharmacist",
+                    "tran": " 药剂师"
+                  },
+                  {
+                    "hwd": "pharmacopoeia",
+                    "tran": " 药典，处方书；一批备用药品"
+                  },
+                  {
+                    "hwd": "pharmaceutics",
+                    "tran": " 制药学；配药学"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " pharma (药) + cy (学科) → 药剂学"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "通宵药店",
+                "s_content": "an all-night pharmacy"
+              }
+            ]
+          },
+          "speech": "pharmacy",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "dispensary"
+                  },
+                  {
+                    "w": "officina"
+                  }
+                ],
+                "pos": "n",
+                "tran": "药房；[药]配药学，药剂学；制药业；一批备用药品"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "药房；配药学，药剂学；制药业；一批备用药品",
+              "tran_other": "a shop or a part of a shop where medicines are prepared and sold"
+            }
+          ],
+          "ukphone": "'fɑːməsɪ",
+          "ukspeech": "pharmacy&type=1",
+          "usphone": "'fɑrməsi",
+          "usspeech": "pharmacy&type=2"
+        },
+        "word_head": "pharmacy",
+        "word_id": "SAT_2_1"
+      }
+    },
+    "head_word": "pharmacy",
+    "word_rank": 1
+  },
+  {
+    "book_id": "SAT_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'tɔilsəm",
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "toil",
+                    "tran": " 辛苦；苦工；网；圈套"
+                  },
+                  {
+                    "hwd": "toiler",
+                    "tran": " 劳动者；辛苦工作的人"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "toil",
+                    "tran": " 辛苦工作；艰难地行进"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "toil",
+                    "tran": " 费力地做；使…过度劳累"
+                  }
+                ]
+              }
+            ]
+          },
+          "speech": "toilsome",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "hard"
+                  },
+                  {
+                    "w": "back-busting"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "辛苦的；劳苦的；费力的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adj",
+              "tran_cn": "辛苦的；劳苦的；费力的",
+              "tran_other": "laborious "
+            }
+          ],
+          "ukphone": "'tɒɪls(ə)m",
+          "ukspeech": "toilsome&type=1",
+          "usphone": "'tɔɪlsəm",
+          "usspeech": "toilsome&type=2"
+        },
+        "word_head": "toilsome",
+        "word_id": "SAT_2_2"
+      }
+    },
+    "head_word": "toilsome",
+    "word_rank": 2
+  }
+]

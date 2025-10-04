@@ -1,0 +1,67 @@
+[
+  {
+    "book_id": "GRE_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'dɔ:ltənizəm",
+          "speech": "daltonism",
+          "star": 0,
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "[医]色盲(=color blindness)",
+              "tran_other": "colour blindness, esp the confusion of red and green "
+            }
+          ]
+        },
+        "word_head": "daltonism",
+        "word_id": "GRE_2_1"
+      }
+    },
+    "head_word": "daltonism",
+    "word_rank": 1
+  },
+  {
+    "book_id": "GRE_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": ",ɔ:θə'pi:diks",
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "如果这个描述正好刻画了你的行为，那你很可能就是一个周末斗士了，北卡罗莱纳大学医学院整形外科助教杰弗里·斯潘医学博士如是说。",
+                "s_content": "If this description matches your behavior, you're probably a weekend warrior, said Jeffrey Spang, MD, an assistant professor of orthopedics at the University of North Carolina School of Medicine.",
+                "s_content_eng": "If this description matches your behavior, you're probably a weekend warrior, said Jeffrey Spang, MD, an assistant professor of <b>orthopedics</b> at the University of North Carolina School of Medicine.",
+                "s_speech": "If+this+description+matches+your+behavior%2C+you%27re+probably+a+weekend+warrior%2C+said+Jeffrey+Spang%2C+MD%2C+an+assistant+professor+of+orthopedics+at+the+University+of+North+Carolina+School+of+Medicine.&le=eng"
+              }
+            ]
+          },
+          "speech": "orthopedics",
+          "star": 0,
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "[医]整形外科, 整形术",
+              "tran_other": "the part of medicine that treats illnesses or injuries that affect people’s bones or muscles"
+            }
+          ],
+          "ukphone": ",ɔ:θə'pi:dɪks",
+          "ukspeech": "orthopedics&type=1",
+          "usphone": ",ɔrθə'pidɪks",
+          "usspeech": "orthopedics&type=2"
+        },
+        "word_head": "orthopedics",
+        "word_id": "GRE_2_2"
+      }
+    },
+    "head_word": "orthopedics",
+    "word_rank": 2
+  }
+]

@@ -1,0 +1,193 @@
+[
+  {
+    "book_id": "GaoZhong_2",
+    "content": {
+      "word": {
+        "content": {
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "来块三明治好吗？",
+                "s_content": "Would you like a sandwich?"
+              },
+              {
+                "s_cn": "我想经过培训成为一名工程师。",
+                "s_content": "I want to train to be an engineer."
+              },
+              {
+                "s_cn": "他真是个好人。",
+                "s_content": "He’s a really nice man."
+              },
+              {
+                "s_cn": "瞧瞧这个。",
+                "s_content": "Take a look at this."
+              },
+              {
+                "s_cn": "这得好好清洗一下。",
+                "s_content": "It needs a good clean."
+              }
+            ]
+          },
+          "speech": "a",
+          "star": 0,
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "字母A；第一流的；学业成绩达最高标准的评价符号",
+              "tran_other": "used to show that you are referring to a general type of person or thing and not a specific person or thing"
+            },
+            {
+              "desc_cn": "中释",
+              "pos": "abbr",
+              "tran_cn": "[物]安（ampere）"
+            }
+          ],
+          "ukphone": "ə; eɪ",
+          "ukspeech": "a&type=1",
+          "usphone": "ə; e",
+          "usspeech": "a&type=2"
+        },
+        "word_head": "a",
+        "word_id": "GaoZhong_2_1"
+      }
+    },
+    "head_word": "a",
+    "word_rank": 1
+  },
+  {
+    "book_id": "GaoZhong_2",
+    "content": {
+      "word": {
+        "content": {
+          "antos": {
+            "anto": [
+              {
+                "hwd": "reclaim"
+              }
+            ],
+            "desc": "反义"
+          },
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "恣意地，放纵地",
+                "p_content": "with abandon"
+              },
+              {
+                "p_cn": "弃船",
+                "p_content": "abandon ship"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 被抛弃的；无约束的；恣意放荡的；寡廉鲜耻的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abandonment",
+                    "tran": " 抛弃；放纵"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 抛弃（abandon的过去式和过去分词）"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " a+band(乐队)+on → 乐队表演时， 抛开一切杂念→放弃"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "他以不计后果的放纵态度对待生活–我想他自己都不知道他接下来要做什么。",
+                "s_content": "He approached life with reckless abandon–I don't think he himself knew what he was going to do next."
+              }
+            ]
+          },
+          "speech": "abandon",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "loose"
+                  },
+                  {
+                    "w": "mania"
+                  }
+                ],
+                "pos": "n",
+                "tran": "狂热；放任"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "desert"
+                  },
+                  {
+                    "w": "yield"
+                  },
+                  {
+                    "w": "quit"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "遗弃；放弃"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "放任；狂热",
+              "tran_other": "if someone does something with abandon, they behave in a careless or uncontrolled way, without thinking or caring about what they are doing"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "遗弃；放弃",
+              "tran_other": "to leave someone, especially someone you are responsible for"
+            }
+          ],
+          "ukphone": "ə'bænd(ə)n",
+          "ukspeech": "abandon&type=1",
+          "usphone": "ə'bændən",
+          "usspeech": "abandon&type=2"
+        },
+        "word_head": "abandon",
+        "word_id": "GaoZhong_2_2"
+      }
+    },
+    "head_word": "abandon",
+    "word_rank": 2
+  }
+]

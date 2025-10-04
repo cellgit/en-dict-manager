@@ -1,0 +1,318 @@
+[
+  {
+    "book_id": "Level8_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'intə:nʃip",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "实习计划；实习课程",
+                "p_content": "internship programs"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "intern",
+                    "tran": " 实习生，实习医师"
+                  },
+                  {
+                    "hwd": "interne",
+                    "tran": " 实习医师"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "intern",
+                    "tran": " 作实习医师"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "intern",
+                    "tran": " 拘留，软禁"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "…一个在纽约做外科实习的职位。",
+                "s_content": "...an internship in surgery in New York."
+              }
+            ]
+          },
+          "speech": "internship",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "trainee"
+                  },
+                  {
+                    "w": "probationer"
+                  }
+                ],
+                "pos": "n",
+                "tran": "实习生；（美）实习期；实习医师职位"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "<美>实习医师",
+              "tran_other": "a job that lasts for a short time, that someone, especially a student, does in order to gain experience"
+            }
+          ],
+          "ukphone": "ˈɪntɜ:nʃɪp",
+          "ukspeech": "internship&type=1",
+          "usphone": "'ɪntɝnʃɪp",
+          "usspeech": "internship&type=2"
+        },
+        "word_head": "internship",
+        "word_id": "Level8_1_1"
+      }
+    },
+    "head_word": "internship",
+    "word_rank": 1
+  },
+  {
+    "book_id": "Level8_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'traiəl",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "在试验中；在受审",
+                "p_content": "on trial"
+              },
+              {
+                "p_cn": "临床试验；诊治试验",
+                "p_content": "clinical trial"
+              },
+              {
+                "p_cn": "产品试制",
+                "p_content": "trial production"
+              },
+              {
+                "p_cn": "反复试验；尝试错误法",
+                "p_content": "trial and error"
+              },
+              {
+                "p_cn": "试车；试验；测试运行",
+                "p_content": "trial run"
+              },
+              {
+                "p_cn": "免费试用",
+                "p_content": "free trial"
+              },
+              {
+                "p_cn": "艰难困苦；痛苦与磨难",
+                "p_content": "trials and tribulations"
+              },
+              {
+                "p_cn": "试用期",
+                "p_content": "trial period"
+              },
+              {
+                "p_cn": "试订单；试用订货",
+                "p_content": "trial order"
+              },
+              {
+                "p_cn": "初审；初次试验",
+                "p_content": "first trial"
+              },
+              {
+                "p_cn": "试行",
+                "p_content": "trial implementation"
+              },
+              {
+                "p_cn": "刑事审判",
+                "p_content": "criminal trial"
+              },
+              {
+                "p_cn": "[法]公平审判",
+                "p_content": "fair trial"
+              },
+              {
+                "p_cn": "（新产品等的）现场试验；（猎狗）实地追猎选拔或测试",
+                "p_content": "field trial"
+              },
+              {
+                "p_cn": "试用版",
+                "p_content": "trial version"
+              },
+              {
+                "p_cn": "民事审判",
+                "p_content": "civil trial"
+              },
+              {
+                "p_cn": "计时赛；计时游；计时测验",
+                "p_content": "time trial"
+              },
+              {
+                "p_cn": "反复试验，不断摸索",
+                "p_content": "by trial and error"
+              },
+              {
+                "p_cn": "在受审",
+                "p_content": "stand trial"
+              },
+              {
+                "p_cn": "法庭审判",
+                "p_content": "court trial"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "tried",
+                    "tran": " 可靠的；试验过的"
+                  },
+                  {
+                    "hwd": "trying",
+                    "tran": " 难受的；难堪的；费劲的；令人厌烦的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "try",
+                    "tran": " 尝试；努力；试验"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "tried",
+                    "tran": " 尝试（try的过去分词）"
+                  },
+                  {
+                    "hwd": "trying",
+                    "tran": " 尝试（try的ing形式）；试验"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "try",
+                    "tran": " 尝试；努力；试验"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "try",
+                    "tran": " 试图，努力；试验；审判；考验"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "审理定于下周开始。",
+                "s_content": "The trial is due to start next week."
+              }
+            ]
+          },
+          "speech": "trial",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "effort"
+                  },
+                  {
+                    "w": "hearing"
+                  },
+                  {
+                    "w": "pain"
+                  },
+                  {
+                    "w": "proof"
+                  },
+                  {
+                    "w": "experiment"
+                  }
+                ],
+                "pos": "n",
+                "tran": "[试验]试验；审讯；努力；磨炼"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "testing"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "[试验]试验的；审讯的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "审判",
+              "tran_other": "a legal process in which a judge and often a  jury  in a court of law examine information to decide whether someone is guilty of a crime"
+            }
+          ],
+          "ukphone": "ˈtraɪəl",
+          "ukspeech": "trial&type=1",
+          "usphone": "'traɪəl",
+          "usspeech": "trial&type=2"
+        },
+        "word_head": "trial",
+        "word_id": "Level8_1_2"
+      }
+    },
+    "head_word": "trial",
+    "word_rank": 2
+  }
+]

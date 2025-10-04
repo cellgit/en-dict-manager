@@ -1,0 +1,189 @@
+[
+  {
+    "book_id": "BEC_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'fɑ:məsi",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "药学院；药剂学院",
+                "p_content": "college of pharmacy"
+              },
+              {
+                "p_cn": "药房设备",
+                "p_content": "pharmacy equipment"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "pharmacist",
+                    "tran": " 药剂师"
+                  },
+                  {
+                    "hwd": "pharmacopoeia",
+                    "tran": " 药典，处方书；一批备用药品"
+                  },
+                  {
+                    "hwd": "pharmaceutics",
+                    "tran": " 制药学；配药学"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " pharma(药； 毒) + cy → 药店； 药剂学"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "通宵药店",
+                "s_content": "an all-night pharmacy"
+              }
+            ]
+          },
+          "speech": "pharmacy",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "dispensary"
+                  },
+                  {
+                    "w": "officina"
+                  }
+                ],
+                "pos": "n",
+                "tran": "药房；[药]配药学，药剂学；制药业；一批备用药品"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "药房；配药学，药剂学；制药业；一批备用药品",
+              "tran_other": "a shop or a part of a shop where medicines are prepared and sold"
+            }
+          ],
+          "ukphone": "'fɑːməsɪ",
+          "ukspeech": "pharmacy&type=1",
+          "usphone": "'fɑrməsi",
+          "usspeech": "pharmacy&type=2"
+        },
+        "word_head": "pharmacy",
+        "word_id": "BEC_2_1"
+      }
+    },
+    "head_word": "pharmacy",
+    "word_rank": 1
+  },
+  {
+    "book_id": "BEC_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'fɔ:ɡɔn",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "预料之中必然发生的事情；不可避免的结局",
+                "p_content": "foregone conclusion"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "foregoing",
+                    "tran": " 前述的；前面的；在前的"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "foregoing",
+                    "tran": " 发生在…之前；走在…之前（forego的ing形式）"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "forego",
+                    "tran": " 放弃；居先；在……之前"
+                  }
+                ]
+              }
+            ]
+          },
+          "speech": "foregone",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "past"
+                  },
+                  {
+                    "w": "ago"
+                  },
+                  {
+                    "w": "back"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "过去的；先前的；预知的；预先决定的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "pos": "adj",
+              "tran_cn": "过去的；先前的；预知的；预先决定的"
+            },
+            {
+              "desc_cn": "中释",
+              "pos": "v",
+              "tran_cn": "发生在…之前（forego的过去分词）"
+            }
+          ],
+          "ukphone": "fɔː'gɒn",
+          "ukspeech": "foregone&type=1",
+          "usphone": "'fɔrɡɔn",
+          "usspeech": "foregone&type=2"
+        },
+        "word_head": "foregone",
+        "word_id": "BEC_2_2"
+      }
+    },
+    "head_word": "foregone",
+    "word_rank": 2
+  }
+]

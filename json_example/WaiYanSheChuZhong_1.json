@@ -1,0 +1,323 @@
+[
+  {
+    "book_id": "WaiYanSheChuZhong_1",
+    "content": {
+      "word": {
+        "content": {
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "打招呼；问好",
+                "p_content": "say hello"
+              },
+              {
+                "p_cn": "大家好",
+                "p_content": "hello everyone"
+              },
+              {
+                "p_cn": "欢迎莅临",
+                "p_content": "hello and welcome"
+              },
+              {
+                "p_cn": "回魂妻（电影名称）",
+                "p_content": "hello again"
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "喂，约翰！你好吗？",
+                "s_content": "Hello, John! How are you?"
+              },
+              {
+                "s_cn": "斯坦利，过来和你的侄子打声招呼。",
+                "s_content": "Stanley, come and say hello to your nephew."
+              },
+              {
+                "s_cn": "嗨，你好！好久不见了。",
+                "s_content": "Well, hello there ! I haven’t seen you for ages."
+              }
+            ]
+          },
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "hallo"
+                  },
+                  {
+                    "w": "holloo"
+                  }
+                ],
+                "pos": "int",
+                "tran": "喂；哈罗"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "int",
+              "tran_cn": "你好，喂",
+              "tran_other": "used as a greeting when you see or meet someone"
+            }
+          ],
+          "ukphone": "həˈləʊ",
+          "ukspeech": "hello&type=1",
+          "usphone": "helˈō",
+          "usspeech": "hello&type=2"
+        },
+        "word_head": "hello",
+        "word_id": "WaiYanSheChuZhong_1_1"
+      }
+    },
+    "head_word": "hello",
+    "word_rank": 1
+  },
+  {
+    "book_id": "WaiYanSheChuZhong_1",
+    "content": {
+      "word": {
+        "content": {
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "在课堂上；上课中",
+                "p_content": "in class"
+              },
+              {
+                "p_cn": "头等，第一流；最高级",
+                "p_content": "first class"
+              },
+              {
+                "p_cn": "（飞机上的）经济舱位",
+                "p_content": "economy class"
+              },
+              {
+                "p_cn": "中产阶级",
+                "p_content": "middle class"
+              },
+              {
+                "p_cn": "下课后；课下",
+                "p_content": "after class"
+              },
+              {
+                "p_cn": "世界级，世界水平；一流的",
+                "p_content": "world class"
+              },
+              {
+                "p_cn": "英文课；英语班",
+                "p_content": "english class"
+              },
+              {
+                "p_cn": "n. 工人阶级；劳动阶级",
+                "p_content": "working class"
+              },
+              {
+                "p_cn": "[口]低劣的；劣等的；不合格的；没地位的",
+                "p_content": "no class"
+              },
+              {
+                "p_cn": "高级，优质",
+                "p_content": "high class"
+              },
+              {
+                "p_cn": "（大学考试成绩）二等；二等舱；二流；（美）二等邮件（定期期刊等）",
+                "p_content": "second class"
+              },
+              {
+                "p_cn": "社会地位；社会阶级",
+                "p_content": "social class"
+              },
+              {
+                "p_cn": "顶层级；最高级",
+                "p_content": "top class"
+              },
+              {
+                "p_cn": "统治阶级",
+                "p_content": "ruling class"
+              },
+              {
+                "p_cn": "阶级斗争",
+                "p_content": "class struggle"
+              },
+              {
+                "p_cn": "基础类别，基本类",
+                "p_content": "base class"
+              },
+              {
+                "p_cn": "商务舱",
+                "p_content": "business class"
+              },
+              {
+                "p_cn": "n. 三等；三级；三等舱",
+                "p_content": "third class"
+              },
+              {
+                "p_cn": "上等阶层，上流社会",
+                "p_content": "upper class"
+              },
+              {
+                "p_cn": "培训班；见习职类",
+                "p_content": "training class"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "classified",
+                    "tran": " 分类的；类别的；机密的"
+                  },
+                  {
+                    "hwd": "classy",
+                    "tran": " 优等的；上等的；漂亮的"
+                  },
+                  {
+                    "hwd": "classless",
+                    "tran": " 无阶级的；不属于任何阶级的"
+                  },
+                  {
+                    "hwd": "classifiable",
+                    "tran": " 可分类的"
+                  },
+                  {
+                    "hwd": "classificatory",
+                    "tran": " 类别的；分类上的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "classification",
+                    "tran": " 分类；类别，等级"
+                  },
+                  {
+                    "hwd": "classified",
+                    "tran": " 分类广告"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "classified",
+                    "tran": " 把…分类（classify的过去分词）"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "classify",
+                    "tran": " 分类；分等"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "他的网球水平并不如她。",
+                "s_content": "He’s not in the same class (= not as good ) as her at tennis."
+              }
+            ]
+          },
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "category"
+                  },
+                  {
+                    "w": "variety"
+                  },
+                  {
+                    "w": "manner"
+                  },
+                  {
+                    "w": "nature"
+                  },
+                  {
+                    "w": "kind"
+                  }
+                ],
+                "pos": "n",
+                "tran": "阶级；班级；种类"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "grade"
+                  },
+                  {
+                    "w": "categorize"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "分类；把…分等级"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "wonderful"
+                  },
+                  {
+                    "w": "excellent"
+                  },
+                  {
+                    "w": "famous"
+                  },
+                  {
+                    "w": "super"
+                  },
+                  {
+                    "w": "great"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "极好的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "同学；班级",
+              "tran_other": "a group into which people or things are divided according to their quality or abilities"
+            }
+          ],
+          "ukphone": "klɑːs",
+          "ukspeech": "class&type=1",
+          "usphone": "klæs",
+          "usspeech": "class&type=2"
+        },
+        "word_head": "class",
+        "word_id": "WaiYanSheChuZhong_1_2"
+      }
+    },
+    "head_word": "class",
+    "word_rank": 2
+  }
+]

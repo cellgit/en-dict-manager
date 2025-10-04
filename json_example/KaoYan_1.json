@@ -1,0 +1,551 @@
+[
+  {
+    "book_id": "KaoYan_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "ækt",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "担当",
+                "p_content": "act as"
+              },
+              {
+                "p_cn": "对…起作用；按照…行事",
+                "p_content": "act on"
+              },
+              {
+                "p_cn": "扮演；在…方面行动",
+                "p_content": "act in"
+              },
+              {
+                "p_cn": "举止像...",
+                "p_content": "act like"
+              },
+              {
+                "p_cn": "v. 代理",
+                "p_content": "act for"
+              },
+              {
+                "p_cn": "[古语]即将，正要(与to和不定式连用)",
+                "p_content": "in act"
+              },
+              {
+                "p_cn": "言语行为",
+                "p_content": "speech act"
+              },
+              {
+                "p_cn": "把…表演出来；把…付诸行动",
+                "p_content": "act out"
+              },
+              {
+                "p_cn": "以…方式行事",
+                "p_content": "act with"
+              },
+              {
+                "p_cn": "对…起作用；按照…行事",
+                "p_content": "act upon"
+              },
+              {
+                "p_cn": "vt. 违反",
+                "p_content": "act against"
+              },
+              {
+                "p_cn": "正在做…时",
+                "p_content": "in the act of"
+              },
+              {
+                "p_cn": "法律行为",
+                "p_content": "legal act"
+              },
+              {
+                "p_cn": "教育法",
+                "p_content": "education act"
+              },
+              {
+                "p_cn": "法律行为；法律行律",
+                "p_content": "juristic act"
+              },
+              {
+                "p_cn": "罪行，犯罪行为",
+                "p_content": "criminal act"
+              },
+              {
+                "p_cn": "天灾；不可抗力",
+                "p_content": "act of god"
+              },
+              {
+                "p_cn": "核办",
+                "p_content": "act accordingly"
+              },
+              {
+                "p_cn": "平衡做法；协调",
+                "p_content": "balancing act"
+              },
+              {
+                "p_cn": "不法行为，非法行为",
+                "p_content": "illegal act"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "active",
+                    "tran": " 积极的；活跃的；主动的；有效的；现役的"
+                  },
+                  {
+                    "hwd": "acting",
+                    "tran": " 代理的；装腔作势的"
+                  },
+                  {
+                    "hwd": "activated",
+                    "tran": " 活性化的；活泼的"
+                  },
+                  {
+                    "hwd": "actable",
+                    "tran": " 能演出的；能实行的"
+                  },
+                  {
+                    "hwd": "actinic",
+                    "tran": " 化学线作用的；化学线的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "active",
+                    "tran": " 主动语态；积极分子"
+                  },
+                  {
+                    "hwd": "action",
+                    "tran": " 行动；活动；功能；战斗；情节"
+                  },
+                  {
+                    "hwd": "activity",
+                    "tran": " 活动；行动；活跃"
+                  },
+                  {
+                    "hwd": "actor",
+                    "tran": " 男演员；行动者；作用物"
+                  },
+                  {
+                    "hwd": "actress",
+                    "tran": " 女演员"
+                  },
+                  {
+                    "hwd": "activation",
+                    "tran": " [电子][物] 激活；活化作用"
+                  },
+                  {
+                    "hwd": "acting",
+                    "tran": " 演技；演戏；假装"
+                  },
+                  {
+                    "hwd": "activism",
+                    "tran": " 行动主义；激进主义"
+                  },
+                  {
+                    "hwd": "actinism",
+                    "tran": " 光化性，[光] 光化度；[化学] 光化作用"
+                  },
+                  {
+                    "hwd": "activeness",
+                    "tran": " 主观能动性；活动积极性"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "activated",
+                    "tran": " 使激活；使活动起来；有生气（activate的过去分词）"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "activate",
+                    "tran": " 激活；有活力"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "activate",
+                    "tran": " 刺激；使活动；使活泼；使产生放射性"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "他们拒绝了吉尔的申请，这样做没道理。",
+                "s_content": "They acted unreasonably when they turned down Jill’s application."
+              },
+              {
+                "s_cn": "自从母亲死后，他的行为一直很怪。",
+                "s_content": "He’s been acting strangely ever since his Mom died."
+              }
+            ]
+          },
+          "speech": "act",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "play"
+                  },
+                  {
+                    "w": "take a part of"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "扮演；装作，举动像"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "operate"
+                  },
+                  {
+                    "w": "bear oneself"
+                  },
+                  {
+                    "w": "conduct oneself"
+                  }
+                ],
+                "pos": "vi",
+                "tran": "行动；扮演，充当；表现，举止；假装，演戏；起作用，见效"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "behavior"
+                  },
+                  {
+                    "w": "dealing"
+                  },
+                  {
+                    "w": "action"
+                  },
+                  {
+                    "w": "going"
+                  },
+                  {
+                    "w": "bill"
+                  }
+                ],
+                "pos": "n",
+                "tran": "行为，行动；[法]法令，法案；（戏剧，歌剧的）一幕，段；装腔作势"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "表演；举动；起作用",
+              "tran_other": "to behave in a particular way"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "行为，法令；一幕",
+              "tran_other": "one thing that you do"
+            }
+          ],
+          "ukphone": "ækt",
+          "ukspeech": "act&type=1",
+          "usphone": "ækt",
+          "usspeech": "act&type=2"
+        },
+        "word_head": "act",
+        "word_id": "KaoYan_1_1"
+      }
+    },
+    "head_word": "act",
+    "word_rank": 1
+  },
+  {
+    "book_id": "KaoYan_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "'ækʃən",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "采取行动；提出诉讼",
+                "p_content": "take action"
+              },
+              {
+                "p_cn": "对…的作用",
+                "p_content": "action on"
+              },
+              {
+                "p_cn": "在活动；在运转",
+                "p_content": "in action"
+              },
+              {
+                "p_cn": "行动计划；行动方案",
+                "p_content": "action plan"
+              },
+              {
+                "p_cn": "作用机制；作用机理",
+                "p_content": "mechanism of action"
+              },
+              {
+                "p_cn": "做法；行动步骤",
+                "p_content": "course of action"
+              },
+              {
+                "p_cn": "法律诉讼",
+                "p_content": "legal action"
+              },
+              {
+                "p_cn": "行动研究；行为研究；动作研究",
+                "p_content": "action research"
+              },
+              {
+                "p_cn": "n. 民事诉讼",
+                "p_content": "civil action"
+              },
+              {
+                "p_cn": "药理作用",
+                "p_content": "pharmacological action"
+              },
+              {
+                "p_cn": "n. 校正动作",
+                "p_content": "corrective action"
+              },
+              {
+                "p_cn": "行政诉讼；行政裁定",
+                "p_content": "administrative action"
+              },
+              {
+                "p_cn": "联合行动；[机]接合动作；接合作用",
+                "p_content": "joint action"
+              },
+              {
+                "p_cn": "集体行动；集体行为",
+                "p_content": "collective action"
+              },
+              {
+                "p_cn": "共同作用；联合行动；复合作用",
+                "p_content": "combined action"
+              },
+              {
+                "p_cn": "直接行动；直接作用",
+                "p_content": "direct action"
+              },
+              {
+                "p_cn": "动作电位；动诅位",
+                "p_content": "action potential"
+              },
+              {
+                "p_cn": "损坏；不运转；失去作用",
+                "p_content": "out of action"
+              },
+              {
+                "p_cn": "控制作用；控制动作",
+                "p_content": "control action"
+              },
+              {
+                "p_cn": "纪律处分；训练活动",
+                "p_content": "disciplinary action"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "active",
+                    "tran": " 积极的；活跃的；主动的；有效的；现役的"
+                  },
+                  {
+                    "hwd": "activated",
+                    "tran": " 活性化的；活泼的"
+                  },
+                  {
+                    "hwd": "actable",
+                    "tran": " 能演出的；能实行的"
+                  }
+                ]
+              },
+              {
+                "pos": "adv",
+                "words": [
+                  {
+                    "hwd": "actively",
+                    "tran": " 积极地；活跃地"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "active",
+                    "tran": " 主动语态；积极分子"
+                  },
+                  {
+                    "hwd": "activity",
+                    "tran": " 活动；行动；活跃"
+                  },
+                  {
+                    "hwd": "act",
+                    "tran": " 行为，行动；法令，法案；（戏剧，歌剧的）一幕，段；装腔作势"
+                  },
+                  {
+                    "hwd": "actor",
+                    "tran": " 男演员；行动者；作用物"
+                  },
+                  {
+                    "hwd": "activation",
+                    "tran": " [电子][物] 激活；活化作用"
+                  },
+                  {
+                    "hwd": "activism",
+                    "tran": " 行动主义；激进主义"
+                  },
+                  {
+                    "hwd": "activator",
+                    "tran": " 催化剂；[助剂] 活化剂；[助剂] 激活剂；触媒剂"
+                  },
+                  {
+                    "hwd": "activeness",
+                    "tran": " 主观能动性；活动积极性"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "activated",
+                    "tran": " 使激活；使活动起来；有生气（activate的过去分词）"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "act",
+                    "tran": " 行动；扮演，充当；表现，举止；假装，演戏；起作用，见效"
+                  },
+                  {
+                    "hwd": "activate",
+                    "tran": " 激活；有活力"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "act",
+                    "tran": " 扮演；装作，举动像"
+                  },
+                  {
+                    "hwd": "activate",
+                    "tran": " 刺激；使活动；使活泼；使产生放射性"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "政府现在必须采取行动遏止暴力犯罪的上升。",
+                "s_content": "The government must take action (=  do something  ) now to stop the rise in violent crime."
+              },
+              {
+                "s_cn": "她盼望着将自己的想法付诸实施。",
+                "s_content": "She was looking forward to putting her ideas into action (=  doing the things she had planned  ) ."
+              },
+              {
+                "s_cn": "救护车急救人员随时准备出动，以应对比赛期间发生的意外。",
+                "s_content": "Ambulance crews are ready to spring into action (=  suddenly start doing something  ) if anything goes wrong during the race."
+              }
+            ]
+          },
+          "speech": "action",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "movement"
+                  },
+                  {
+                    "w": "function"
+                  },
+                  {
+                    "w": "doing"
+                  },
+                  {
+                    "w": "campaign"
+                  },
+                  {
+                    "w": "working"
+                  }
+                ],
+                "pos": "n",
+                "tran": "行动；活动；功能；战斗；情节"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "行动，动作；作用；运转；行为；战斗",
+              "tran_other": "the process of doing something, especially in order to achieve a particular thing"
+            }
+          ],
+          "ukphone": "'ækʃ(ə)n",
+          "ukspeech": "action&type=1",
+          "usphone": "'ækʃən",
+          "usspeech": "action&type=2"
+        },
+        "word_head": "action",
+        "word_id": "KaoYan_1_2"
+      }
+    },
+    "head_word": "action",
+    "word_rank": 2
+  }
+]

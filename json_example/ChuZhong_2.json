@@ -1,0 +1,278 @@
+[
+  {
+    "book_id": "ChuZhong_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "ə'biliti",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "创新能力",
+                "p_content": "innovation ability"
+              },
+              {
+                "p_cn": "在…的能力",
+                "p_content": "ability for"
+              },
+              {
+                "p_cn": "学习能力",
+                "p_content": "learning ability"
+              },
+              {
+                "p_cn": "实践能力；实际能力",
+                "p_content": "practical ability"
+              },
+              {
+                "p_cn": "技术能力",
+                "p_content": "technical ability"
+              },
+              {
+                "p_cn": "阅读能力",
+                "p_content": "reading ability"
+              },
+              {
+                "p_cn": "管理能力",
+                "p_content": "management ability"
+              },
+              {
+                "p_cn": "写作能力；书写能力",
+                "p_content": "writing ability"
+              },
+              {
+                "p_cn": "工作能力，加工能力",
+                "p_content": "working ability"
+              },
+              {
+                "p_cn": "体能，体质能力；身体能力",
+                "p_content": "physical ability"
+              },
+              {
+                "p_cn": "认知能力",
+                "p_content": "cognitive ability"
+              },
+              {
+                "p_cn": "工作能力",
+                "p_content": "service ability"
+              },
+              {
+                "p_cn": "支付能力",
+                "p_content": "ability to pay"
+              },
+              {
+                "p_cn": "配合力",
+                "p_content": "combining ability"
+              },
+              {
+                "p_cn": "发挥才能",
+                "p_content": "develop ability"
+              },
+              {
+                "p_cn": "执行力；行政能力",
+                "p_content": "executive ability"
+              },
+              {
+                "p_cn": "本能",
+                "p_content": "natural ability"
+              },
+              {
+                "p_cn": "行政能力；经营才能",
+                "p_content": "administrative ability"
+              },
+              {
+                "p_cn": "独有能力",
+                "p_content": "unique ability"
+              },
+              {
+                "p_cn": "自适应能力",
+                "p_content": "adaptive ability"
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " 来自able(adj. 能够…的)"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "这种测试考查的是数学能力。",
+                "s_content": "The test measures your mathematical ability."
+              }
+            ]
+          },
+          "speech": "ability",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "capacity"
+                  },
+                  {
+                    "w": "competence"
+                  },
+                  {
+                    "w": "talent"
+                  },
+                  {
+                    "w": "quality"
+                  },
+                  {
+                    "w": "power"
+                  }
+                ],
+                "pos": "n",
+                "tran": "能力，能耐；才能"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "能力，能耐；才能",
+              "tran_other": "the state of being able to do something"
+            }
+          ],
+          "ukphone": "ə'bɪlɪtɪ",
+          "ukspeech": "ability&type=1",
+          "usphone": "ə'bɪləti",
+          "usspeech": "ability&type=2"
+        },
+        "word_head": "ability",
+        "word_id": "ChuZhong_2_1"
+      }
+    },
+    "head_word": "ability",
+    "word_rank": 1
+  },
+  {
+    "book_id": "ChuZhong_2",
+    "content": {
+      "word": {
+        "content": {
+          "antos": {
+            "anto": [
+              {
+                "hwd": "inept"
+              }
+            ],
+            "desc": "反义"
+          },
+          "phone": "'eibl",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "将能够",
+                "p_content": "will be able to"
+              },
+              {
+                "p_cn": "能够做",
+                "p_content": "be able to do"
+              },
+              {
+                "p_cn": "经受得住某事(指困难、痛苦的事)",
+                "p_content": "be able to take"
+              },
+              {
+                "p_cn": "能人；有能力的人；有用的人才",
+                "p_content": "able person"
+              },
+              {
+                "p_cn": "干练的；有能力的",
+                "p_content": "spell able"
+              },
+              {
+                "p_cn": "一级水手；熟练水手；[英国，加拿大]二等水兵",
+                "p_content": "able seaman"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adv",
+                "words": [
+                  {
+                    "hwd": "ably",
+                    "tran": " 巧妙地；精明能干地"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "ableism",
+                    "tran": " 体能歧视（由于对体能或智能较差的人不去作特别照顾所构成的歧视）"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "我班上能力比较强的学生之一",
+                "s_content": "one of my more able students"
+              }
+            ]
+          },
+          "speech": "able",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "capable"
+                  },
+                  {
+                    "w": "efficient"
+                  },
+                  {
+                    "w": "competent"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "能；[经管]有能力的；能干的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adj",
+              "tran_cn": "能；[经管] 有能力的；能干的",
+              "tran_other": "clever or good at doing something"
+            },
+            {
+              "desc_cn": "中释",
+              "pos": "n",
+              "tran_cn": "(Able)人名；(伊朗)阿布勒；(英)埃布尔"
+            }
+          ],
+          "ukphone": "'eɪb(ə)l",
+          "ukspeech": "able&type=1",
+          "usphone": "'ebl",
+          "usspeech": "able&type=2"
+        },
+        "word_head": "able",
+        "word_id": "ChuZhong_2_2"
+      }
+    },
+    "head_word": "able",
+    "word_rank": 2
+  }
+]

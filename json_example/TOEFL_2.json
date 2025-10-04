@@ -1,0 +1,507 @@
+[
+  {
+    "book_id": "TOEFL_2",
+    "content": {
+      "word": {
+        "content": {
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "回去；追溯",
+                "p_content": "go back"
+              },
+              {
+                "p_cn": "[体育]后内刃",
+                "p_content": "back in"
+              },
+              {
+                "p_cn": "在…后面；在…背后",
+                "p_content": "back of"
+              },
+              {
+                "p_cn": "背靠",
+                "p_content": "back on"
+              },
+              {
+                "p_cn": "倒车撞上（某物）",
+                "p_content": "back into"
+              },
+              {
+                "p_cn": "在后面",
+                "p_content": "in the back"
+              },
+              {
+                "p_cn": "在后面；在…后部",
+                "p_content": "at the back"
+              },
+              {
+                "p_cn": "反复地，来回地",
+                "p_content": "back and forth"
+              },
+              {
+                "p_cn": "v. 支持，援助；（资料）备份；倒退；裱",
+                "p_content": "back up"
+              },
+              {
+                "p_cn": "好久以前，老早就",
+                "p_content": "way back"
+              },
+              {
+                "p_cn": "在…之外，在…后面",
+                "p_content": "on the back of"
+              },
+              {
+                "p_cn": "在…背后，支持；在…的后面；在…的后部",
+                "p_content": "at the back of"
+              },
+              {
+                "p_cn": "放弃；让步",
+                "p_content": "back down"
+              },
+              {
+                "p_cn": "在……后面；在……之后",
+                "p_content": "in the back of"
+              },
+              {
+                "p_cn": "退出；收回",
+                "p_content": "back out"
+              },
+              {
+                "p_cn": "在背上；找我麻烦，挑我毛病",
+                "p_content": "on my back"
+              },
+              {
+                "p_cn": "卧病在床",
+                "p_content": "on one's back"
+              },
+              {
+                "p_cn": "后退；软化；减轻；卸下",
+                "p_content": "back off"
+              },
+              {
+                "p_cn": "背靠背；连续，紧接",
+                "p_content": "back to back"
+              },
+              {
+                "p_cn": "违背；背弃",
+                "p_content": "go back on"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "backward",
+                    "tran": " 向后的；反向的；发展迟缓的"
+                  },
+                  {
+                    "hwd": "backed",
+                    "tran": " 有背的；有财力支持的"
+                  },
+                  {
+                    "hwd": "backless",
+                    "tran": " 无背的；无靠背的；无后盾的"
+                  },
+                  {
+                    "hwd": "backmost",
+                    "tran": " 最后面的"
+                  }
+                ]
+              },
+              {
+                "pos": "adv",
+                "words": [
+                  {
+                    "hwd": "backward",
+                    "tran": " 向后地；相反地"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "backing",
+                    "tran": " 支持；后退；支持者；衬背"
+                  },
+                  {
+                    "hwd": "backer",
+                    "tran": " 支持者；赞助人；援助者"
+                  },
+                  {
+                    "hwd": "backwardness",
+                    "tran": " 落后；迟疑；畏缩；腼腆"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "backing",
+                    "tran": " 支持（back的ing形式）"
+                  },
+                  {
+                    "hwd": "backed",
+                    "tran": " 支持；使后退（back的过去分词）"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "我马上回来。",
+                "s_content": "I’ll be back in a minute."
+              },
+              {
+                "s_cn": "把那本书放回原处！",
+                "s_content": "Put that book back where you found it!"
+              },
+              {
+                "s_cn": "他是11点半之前回家的。",
+                "s_content": "He was back home by half past eleven."
+              },
+              {
+                "s_cn": "到那里一天来回是可以的。",
+                "s_content": "It’s possible to travel there and back in a day."
+              }
+            ]
+          },
+          "speech": "back",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "rear"
+                  },
+                  {
+                    "w": "dorsum"
+                  }
+                ],
+                "pos": "n",
+                "tran": "[机]后面；背部；[家具]靠背；足球等的后卫；书报等的末尾"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "encourage"
+                  },
+                  {
+                    "w": "second"
+                  },
+                  {
+                    "w": "carry"
+                  },
+                  {
+                    "w": "hand"
+                  },
+                  {
+                    "w": "champion"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "支持；后退；背书；下赌注"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "reverse"
+                  },
+                  {
+                    "w": "recede"
+                  }
+                ],
+                "pos": "vi",
+                "tran": "后退；背靠；倒退"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "previously"
+                  },
+                  {
+                    "w": "ago"
+                  },
+                  {
+                    "w": "formerly"
+                  }
+                ],
+                "pos": "adv",
+                "tran": "以前；向后地；来回地；上溯"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "latter"
+                  },
+                  {
+                    "w": "past"
+                  },
+                  {
+                    "w": "ago"
+                  },
+                  {
+                    "w": "rear"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "[机]后面的；过去的；拖欠的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adv",
+              "tran_cn": "回原处",
+              "tran_other": "in, into, or to the place or position where someone or something was before"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "背,后面",
+              "tran_other": "the part of something that is furthest from the front"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adj",
+              "tran_cn": "后面的",
+              "tran_other": "at or in the back of something"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "后退",
+              "tran_other": "in the opposite direction from the way you are facing"
+            }
+          ],
+          "ukphone": "bæk",
+          "ukspeech": "back&type=1",
+          "usphone": "bæk",
+          "usspeech": "back&type=2"
+        },
+        "word_head": "back",
+        "word_id": "TOEFL_2_1"
+      }
+    },
+    "head_word": "back",
+    "word_rank": 1
+  },
+  {
+    "book_id": "TOEFL_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "sig'nifikənt",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "显著性差异",
+                "p_content": "significant difference"
+              },
+              {
+                "p_cn": "显著变化；有效变化量",
+                "p_content": "significant change"
+              },
+              {
+                "p_cn": "统计上显著的",
+                "p_content": "statistically significant"
+              },
+              {
+                "p_cn": "大量；有实义金额；巨数",
+                "p_content": "significant amount"
+              },
+              {
+                "p_cn": "重大进展；长足发展",
+                "p_content": "significant development"
+              },
+              {
+                "p_cn": "重要他人",
+                "p_content": "significant other"
+              },
+              {
+                "p_cn": "显著水准；检验水准；有效水平",
+                "p_content": "significant level"
+              },
+              {
+                "p_cn": "统计上的显著差异",
+                "p_content": "statistically significant difference"
+              },
+              {
+                "p_cn": "有意义事件",
+                "p_content": "significant event"
+              },
+              {
+                "p_cn": "指示波；显著波；有效波",
+                "p_content": "significant wave"
+              },
+              {
+                "p_cn": "最低有效位",
+                "p_content": "least significant bit"
+              },
+              {
+                "p_cn": "有意味的形式；蕴意形式；言之有意的形式",
+                "p_content": "significant form"
+              },
+              {
+                "p_cn": "有效数字；有效数",
+                "p_content": "significant figure"
+              },
+              {
+                "p_cn": "有效波高",
+                "p_content": "significant wave height"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "significative",
+                    "tran": " 有意义的；表示…的；为…提供推定证据的"
+                  }
+                ]
+              },
+              {
+                "pos": "adv",
+                "words": [
+                  {
+                    "hwd": "significantly",
+                    "tran": " 意味深长地；值得注目地"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "significance",
+                    "tran": " 意义；重要性；意思"
+                  },
+                  {
+                    "hwd": "signification",
+                    "tran": " 意义；表示"
+                  }
+                ]
+              },
+              {
+                "pos": "vi",
+                "words": [
+                  {
+                    "hwd": "signify",
+                    "tran": " 有重要性；要紧；冒充内行"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "signify",
+                    "tran": " 表示；意味；预示"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " sign(记号) + i + fic(做) + ant → 值得做记号的 → 有重大意义的"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "他政治上最重大的成就是废除了死刑。",
+                "s_content": "His most significant political achievement was the abolition of the death penalty."
+              },
+              {
+                "s_cn": "你们的计划如有重大变动，请通知我们。",
+                "s_content": "Please inform us if there are any significant changes in your plans."
+              }
+            ]
+          },
+          "speech": "significant",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "valid"
+                  },
+                  {
+                    "w": "important"
+                  },
+                  {
+                    "w": "available"
+                  },
+                  {
+                    "w": "effective"
+                  },
+                  {
+                    "w": "virtual"
+                  },
+                  {
+                    "w": "remarkable"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "重大的；有效的；有意义的；值得注意的；意味深长的"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "symbol"
+                  },
+                  {
+                    "w": "indication"
+                  }
+                ],
+                "pos": "n",
+                "tran": "象征；有意义的事物"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adj",
+              "tran_cn": "重要的,意义重大的",
+              "tran_other": "having an important effect or influence, especially on what will happen in the future"
+            }
+          ],
+          "ukphone": "sɪg'nɪfɪk(ə)nt",
+          "ukspeech": "significant&type=1",
+          "usphone": "sɪɡ'nɪfɪkənt",
+          "usspeech": "significant&type=2"
+        },
+        "word_head": "significant",
+        "word_id": "TOEFL_2_2"
+      }
+    },
+    "head_word": "significant",
+    "word_rank": 2
+  }
+]

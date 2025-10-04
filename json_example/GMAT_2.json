@@ -1,0 +1,250 @@
+[
+  {
+    "book_id": "GMAT_2",
+    "content": {
+      "word": {
+        "content": {
+          "antos": {
+            "anto": [
+              {
+                "hwd": "assume"
+              }
+            ],
+            "desc": "反义"
+          },
+          "phone": "'æbdikeit",
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abdicable",
+                    "tran": " 可辞职的；可放弃的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abdication",
+                    "tran": " 辞职；退位"
+                  },
+                  {
+                    "hwd": "abdicator",
+                    "tran": " 让位者；放弃者"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " ab(离去) + dic(说话， 命令) + ate(做) → 被命令离去 → 放弃"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "国王阿方索十三世把王位让给了长子。",
+                "s_content": "King Alfonso XIII abdicated in favour of his eldest son."
+              },
+              {
+                "s_cn": "国王被迫退位。",
+                "s_content": "The king was forced to abdicate the throne ."
+              }
+            ]
+          },
+          "speech": "abdicate",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "fall out of"
+                  },
+                  {
+                    "w": "render up"
+                  }
+                ],
+                "pos": "vi",
+                "tran": "退位；放弃"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "yield"
+                  },
+                  {
+                    "w": "desert"
+                  },
+                  {
+                    "w": "quit"
+                  }
+                ],
+                "pos": "vt",
+                "tran": "退位；放弃"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "v",
+              "tran_cn": "退位；放弃",
+              "tran_other": "to give up the position of being king or queen"
+            }
+          ],
+          "ukphone": "'æbdɪkeɪt",
+          "ukspeech": "abdicate&type=1",
+          "usphone": "'æbdɪket",
+          "usspeech": "abdicate&type=2"
+        },
+        "word_head": "abdicate",
+        "word_id": "GMAT_2_1"
+      }
+    },
+    "head_word": "abdicate",
+    "word_rank": 1
+  },
+  {
+    "book_id": "GMAT_2",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "æb'nɔ:məl",
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "异常现象",
+                "p_content": "abnormal phenomena"
+              },
+              {
+                "p_cn": "异常行为；变态行为",
+                "p_content": "abnormal behavior"
+              },
+              {
+                "p_cn": "异常情况",
+                "p_content": "abnormal condition"
+              },
+              {
+                "p_cn": "变态心理学",
+                "p_content": "abnormal psychology"
+              },
+              {
+                "p_cn": "不正常声音；杂音",
+                "p_content": "abnormal sound"
+              },
+              {
+                "p_cn": "异常返回",
+                "p_content": "abnormal return"
+              },
+              {
+                "p_cn": "异常情况",
+                "p_content": "abnormal situation"
+              },
+              {
+                "p_cn": "[化]非正态分布",
+                "p_content": "abnormal distribution"
+              },
+              {
+                "p_cn": "月经失调",
+                "p_content": "abnormal menstruation"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adv",
+                "words": [
+                  {
+                    "hwd": "abnormally",
+                    "tran": " 反常地；变态地；不规则地"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abnormality",
+                    "tran": " 异常；畸形，变态"
+                  },
+                  {
+                    "hwd": "abnormalcy",
+                    "tran": " 反常；变态；畸形（等于abnormality）"
+                  }
+                ]
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": " ab(离去) + norm(标准) + al → 脱离标准的 → 反常的"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "反常行为",
+                "s_content": "abnormal behaviour"
+              },
+              {
+                "s_cn": "胆固醇水平异常",
+                "s_content": "an abnormal level of cholesterol"
+              },
+              {
+                "s_cn": "我父母认为一个男孩子对芭蕾舞感兴趣并不正常。",
+                "s_content": "My parents thought it was abnormal for a boy to be interested in ballet."
+              }
+            ]
+          },
+          "speech": "abnormal",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "unnatural"
+                  },
+                  {
+                    "w": "eccentric"
+                  }
+                ],
+                "pos": "adj",
+                "tran": "反常的，不规则的；变态的"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "adj",
+              "tran_cn": "反常的，不规则的；变态的",
+              "tran_other": "very different from usual in a way that seems strange, worrying, wrong, or dangerous"
+            }
+          ],
+          "ukphone": "æb'nɔːml",
+          "ukspeech": "abnormal&type=1",
+          "usphone": "æbˈnɔːrml",
+          "usspeech": "abnormal&type=2"
+        },
+        "word_head": "abnormal",
+        "word_id": "GMAT_2_2"
+      }
+    },
+    "head_word": "abnormal",
+    "word_rank": 2
+  }
+]

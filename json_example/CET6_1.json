@@ -1,0 +1,189 @@
+[
+  {
+    "book_id": "CET6_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "ə'bændənmənt",
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 被抛弃的；无约束的；恣意放荡的；寡廉鲜耻的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abandon",
+                    "tran": " 狂热；放任"
+                  }
+                ]
+              },
+              {
+                "pos": "v",
+                "words": [
+                  {
+                    "hwd": "abandoned",
+                    "tran": " 抛弃（abandon的过去式和过去分词）"
+                  }
+                ]
+              },
+              {
+                "pos": "vt",
+                "words": [
+                  {
+                    "hwd": "abandon",
+                    "tran": " 遗弃；放弃"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "…她父亲对她的彻底抛弃的那些记忆。",
+                "s_content": "...memories of her father's complete abandonment of her."
+              }
+            ]
+          },
+          "speech": "abandonment",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "rejection"
+                  },
+                  {
+                    "w": "loose"
+                  }
+                ],
+                "pos": "n",
+                "tran": "[法]抛弃；放纵"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "放弃",
+              "tran_other": "The abandonment of a place, thing, or person is the act of leaving it permanently or for a long time, especially when you should not do so"
+            }
+          ],
+          "ukphone": "əˈbændənmənt",
+          "ukspeech": "abandonment&type=1",
+          "usphone": "ə'bændənmənt",
+          "usspeech": "abandonment&type=2"
+        },
+        "word_head": "abandonment",
+        "word_id": "CET6_1_1"
+      }
+    },
+    "head_word": "abandonment",
+    "word_rank": 1
+  },
+  {
+    "book_id": "CET6_1",
+    "content": {
+      "word": {
+        "content": {
+          "phone": "æb'nɔ:məli",
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "abnormal",
+                    "tran": " 反常的，不规则的；变态的"
+                  }
+                ]
+              },
+              {
+                "pos": "n",
+                "words": [
+                  {
+                    "hwd": "abnormality",
+                    "tran": " 异常；畸形，变态"
+                  },
+                  {
+                    "hwd": "abnormalcy",
+                    "tran": " 反常；变态；畸形（等于abnormality）"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "这两个孩子出生时都比较大，但并非异常的大。",
+                "s_content": "Both were big at birth but were not abnormally large.",
+                "s_content_eng": "Both were big at birth but were not <b>abnormally</b> large.",
+                "s_speech": "Both+were+big+at+birth+but+were+not+abnormally+large.&le=eng"
+              },
+              {
+                "s_cn": "这样，如果该函数或过程崩溃或者异常终止，也不会对其他实例进程产生任何影响。",
+                "s_content": "This way, if the function or procedure crashes or terminates abnormally, it will not affect any of the other instance processes.",
+                "s_content_eng": "This way, if the function or procedure crashes or terminates <b>abnormally</b>, it will not affect any of the other instance processes.",
+                "s_speech": "This+way%2C+if+the+function+or+procedure+crashes+or+terminates+abnormally%2C+it+will+not+affect+any+of+the+other+instance+processes.&le=eng"
+              },
+              {
+                "s_cn": "患有这种病的人的红细胞比正常人的更小——这导致了一种轻微的贫血——但是红细胞水平异常地高。",
+                "s_content": "People with the condition have red blood cells smaller than normal — causing a mild form of anaemia — but abnormally high levels of them.",
+                "s_content_eng": "People with the condition have red blood cells smaller than normal — causing a mild form of anaemia — but <b>abnormally</b> high levels of them.",
+                "s_speech": "People+with+the+condition+have+red+blood+cells+smaller+than+normal+%E2%80%94+causing+a+mild+form+of+anaemia+%E2%80%94+but+abnormally+high+levels+of+them.&le=eng"
+              }
+            ]
+          },
+          "speech": "abnormally",
+          "star": 0,
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "eccentrically"
+                  },
+                  {
+                    "w": "freakishly"
+                  }
+                ],
+                "pos": "adv",
+                "tran": "反常地；变态地；不规则地"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "pos": "adv",
+              "tran_cn": "不正常的"
+            }
+          ],
+          "ukphone": "æb'nɔ:məlɪ"
+        },
+        "word_head": "abnormally",
+        "word_id": "CET6_1_2"
+      }
+    },
+    "head_word": "abnormally",
+    "word_rank": 2
+  }
+]

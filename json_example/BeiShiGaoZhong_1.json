@@ -1,0 +1,268 @@
+[
+  {
+    "book_id": "BeiShiGaoZhong_1",
+    "content": {
+      "word": {
+        "content": {
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "问卷调查",
+                "p_content": "questionnaire survey"
+              },
+              {
+                "p_cn": "问卷调查法；问卷法",
+                "p_content": "questionnaire method"
+              },
+              {
+                "p_cn": "人格问卷",
+                "p_content": "personality questionnaire"
+              }
+            ]
+          },
+          "rem_method": {
+            "desc": "记忆",
+            "val": "来自 question(询问)"
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "教师们将被要求填写一份调查问卷。",
+                "s_content": "Teachers will be asked to fill in a questionnaire."
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "问卷；调查表",
+              "tran_other": "a written set of questions which you give to a large number of people in order to collect information"
+            }
+          ],
+          "ukphone": "ˌkwestʃəˈneə(r)",
+          "ukspeech": "questionnaire&type=1",
+          "usphone": "ˌkwɛstʃənˈɛr",
+          "usspeech": "questionnaire&type=2"
+        },
+        "word_head": "questionnaire",
+        "word_id": "BeiShiGaoZhong_1_1"
+      }
+    },
+    "head_word": "questionnaire",
+    "word_rank": 1
+  },
+  {
+    "book_id": "BeiShiGaoZhong_1",
+    "content": {
+      "word": {
+        "content": {
+          "phrase": {
+            "desc": "短语",
+            "phrases": [
+              {
+                "p_cn": "不论怎样；不要紧",
+                "p_content": "no matter"
+              },
+              {
+                "p_cn": "大约；…的问题",
+                "p_content": "a matter of"
+              },
+              {
+                "p_cn": "不管怎样",
+                "p_content": "no matter how"
+              },
+              {
+                "p_cn": "不管什么，无论什么",
+                "p_content": "no matter what"
+              },
+              {
+                "p_cn": "有机质；有机物；有机物质",
+                "p_content": "organic matter"
+              },
+              {
+                "p_cn": "主题；主旨",
+                "p_content": "subject matter"
+              },
+              {
+                "p_cn": "无所谓；无关紧要",
+                "p_content": "doesn't matter"
+              },
+              {
+                "p_cn": "n. 事实",
+                "p_content": "matter of fact"
+              },
+              {
+                "p_cn": "无论哪里",
+                "p_content": "no matter where"
+              },
+              {
+                "p_cn": "就此而言；至于那个；说到那一点",
+                "p_content": "for that matter"
+              },
+              {
+                "p_cn": "干物质，固形物",
+                "p_content": "dry matter"
+              },
+              {
+                "p_cn": "无论发生什么事；无论出现什么情况",
+                "p_content": "no matter what happens"
+              },
+              {
+                "p_cn": "conj. 不管是谁",
+                "p_content": "no matter who"
+              },
+              {
+                "p_cn": "在这件事情上；对这个问题",
+                "p_content": "on the matter"
+              },
+              {
+                "p_cn": "conj. 无论（不管是）",
+                "p_content": "no matter whether"
+              },
+              {
+                "p_cn": "只是时间问题；某事肯定发生只是时间问题而已",
+                "p_content": "a matter of time"
+              },
+              {
+                "p_cn": "就…而论，在…方面",
+                "p_content": "in the matter of"
+              },
+              {
+                "p_cn": "左右；大约只不过在…之内",
+                "p_content": "in a matter of"
+              },
+              {
+                "p_cn": "无论哪一个",
+                "p_content": "no matter which"
+              },
+              {
+                "p_cn": "暗物质",
+                "p_content": "dark matter"
+              }
+            ]
+          },
+          "rel_word": {
+            "desc": "同根",
+            "rels": [
+              {
+                "pos": "adj",
+                "words": [
+                  {
+                    "hwd": "matrimonial",
+                    "tran": " 婚姻的；与婚姻有关的；根据结婚的惯例的"
+                  }
+                ]
+              }
+            ]
+          },
+          "sentence": {
+            "desc": "例句",
+            "sentences": [
+              {
+                "s_cn": "如果今晚我必须工作到很晚的话，那也没关系，我们可以改天晚上再出去。",
+                "s_content": "If I have to stay late at work tonight, it won’t matter because we can go out another night."
+              },
+              {
+                "s_cn": "我怎么想重要吗？",
+                "s_content": "Does it matter what I think?"
+              },
+              {
+                "s_cn": "你觉得茶杯与杯托不相配要紧吗？",
+                "s_content": "Do you think it matters that the cups and saucers don’t match?"
+              },
+              {
+                "s_cn": "以重大问题为竞选议题",
+                "s_content": "campaigning on issues that really matter"
+              },
+              {
+                "s_cn": "对他来说，钱是唯一重要的东西。",
+                "s_content": "Money was the only thing that mattered to him."
+              },
+              {
+                "s_cn": "我不在乎外观——要紧的是它要管用。",
+                "s_content": "I don’t care what it looks like – what matters is that it works."
+              },
+              {
+                "s_cn": "最终她和她所爱的男人在一起了，其他都无关紧要。",
+                "s_content": "At last she was with the man she loved and nothing else mattered ."
+              },
+              {
+                "s_cn": "她吃饭时话很少，那倒无所谓。",
+                "s_content": "She said very little during the meal. Not that it mattered (= it was not important ) ."
+              }
+            ]
+          },
+          "syno": {
+            "desc": "同近",
+            "synos": [
+              {
+                "hwds": [
+                  {
+                    "w": "substance"
+                  },
+                  {
+                    "w": "event"
+                  },
+                  {
+                    "w": "consideration"
+                  },
+                  {
+                    "w": "circumstance"
+                  },
+                  {
+                    "w": "occurrence"
+                  },
+                  {
+                    "w": "scene"
+                  }
+                ],
+                "pos": "n",
+                "tran": "[物]物质；原因；事件"
+              },
+              {
+                "hwds": [
+                  {
+                    "w": "to be related"
+                  },
+                  {
+                    "w": "make a difference"
+                  }
+                ],
+                "pos": "vi",
+                "tran": "有关系；要紧"
+              }
+            ]
+          },
+          "trans": [
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "vi",
+              "tran_cn": "要紧，有重大关系",
+              "tran_other": "to be important, especially to be important to you, or to have an effect on what happens"
+            },
+            {
+              "desc_cn": "中释",
+              "desc_other": "英释",
+              "pos": "n",
+              "tran_cn": "事情",
+              "tran_other": "a subject or situation that you have to think about or deal with"
+            }
+          ],
+          "ukphone": "'mætə",
+          "ukspeech": "matter&type=1",
+          "usphone": "'mætɚ",
+          "usspeech": "matter&type=2"
+        },
+        "word_head": "matter",
+        "word_id": "BeiShiGaoZhong_1_2"
+      }
+    },
+    "head_word": "matter",
+    "word_rank": 2
+  }
+]
