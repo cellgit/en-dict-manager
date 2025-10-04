@@ -208,6 +208,7 @@ export const openApiDocument: OpenAPIV3.Document = {
         properties: {
           id: { type: "string", format: "uuid" },
           partOfSpeech: { type: "string", nullable: true },
+          pos: { type: "string", nullable: true },
           meaningCn: { type: "string", nullable: true },
           meaningEn: { type: "string", nullable: true },
           note: { type: "string", nullable: true },
@@ -254,6 +255,49 @@ export const openApiDocument: OpenAPIV3.Document = {
           meaningCn: { type: "string", nullable: true }
         }
       },
+      Antonym: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          value: { type: "string" },
+          meta: { type: "object", nullable: true, additionalProperties: true }
+        }
+      },
+      RealExamSentence: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          content: { type: "string" },
+          level: { type: "string", nullable: true },
+          paper: { type: "string", nullable: true },
+          sourceType: { type: "string", nullable: true },
+          year: { type: "string", nullable: true },
+          order: { type: "integer", nullable: true },
+          sourceInfo: { type: "object", nullable: true, additionalProperties: true }
+        }
+      },
+      ExamChoice: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          value: { type: "string" },
+          index: { type: "integer", nullable: true }
+        }
+      },
+      ExamQuestion: {
+        type: "object",
+        properties: {
+          id: { type: "string", format: "uuid" },
+          question: { type: "string" },
+          examType: { type: "integer", nullable: true },
+          explanation: { type: "string", nullable: true },
+          rightIndex: { type: "integer", nullable: true },
+          choices: {
+            type: "array",
+            items: { $ref: "#/components/schemas/ExamChoice" }
+          }
+        }
+      },
       ImportLog: {
         type: "object",
         properties: {
@@ -274,6 +318,9 @@ export const openApiDocument: OpenAPIV3.Document = {
           bookId: { type: "string", nullable: true },
           phoneticUs: { type: "string", nullable: true },
           phoneticUk: { type: "string", nullable: true },
+          phonetic: { type: "string", nullable: true },
+          speech: { type: "string", nullable: true },
+          star: { type: "integer", nullable: true },
           audioUs: {
             type: "string",
             nullable: true,
@@ -284,7 +331,18 @@ export const openApiDocument: OpenAPIV3.Document = {
             nullable: true,
             description: "英式读音播放链接，来自 https://dict.youdao.com/dictvoice?audio={word}&type=2"
           },
+          audioUsRaw: { type: "string", nullable: true },
+          audioUkRaw: { type: "string", nullable: true },
           memoryTip: { type: "string", nullable: true },
+          memoryTipDesc: { type: "string", nullable: true },
+          sentenceDesc: { type: "string", nullable: true },
+          synonymDesc: { type: "string", nullable: true },
+          phraseDesc: { type: "string", nullable: true },
+          relatedDesc: { type: "string", nullable: true },
+          antonymDesc: { type: "string", nullable: true },
+          realExamSentenceDesc: { type: "string", nullable: true },
+          pictureUrl: { type: "string", nullable: true },
+          sourceWordId: { type: "string", nullable: true },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
           definitions: {
@@ -306,6 +364,18 @@ export const openApiDocument: OpenAPIV3.Document = {
           relatedWords: {
             type: "array",
             items: { $ref: "#/components/schemas/RelatedWord" }
+          },
+          antonyms: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Antonym" }
+          },
+          realExamSentences: {
+            type: "array",
+            items: { $ref: "#/components/schemas/RealExamSentence" }
+          },
+          examQuestions: {
+            type: "array",
+            items: { $ref: "#/components/schemas/ExamQuestion" }
           },
           importLogs: {
             type: "array",
@@ -335,6 +405,9 @@ export const openApiDocument: OpenAPIV3.Document = {
           bookId: { type: "string", nullable: true },
           phoneticUs: { type: "string", nullable: true },
           phoneticUk: { type: "string", nullable: true },
+          phonetic: { type: "string", nullable: true },
+          speech: { type: "string", nullable: true },
+          star: { type: "integer", nullable: true },
           audioUs: {
             type: "string",
             nullable: true,
@@ -345,13 +418,25 @@ export const openApiDocument: OpenAPIV3.Document = {
             nullable: true,
             description: "可留空，服务端会按照 headword 生成 DictVoice 英式读音"
           },
+          audioUsRaw: { type: "string", nullable: true },
+          audioUkRaw: { type: "string", nullable: true },
           memoryTip: { type: "string", nullable: true },
+          memoryTipDesc: { type: "string", nullable: true },
+          sentenceDesc: { type: "string", nullable: true },
+          synonymDesc: { type: "string", nullable: true },
+          phraseDesc: { type: "string", nullable: true },
+          relatedDesc: { type: "string", nullable: true },
+          antonymDesc: { type: "string", nullable: true },
+          realExamSentenceDesc: { type: "string", nullable: true },
+          pictureUrl: { type: "string", nullable: true },
+          sourceWordId: { type: "string", nullable: true },
           definitions: {
             type: "array",
             items: {
               type: "object",
               properties: {
                 partOfSpeech: { type: "string", nullable: true },
+                pos: { type: "string", nullable: true },
                 meaningCn: { type: "string", nullable: true },
                 meaningEn: { type: "string", nullable: true },
                 note: { type: "string", nullable: true },
@@ -419,6 +504,57 @@ export const openApiDocument: OpenAPIV3.Document = {
                 meaningCn: { type: "string", nullable: true }
               },
               required: ["headword"]
+            }
+          },
+          antonyms: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                headword: { type: "string" },
+                meta: { type: "object", nullable: true, additionalProperties: true }
+              },
+              required: ["headword"]
+            }
+          },
+          realExamSentences: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                content: { type: "string" },
+                level: { type: "string", nullable: true },
+                paper: { type: "string", nullable: true },
+                sourceType: { type: "string", nullable: true },
+                year: { type: "string", nullable: true },
+                order: { type: "integer", nullable: true },
+                sourceInfo: { type: "object", nullable: true, additionalProperties: true }
+              },
+              required: ["content"]
+            }
+          },
+          examQuestions: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                question: { type: "string" },
+                examType: { type: "integer", nullable: true },
+                explanation: { type: "string", nullable: true },
+                rightIndex: { type: "integer", nullable: true },
+                choices: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      value: { type: "string" },
+                      index: { type: "integer", nullable: true }
+                    },
+                    required: ["value"]
+                  }
+                }
+              },
+              required: ["question"]
             }
           }
         }

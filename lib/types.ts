@@ -9,6 +9,7 @@ export interface NormalizedExampleSentence {
 
 export interface NormalizedWordDefinition {
   partOfSpeech?: string | null;
+  pos?: string | null;
   meaningCn?: string | null;
   meaningEn?: string | null;
   note?: string | null;
@@ -34,6 +35,34 @@ export interface NormalizedRelatedWord {
   meaningCn?: string | null;
 }
 
+export interface NormalizedAntonym {
+  headword: string;
+  meta?: Record<string, unknown> | null;
+}
+
+export interface NormalizedExamChoice {
+  value: string;
+  index?: number | null;
+}
+
+export interface NormalizedExamQuestion {
+  question: string;
+  examType?: number | null;
+  explanation?: string | null;
+  rightIndex?: number | null;
+  choices: NormalizedExamChoice[];
+}
+
+export interface NormalizedRealExamSentence {
+  content: string;
+  level?: string | null;
+  paper?: string | null;
+  sourceType?: string | null;
+  year?: string | null;
+  order?: number | null;
+  sourceInfo?: Record<string, unknown> | null;
+}
+
 export interface NormalizedWord {
   headword: string;
   rank?: number | null;
@@ -42,12 +71,29 @@ export interface NormalizedWord {
   phoneticUk?: string | null;
   audioUs?: string | null;
   audioUk?: string | null;
+  audioUsRaw?: string | null;
+  audioUkRaw?: string | null;
+  phonetic?: string | null;
+  speech?: string | null;
+  star?: number | null;
+  sourceWordId?: string | null;
   memoryTip?: string | null;
+  memoryTipDesc?: string | null;
+  sentenceDesc?: string | null;
+  synonymDesc?: string | null;
+  phraseDesc?: string | null;
+  relatedDesc?: string | null;
+  antonymDesc?: string | null;
+  realExamSentenceDesc?: string | null;
+  pictureUrl?: string | null;
   definitions: NormalizedWordDefinition[];
   examples: NormalizedExampleSentence[];
   synonymGroups: NormalizedSynonymGroup[];
   phrases: NormalizedPhrase[];
   relatedWords: NormalizedRelatedWord[];
+  antonyms: NormalizedAntonym[];
+  realExamSentences: NormalizedRealExamSentence[];
+  examQuestions: NormalizedExamQuestion[];
 }
 
 export interface ListWordsParams {

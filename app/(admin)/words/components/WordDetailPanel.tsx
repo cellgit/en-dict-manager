@@ -71,12 +71,23 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
     );
   }
 
-  const { us: audioUsUrl, uk: audioUkUrl } = getYoudaoDictVoicePair(word.headword);
+  const voicePair = getYoudaoDictVoicePair(word.headword);
+  const audioUsUrl = word.audioUs ?? voicePair.us;
+  const audioUkUrl = word.audioUk ?? voicePair.uk;
 
   const partsOfSpeech = word.definitions
-    .map((definition) => definition.partOfSpeech)
+    .map((definition) => definition.partOfSpeech || definition.pos)
     .filter(Boolean)
     .join(" · ");
+
+  const describeRawAudio = (value: string | null): string =>
+    value && value.length > 0 ? `已提供（${value.length} 字符）` : "未提供";
+
+  const describeNullable = (value: string | null, fallback = "未提供") =>
+    value && value.trim().length > 0 ? value : fallback;
+
+  const truncate = (value: string, length = 60) =>
+    value.length > length ? `${value.slice(0, length)}…` : value;
 
   const baseInfoRows = [
     {
@@ -84,16 +95,32 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
       value: word.rank !== null ? `#${word.rank}` : "未提供"
     },
     {
+      label: "星级",
+      value: word.star !== null ? String(word.star) : "未提供"
+    },
+    {
       label: "教材/分组",
-      value: word.bookId ?? "未提供"
+      value: describeNullable(word.bookId)
+    },
+    {
+      label: "来源词条 ID",
+      value: describeNullable(word.sourceWordId)
+    },
+    {
+      label: "综合音标",
+      value: describeNullable(word.phonetic)
+    },
+    {
+      label: "读音提示",
+      value: describeNullable(word.speech)
     },
     {
       label: "美式音标",
-      value: word.phoneticUs ?? "未提供"
+      value: describeNullable(word.phoneticUs)
     },
     {
       label: "英式音标",
-      value: word.phoneticUk ?? "未提供"
+      value: describeNullable(word.phoneticUk)
     },
     {
       label: "美式音频链接",
@@ -102,6 +129,18 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
     {
       label: "英式音频链接",
       value: audioUkUrl ?? "未能生成（检查词头）"
+    },
+    {
+      label: "美式音频原始",
+      value: describeRawAudio(word.audioUsRaw)
+    },
+    {
+      label: "英式音频原始",
+      value: describeRawAudio(word.audioUkRaw)
+    },
+    {
+      label: "图片链接",
+      value: word.pictureUrl ? truncate(word.pictureUrl) : "未提供"
     },
     {
       label: "创建时间",
@@ -120,7 +159,10 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
       <DetailTile
         key={`${word.id}-definition-${index}`}
         title={`释义 ${index + 1}`}
-        description={definition.partOfSpeech ?? undefined}
+        description={(() => {
+          const tags = [definition.partOfSpeech, definition.pos].filter(Boolean);
+          return tags.length > 0 ? tags.join(" / ") : undefined;
+        })()}
       >
         <div className="space-y-3 text-sm">
           {definition.meaningCn ? (
@@ -220,6 +262,86 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
         {related.meaningCn ? (
           <p className="text-sm text-muted-foreground">{related.meaningCn}</p>
         ) : null}
+      </DetailTile>
+    ))
+  );
+
+  const antonymsContent = word.antonyms.length === 0 ? (
+    <EmptyState title="暂无反义词" description="可在编辑页补充反义词信息。" />
+  ) : (
+    word.antonyms.map((antonym, index) => (
+      <DetailTile key={`${word.id}-antonym-${index}`} title={antonym.value}>
+        {antonym.meta ? (
+          <pre className="overflow-x-auto rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
+            {JSON.stringify(antonym.meta, null, 2)}
+          </pre>
+        ) : (
+          <p className="text-xs text-muted-foreground">暂无附加信息。</p>
+        )}
+      </DetailTile>
+    ))
+  );
+
+  const realExamSentencesContent = word.realExamSentences.length === 0 ? (
+    <EmptyState title="暂无真题例句" description="导入或编辑词条时可同步真题例句。" />
+  ) : (
+    word.realExamSentences.map((sentence, index) => {
+      const metaItems = [
+        sentence.level ? `等级：${sentence.level}` : null,
+        sentence.paper ? `试卷：${sentence.paper}` : null,
+        sentence.sourceType ? `类型：${sentence.sourceType}` : null,
+        sentence.year ? `年份：${sentence.year}` : null,
+        sentence.order !== null ? `排序：${sentence.order}` : null
+      ].filter(Boolean);
+
+      return (
+        <DetailTile
+          key={`${word.id}-real-exam-${index}`}
+          title={`真题例句 ${index + 1}`}
+          description={metaItems.length ? metaItems.join(" · ") : undefined}
+        >
+          <p className="text-sm font-medium text-foreground">{sentence.content}</p>
+          {sentence.sourceInfo ? (
+            <pre className="mt-3 overflow-x-auto rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">
+              {JSON.stringify(sentence.sourceInfo, null, 2)}
+            </pre>
+          ) : null}
+        </DetailTile>
+      );
+    })
+  );
+
+  const examQuestionsContent = word.examQuestions.length === 0 ? (
+    <EmptyState title="暂无真题练习题" description="导入或编辑词条以补充练习题。" />
+  ) : (
+    word.examQuestions.map((question, index) => (
+      <DetailTile
+        key={`${word.id}-exam-${index}`}
+        title={`练习题 ${index + 1}`}
+        description={question.examType !== null ? `题型：${question.examType}` : undefined}
+      >
+        <div className="space-y-3 text-sm">
+          <p className="font-medium text-foreground">{question.question}</p>
+          {question.explanation ? (
+            <p className="text-muted-foreground">解析：{question.explanation}</p>
+          ) : null}
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">选项</h4>
+            <ul className="space-y-1 text-sm text-muted-foreground">
+              {question.choices.map((choice, choiceIndex) => {
+                const isCorrect =
+                  question.rightIndex !== null && choice.index === question.rightIndex;
+                return (
+                  <li key={`${word.id}-exam-${index}-choice-${choiceIndex}`} className={isCorrect ? "font-semibold text-foreground" : undefined}>
+                    {choice.index !== null ? `${choice.index}. ` : ""}
+                    {choice.value}
+                    {isCorrect ? "（正确）" : ""}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </DetailTile>
     ))
   );
@@ -357,6 +479,15 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
             <TabsTrigger value="relations" className="whitespace-nowrap">
               相关词条
             </TabsTrigger>
+            <TabsTrigger value="antonyms" className="whitespace-nowrap">
+              反义词
+            </TabsTrigger>
+            <TabsTrigger value="real-exam" className="whitespace-nowrap">
+              真题例句
+            </TabsTrigger>
+            <TabsTrigger value="exam-questions" className="whitespace-nowrap">
+              真题练习
+            </TabsTrigger>
             <TabsTrigger value="logs" className="whitespace-nowrap">
               导入记录
             </TabsTrigger>
@@ -376,11 +507,49 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
                     <p className="text-sm leading-relaxed text-muted-foreground">{word.memoryTip}</p>
                   </DetailTile>
                 ) : null}
+                {word.memoryTipDesc ? (
+                  <DetailTile title="记忆提示说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.memoryTipDesc}</p>
+                  </DetailTile>
+                ) : null}
                 <SectionBlock title="释义" content={definitionsContent} />
+                {word.sentenceDesc ? (
+                  <DetailTile title="例句说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.sentenceDesc}</p>
+                  </DetailTile>
+                ) : null}
                 <SectionBlock title="独立例句" content={examplesContent} />
+                {word.synonymDesc ? (
+                  <DetailTile title="近义词说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.synonymDesc}</p>
+                  </DetailTile>
+                ) : null}
                 <SectionBlock title="近义词" content={synonymsContent} />
+                {word.phraseDesc ? (
+                  <DetailTile title="固定搭配说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.phraseDesc}</p>
+                  </DetailTile>
+                ) : null}
                 <SectionBlock title="固定搭配" content={phrasesContent} />
+                {word.relatedDesc ? (
+                  <DetailTile title="相关词条说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.relatedDesc}</p>
+                  </DetailTile>
+                ) : null}
                 <SectionBlock title="相关词条" content={relationsContent} />
+                {word.antonymDesc ? (
+                  <DetailTile title="反义词说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.antonymDesc}</p>
+                  </DetailTile>
+                ) : null}
+                <SectionBlock title="反义词" content={antonymsContent} />
+                {word.realExamSentenceDesc ? (
+                  <DetailTile title="真题例句说明">
+                    <p className="text-sm leading-relaxed text-muted-foreground">{word.realExamSentenceDesc}</p>
+                  </DetailTile>
+                ) : null}
+                <SectionBlock title="真题例句" content={realExamSentencesContent} />
+                <SectionBlock title="真题练习题" content={examQuestionsContent} />
                 <SectionBlock title="导入记录" content={logsContent} />
               </TabsContent>
 
@@ -402,6 +571,18 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
 
               <TabsContent value="relations" className="space-y-4 pt-4">
                 {relationsContent}
+              </TabsContent>
+
+              <TabsContent value="antonyms" className="space-y-4 pt-4">
+                {antonymsContent}
+              </TabsContent>
+
+              <TabsContent value="real-exam" className="space-y-4 pt-4">
+                {realExamSentencesContent}
+              </TabsContent>
+
+              <TabsContent value="exam-questions" className="space-y-4 pt-4">
+                {examQuestionsContent}
               </TabsContent>
 
               <TabsContent value="logs" className="space-y-4 pt-4">

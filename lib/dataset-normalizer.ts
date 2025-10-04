@@ -1,7 +1,11 @@
 import { normalizedWordSchema } from "@/app/words/schemas";
 import type {
+  NormalizedAntonym,
+  NormalizedExamChoice,
+  NormalizedExamQuestion,
   NormalizedExampleSentence,
   NormalizedPhrase,
+  NormalizedRealExamSentence,
   NormalizedRelatedWord,
   NormalizedSynonymGroup,
   NormalizedWord,
@@ -37,11 +41,19 @@ const asArray = <T>(value: unknown): T[] => {
   return [];
 };
 
+const toRecord = (value: unknown): Record<string, unknown> | null => {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return null;
+};
+
 type RawTranslation = {
   desc_cn?: unknown;
   desc_other?: unknown;
   tran_cn?: unknown;
   tran_other?: unknown;
+  pos?: unknown;
 };
 
 type RawSentence = {
@@ -51,6 +63,16 @@ type RawSentence = {
   s_speech?: unknown;
   [key: string]: unknown;
 };
+
+type RawAntonym = {
+  hwd?: unknown;
+  [key: string]: unknown;
+};
+
+type RawAntonymContainer = {
+  desc?: unknown;
+  anto?: RawAntonym[] | unknown;
+} | null;
 
 type RawSynonymWord = {
   w?: unknown;
@@ -78,17 +100,51 @@ type RawRelGroup = {
   words?: RawRelWord[] | unknown;
 };
 
+type RawExamChoice = {
+  choice?: unknown;
+  choice_index?: unknown;
+};
+
+type RawExamAnswer = {
+  explain?: unknown;
+  right_index?: unknown;
+} | null;
+
+type RawExamItem = {
+  question?: unknown;
+  exam_type?: unknown;
+  choices?: RawExamChoice[] | unknown;
+  answer?: RawExamAnswer;
+};
+
+type RawRealExamSentence = {
+  s_content?: unknown;
+  source_info?: Record<string, unknown> | unknown;
+};
+
+type RawRealExamContainer = {
+  desc?: unknown;
+  sentences?: RawRealExamSentence[] | unknown;
+} | null;
+
 type RawWordContent = {
+  phone?: unknown;
   ukphone?: unknown;
   usphone?: unknown;
   ukspeech?: unknown;
   usspeech?: unknown;
+  speech?: unknown;
+  star?: unknown;
+  picture?: unknown;
   rem_method?: { desc?: unknown; val?: unknown } | null;
   trans?: RawTranslation[] | unknown;
   sentence?: { desc?: unknown; sentences?: RawSentence[] | unknown } | null;
   syno?: { desc?: unknown; synos?: RawSynonymGroup[] | unknown } | null;
   phrase?: { desc?: unknown; phrases?: RawPhrase[] | unknown } | null;
   rel_word?: { desc?: unknown; rels?: RawRelGroup[] | unknown } | null;
+  antos?: RawAntonymContainer;
+  exam?: RawExamItem[] | unknown;
+  real_exam_sentence?: RawRealExamContainer;
 };
 
 type RawWordEntry = {
@@ -117,10 +173,12 @@ const buildDefinitions = (content: RawWordContent | null | undefined): Normalize
     const meaningEn = toTrimmedString(item?.tran_other ?? null);
     const note = toTrimmedString(item?.desc_other ?? null);
     const partOfSpeech = toTrimmedString(item?.desc_cn ?? null);
+    const pos = toTrimmedString(item?.pos ?? null);
 
-    if (meaningCn || meaningEn || note || partOfSpeech) {
+    if (meaningCn || meaningEn || note || partOfSpeech || pos) {
       definitions.push({
         partOfSpeech,
+        pos,
         meaningCn,
         meaningEn,
         note,
@@ -225,6 +283,93 @@ const buildRelatedWords = (
   return related;
 };
 
+const buildAntonyms = (content: RawWordContent | null | undefined): NormalizedAntonym[] => {
+  const rawAntonyms = asArray<RawAntonym>(content?.antos?.anto);
+  const result: NormalizedAntonym[] = [];
+
+  for (const entry of rawAntonyms) {
+    const headword = toTrimmedString(entry?.hwd ?? null);
+    if (!headword) {
+      continue;
+    }
+    const metaSource = { ...entry };
+    delete metaSource.hwd;
+    const meta = Object.keys(metaSource).length > 0 ? metaSource : null;
+    result.push({
+      headword,
+      meta
+    });
+  }
+
+  return result;
+};
+
+const buildRealExamSentences = (
+  content: RawWordContent | null | undefined
+): NormalizedRealExamSentence[] => {
+  const sentences = asArray<RawRealExamSentence>(content?.real_exam_sentence?.sentences);
+  const result: NormalizedRealExamSentence[] = [];
+
+  sentences.forEach((item, index) => {
+    const sentenceContent = toTrimmedString(item?.s_content ?? null);
+    if (!sentenceContent) {
+      return;
+    }
+
+    const sourceInfo = toRecord(item?.source_info);
+    result.push({
+      content: sentenceContent,
+      level: toTrimmedString(sourceInfo?.level ?? null),
+      paper: toTrimmedString(sourceInfo?.paper ?? null),
+      sourceType: toTrimmedString(sourceInfo?.type ?? null),
+      year: toTrimmedString(sourceInfo?.year ?? null),
+      order: index,
+      sourceInfo
+    });
+  });
+
+  return result;
+};
+
+const buildExamQuestions = (
+  content: RawWordContent | null | undefined
+): NormalizedExamQuestion[] => {
+  const exams = asArray<RawExamItem>(content?.exam);
+  const result: NormalizedExamQuestion[] = [];
+
+  for (const item of exams) {
+    const question = toTrimmedString(item?.question ?? null);
+    if (!question) {
+      continue;
+    }
+
+    const choices: NormalizedExamChoice[] = [];
+    for (const choice of asArray<RawExamChoice>(item?.choices)) {
+      const value = toTrimmedString(choice?.choice ?? null);
+      if (!value) {
+        continue;
+      }
+      const indexValue = toPositiveInt(choice?.choice_index ?? null);
+      choices.push({
+        value,
+        index: indexValue ?? null
+      });
+    }
+
+    const answer = item?.answer ?? null;
+
+    result.push({
+      question,
+      examType: toPositiveInt(item?.exam_type ?? null),
+      explanation: toTrimmedString(answer?.explain ?? null),
+      rightIndex: toPositiveInt(answer?.right_index ?? null),
+      choices
+    });
+  }
+
+  return result;
+};
+
 export const normalizeDictionaryEntry = (entry: unknown): NormalizationResult => {
   if (!entry || typeof entry !== "object") {
     return { ok: false, reason: "数据不是对象格式" };
@@ -249,12 +394,29 @@ export const normalizeDictionaryEntry = (entry: unknown): NormalizationResult =>
     phoneticUk: toTrimmedString(content?.ukphone ?? null),
     audioUs: voice.us,
     audioUk: voice.uk,
+    audioUsRaw: toTrimmedString(content?.usspeech ?? null),
+    audioUkRaw: toTrimmedString(content?.ukspeech ?? null),
+    phonetic: toTrimmedString(content?.phone ?? null),
+    speech: toTrimmedString(content?.speech ?? null),
+    star: toPositiveInt(content?.star ?? null),
+    sourceWordId: toTrimmedString(raw.content?.word?.word_id ?? null),
     memoryTip: toTrimmedString(content?.rem_method?.val ?? null),
+    memoryTipDesc: toTrimmedString(content?.rem_method?.desc ?? null),
+    sentenceDesc: toTrimmedString(content?.sentence?.desc ?? null),
+    synonymDesc: toTrimmedString(content?.syno?.desc ?? null),
+    phraseDesc: toTrimmedString(content?.phrase?.desc ?? null),
+    relatedDesc: toTrimmedString(content?.rel_word?.desc ?? null),
+    antonymDesc: toTrimmedString(content?.antos?.desc ?? null),
+    realExamSentenceDesc: toTrimmedString(content?.real_exam_sentence?.desc ?? null),
+    pictureUrl: toTrimmedString(content?.picture ?? null),
     definitions: buildDefinitions(content),
     examples: buildExamples(content),
     synonymGroups: buildSynonymGroups(content),
     phrases: buildPhrases(content),
-    relatedWords: buildRelatedWords(content)
+    relatedWords: buildRelatedWords(content),
+    antonyms: buildAntonyms(content),
+    realExamSentences: buildRealExamSentences(content),
+    examQuestions: buildExamQuestions(content)
   };
 
   const validation = normalizedWordSchema.safeParse(normalized);

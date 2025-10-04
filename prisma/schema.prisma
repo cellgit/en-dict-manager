@@ -44,8 +44,22 @@ model dict_word {
   phonetic_uk String?              @db.VarChar(255)
   audio_us    String?              @db.Text
   audio_uk    String?              @db.Text
+  audio_us_raw String?             @db.Text
+  audio_uk_raw String?             @db.Text
   book_id     String?              @db.VarChar(255)
   memory_tip  String?              @db.Text
+  memory_tip_desc String?          @db.Text
+  source_word_id String?           @db.VarChar(255)
+  phonetic    String?              @db.VarChar(255)
+  speech_text String?              @db.VarChar(255)
+  star        Int?                 @db.Integer
+  sentence_desc String?            @db.Text
+  synonym_desc String?             @db.Text
+  phrase_desc String?              @db.Text
+  related_desc String?             @db.Text
+  antonym_desc String?             @db.Text
+  real_exam_sentence_desc String?  @db.Text
+  picture_url String?              @db.Text
   created_at  DateTime             @default(now()) @db.Timestamptz(6)
   updated_at  DateTime             @updatedAt @db.Timestamptz(6)
 
@@ -61,12 +75,19 @@ model dict_word {
   phrases           dict_phrase[]
   /// 一对多：同根或相关词集合。
   relatedWords      dict_related_word[]
+  /// 一对多：反义词集合。
+  antonyms          dict_antonym[]
+  /// 一对多：真题例句集合。
+  realExamSentences dict_real_exam_sentence[]
+  /// 一对多：真题练习题集合。
+  examQuestions     dict_exam_question[]
   /// 一对多：导入日志。
   importLogs        dict_import_log[]
 
   @@unique([headword, book_id])
   @@index([headword])
   @@index([book_id])
+  @@index([source_word_id])
 }
 
 /// 释义表，记录词性、中文释义、英文解释等信息。
@@ -74,6 +95,7 @@ model dict_definition {
   id              String                  @id @default(uuid()) @db.Uuid
   word_id         String                  @db.Uuid
   part_of_speech  String?                 @db.VarChar(64)
+  pos             String?                 @db.VarChar(64)
   meaning_cn      String?                 @db.Text
   meaning_en      String?                 @db.Text
   note            String?                 @db.Text
@@ -193,4 +215,67 @@ model dict_import_log {
 
   @@index([batch_id])
   @@index([word_id])
+}
+
+/// 反义词表，记录与词条关联的反义词文本。
+model dict_antonym {
+  id       String     @id @default(uuid()) @db.Uuid
+  word_id  String     @db.Uuid
+  value    String     @db.VarChar(255)
+  meta     Json?      @db.Json
+
+  /// 多对一：所属词条。
+  word dict_word      @relation(fields: [word_id], references: [id], onDelete: Cascade)
+
+  @@index([word_id])
+}
+
+/// 真题例句表，记录真题出处等信息。
+model dict_real_exam_sentence {
+  id         String    @id @default(uuid()) @db.Uuid
+  word_id    String    @db.Uuid
+  content    String    @db.Text
+  level      String?   @db.VarChar(64)
+  paper      String?   @db.VarChar(128)
+  source_type String?  @db.VarChar(128)
+  year       String?   @db.VarChar(32)
+  order      Int?      @db.Integer
+  meta       Json?     @db.Json
+
+  /// 多对一：所属词条。
+  word dict_word       @relation(fields: [word_id], references: [id], onDelete: Cascade)
+
+  @@index([word_id])
+  @@index([order])
+}
+
+/// 真题练习题表，记录题面、类型以及解析。
+model dict_exam_question {
+  id          String             @id @default(uuid()) @db.Uuid
+  word_id     String             @db.Uuid
+  question    String             @db.Text
+  exam_type   Int?               @db.Integer
+  explanation String?            @db.Text
+  right_index Int?               @db.Integer
+
+  /// 多对一：所属词条。
+  word     dict_word             @relation(fields: [word_id], references: [id], onDelete: Cascade)
+  /// 一对多：选项集合。
+  choices  dict_exam_choice[]
+
+  @@index([word_id])
+}
+
+/// 真题练习题选项表。
+model dict_exam_choice {
+  id          String            @id @default(uuid()) @db.Uuid
+  question_id String            @db.Uuid
+  value       String            @db.Text
+  choice_index Int?             @db.Integer
+
+  /// 多对一：所属试题。
+  question dict_exam_question   @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@index([question_id])
+  @@index([choice_index])
 }

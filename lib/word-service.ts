@@ -7,8 +7,11 @@ import { toNullableInt, toNullableString } from "@/lib/word-normalizer";
 import {
   type ListWordsParams,
   type ListWordsResult,
+  type NormalizedAntonym,
+  type NormalizedExamQuestion,
   type NormalizedExampleSentence,
   type NormalizedPhrase,
+  type NormalizedRealExamSentence,
   type NormalizedRelatedWord,
   type NormalizedSynonymGroup,
   type NormalizedWord,
@@ -65,6 +68,33 @@ const wordDetailInclude = {
       id: "asc"
     }
   },
+  antonyms: {
+    orderBy: {
+      value: "asc"
+    }
+  },
+  realExamSentences: {
+    orderBy: [
+      {
+        order: "asc"
+      },
+      {
+        id: "asc"
+      }
+    ]
+  },
+  examQuestions: {
+    include: {
+      choices: {
+        orderBy: {
+          choice_index: "asc"
+        }
+      }
+    },
+    orderBy: {
+      id: "asc"
+    }
+  },
   importLogs: {
     orderBy: {
       created_at: "desc"
@@ -86,6 +116,7 @@ type ExampleWriteModel = {
 type DefinitionWriteModel = {
   data: {
     part_of_speech: string | null;
+    pos: string | null;
     meaning_cn: string | null;
     meaning_en: string | null;
     note: string | null;
@@ -114,6 +145,36 @@ type RelatedWordWriteModel = {
   meaning_cn: string | null;
 };
 
+type AntonymWriteModel = {
+  value: string;
+  meta: Prisma.InputJsonValue | null;
+};
+
+type RealExamSentenceWriteModel = {
+  content: string;
+  level: string | null;
+  paper: string | null;
+  source_type: string | null;
+  year: string | null;
+  order: number | null;
+  meta: Prisma.InputJsonValue | null;
+};
+
+type ExamChoiceWriteModel = {
+  value: string;
+  choice_index: number | null;
+};
+
+type ExamQuestionWriteModel = {
+  data: {
+    question: string;
+    exam_type: number | null;
+    explanation: string | null;
+    right_index: number | null;
+  };
+  choices: ExamChoiceWriteModel[];
+};
+
 type PreparedWordData = {
   baseData: Prisma.dict_wordUncheckedCreateInput;
   definitions: DefinitionWriteModel[];
@@ -121,6 +182,9 @@ type PreparedWordData = {
   synonymGroups: SynonymGroupWriteModel[];
   phrases: PhraseWriteModel[];
   relatedWords: RelatedWordWriteModel[];
+  antonyms: AntonymWriteModel[];
+  realExamSentences: RealExamSentenceWriteModel[];
+  examQuestions: ExamQuestionWriteModel[];
 };
 
 const mapExample = (example: NormalizedExampleSentence): ExampleWriteModel => {
@@ -140,6 +204,7 @@ const prepareDefinition = (definition: NormalizedWordDefinition): DefinitionWrit
 
   const data = {
     part_of_speech: toNullableString(definition.partOfSpeech ?? undefined),
+    pos: toNullableString(definition.pos ?? undefined),
     meaning_cn: toNullableString(definition.meaningCn ?? undefined),
     meaning_en: toNullableString(definition.meaningEn ?? undefined),
     note: toNullableString(definition.note ?? undefined)
@@ -147,6 +212,7 @@ const prepareDefinition = (definition: NormalizedWordDefinition): DefinitionWrit
 
   const hasContent =
     data.part_of_speech !== null ||
+    data.pos !== null ||
     data.meaning_cn !== null ||
     data.meaning_en !== null ||
     data.note !== null ||
@@ -214,8 +280,74 @@ const prepareRelatedWord = (related: NormalizedRelatedWord): RelatedWordWriteMod
   };
 };
 
+const prepareAntonym = (antonym: NormalizedAntonym): AntonymWriteModel | null => {
+  const value = toNullableString(antonym.headword);
+  if (!value) {
+    return null;
+  }
+  const meta = antonym.meta ?? null;
+  return {
+    value,
+    meta: (meta ?? null) as Prisma.InputJsonValue | null
+  };
+};
+
+const prepareRealExamSentence = (
+  sentence: NormalizedRealExamSentence
+): RealExamSentenceWriteModel | null => {
+  const content = toNullableString(sentence.content);
+  if (!content) {
+    return null;
+  }
+  const meta = sentence.sourceInfo ?? null;
+  return {
+    content,
+    level: toNullableString(sentence.level ?? undefined),
+    paper: toNullableString(sentence.paper ?? undefined),
+    source_type: toNullableString(sentence.sourceType ?? undefined),
+    year: toNullableString(sentence.year ?? undefined),
+    order: toNullableInt(sentence.order ?? undefined),
+    meta: (meta ?? null) as Prisma.InputJsonValue | null
+  };
+};
+
+const prepareExamChoice = (choice: NormalizedExamQuestion["choices"][number]): ExamChoiceWriteModel | null => {
+  const value = toNullableString(choice.value);
+  if (!value) {
+    return null;
+  }
+  return {
+    value,
+    choice_index: toNullableInt(choice.index ?? undefined)
+  };
+};
+
+const prepareExamQuestion = (
+  question: NormalizedExamQuestion
+): ExamQuestionWriteModel | null => {
+  const preparedQuestion = toNullableString(question.question);
+  if (!preparedQuestion) {
+    return null;
+  }
+  const choices = (question.choices ?? [])
+    .map((choice) => prepareExamChoice(choice))
+    .filter((choice): choice is ExamChoiceWriteModel => Boolean(choice));
+
+  return {
+    data: {
+      question: preparedQuestion,
+      exam_type: toNullableInt(question.examType ?? undefined),
+      explanation: toNullableString(question.explanation ?? undefined),
+      right_index: toNullableInt(question.rightIndex ?? undefined)
+    },
+    choices
+  };
+};
+
 const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
   const voice = getYoudaoDictVoicePair(input.headword);
+  const normalizedAudioUs = toNullableString(input.audioUs ?? undefined);
+  const normalizedAudioUk = toNullableString(input.audioUk ?? undefined);
   const definitions = (input.definitions ?? [])
     .map(prepareDefinition)
     .filter((definition): definition is DefinitionWriteModel => Boolean(definition));
@@ -234,6 +366,18 @@ const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
     .map(prepareRelatedWord)
     .filter((related): related is RelatedWordWriteModel => Boolean(related));
 
+  const antonyms = (input.antonyms ?? [])
+    .map(prepareAntonym)
+    .filter((antonym): antonym is AntonymWriteModel => Boolean(antonym));
+
+  const realExamSentences = (input.realExamSentences ?? [])
+    .map(prepareRealExamSentence)
+    .filter((sentence): sentence is RealExamSentenceWriteModel => Boolean(sentence));
+
+  const examQuestions = (input.examQuestions ?? [])
+    .map(prepareExamQuestion)
+    .filter((question): question is ExamQuestionWriteModel => Boolean(question));
+
   return {
     baseData: {
       headword: input.headword.trim(),
@@ -241,15 +385,32 @@ const prepareWordWriteData = (input: NormalizedWord): PreparedWordData => {
       book_id: toNullableString(input.bookId ?? undefined),
       phonetic_us: toNullableString(input.phoneticUs ?? undefined),
       phonetic_uk: toNullableString(input.phoneticUk ?? undefined),
-      audio_us: voice.us,
-      audio_uk: voice.uk,
-      memory_tip: toNullableString(input.memoryTip ?? undefined)
+      audio_us: normalizedAudioUs ?? voice.us,
+      audio_uk: normalizedAudioUk ?? voice.uk,
+      audio_us_raw: toNullableString(input.audioUsRaw ?? undefined),
+      audio_uk_raw: toNullableString(input.audioUkRaw ?? undefined),
+      memory_tip: toNullableString(input.memoryTip ?? undefined),
+      memory_tip_desc: toNullableString(input.memoryTipDesc ?? undefined),
+      source_word_id: toNullableString(input.sourceWordId ?? undefined),
+      phonetic: toNullableString(input.phonetic ?? undefined),
+      speech_text: toNullableString(input.speech ?? undefined),
+      star: toNullableInt(input.star ?? undefined),
+      sentence_desc: toNullableString(input.sentenceDesc ?? undefined),
+      synonym_desc: toNullableString(input.synonymDesc ?? undefined),
+      phrase_desc: toNullableString(input.phraseDesc ?? undefined),
+      related_desc: toNullableString(input.relatedDesc ?? undefined),
+      antonym_desc: toNullableString(input.antonymDesc ?? undefined),
+      real_exam_sentence_desc: toNullableString(input.realExamSentenceDesc ?? undefined),
+      picture_url: toNullableString(input.pictureUrl ?? undefined)
     } satisfies Prisma.dict_wordUncheckedCreateInput,
     definitions,
     examples: exampleSentences,
     synonymGroups,
     phrases,
-    relatedWords
+    relatedWords,
+    antonyms,
+    realExamSentences,
+    examQuestions
   };
 };
 
@@ -330,6 +491,50 @@ const writeWordRelations = async (
       }))
     });
   }
+
+  if (prepared.antonyms.length > 0) {
+    await tx.dict_antonym.createMany({
+      data: prepared.antonyms.map((antonym) => ({
+        word_id: wordId,
+        value: antonym.value,
+        meta: antonym.meta ?? undefined
+      }))
+    });
+  }
+
+  if (prepared.realExamSentences.length > 0) {
+    await tx.dict_real_exam_sentence.createMany({
+      data: prepared.realExamSentences.map((sentence) => ({
+        word_id: wordId,
+        content: sentence.content,
+        level: sentence.level,
+        paper: sentence.paper,
+        source_type: sentence.source_type,
+        year: sentence.year,
+        order: sentence.order,
+        meta: sentence.meta ?? undefined
+      }))
+    });
+  }
+
+  for (const question of prepared.examQuestions) {
+    const questionRecord = await tx.dict_exam_question.create({
+      data: {
+        ...question.data,
+        word_id: wordId
+      }
+    });
+
+    if (question.choices.length > 0) {
+      await tx.dict_exam_choice.createMany({
+        data: question.choices.map((choice) => ({
+          question_id: questionRecord.id,
+          value: choice.value,
+          choice_index: choice.choice_index
+        }))
+      });
+    }
+  }
 };
 
 const createWordRecord = async (tx: Prisma.TransactionClient, prepared: PreparedWordData) => {
@@ -351,6 +556,10 @@ const replaceWordRecord = async (
   await tx.dict_synonym_group.deleteMany({ where: { word_id: id } });
   await tx.dict_phrase.deleteMany({ where: { word_id: id } });
   await tx.dict_related_word.deleteMany({ where: { word_id: id } });
+  await tx.dict_antonym.deleteMany({ where: { word_id: id } });
+  await tx.dict_real_exam_sentence.deleteMany({ where: { word_id: id } });
+  await tx.dict_exam_choice.deleteMany({ where: { question: { word_id: id } } });
+  await tx.dict_exam_question.deleteMany({ where: { word_id: id } });
   await tx.dict_definition.deleteMany({ where: { word_id: id } });
 
   await tx.dict_word.update({

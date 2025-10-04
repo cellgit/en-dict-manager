@@ -10,6 +10,10 @@ export type ExampleForm = NormalizedWordInput["examples"][number];
 export type SynonymGroupForm = NormalizedWordInput["synonymGroups"][number];
 export type PhraseForm = NormalizedWordInput["phrases"][number];
 export type RelatedWordForm = NormalizedWordInput["relatedWords"][number];
+export type AntonymForm = NormalizedWordInput["antonyms"][number];
+export type RealExamSentenceForm = NormalizedWordInput["realExamSentences"][number];
+export type ExamQuestionForm = NormalizedWordInput["examQuestions"][number];
+export type ExamChoiceForm = ExamQuestionForm["choices"][number];
 
 export type InputChangeEvent = ChangeEvent<HTMLInputElement>;
 export type TextareaChangeEvent = ChangeEvent<HTMLTextAreaElement>;
@@ -28,13 +32,28 @@ export type WordViewModel = {
   bookId: string | null;
   phoneticUs: string | null;
   phoneticUk: string | null;
+  phonetic: string | null;
+  speech: string | null;
+  star: number | null;
   audioUs: string | null;
   audioUk: string | null;
+  audioUsRaw: string | null;
+  audioUkRaw: string | null;
   memoryTip: string | null;
+  memoryTipDesc: string | null;
+  sentenceDesc: string | null;
+  synonymDesc: string | null;
+  phraseDesc: string | null;
+  relatedDesc: string | null;
+  antonymDesc: string | null;
+  realExamSentenceDesc: string | null;
+  pictureUrl: string | null;
+  sourceWordId: string | null;
   createdAt: Date;
   updatedAt: Date;
   definitions: Array<{
     partOfSpeech: string | null;
+    pos: string | null;
     meaningCn: string | null;
     meaningEn: string | null;
     note: string | null;
@@ -49,6 +68,23 @@ export type WordViewModel = {
   }>;
   phrases: Array<{ content: string; meaningCn: string | null; meaningEn: string | null }>;
   relatedWords: Array<{ headword: string; partOfSpeech: string | null; meaningCn: string | null }>;
+  antonyms: Array<{ value: string; meta: Record<string, unknown> | null }>;
+  realExamSentences: Array<{
+    content: string;
+    level: string | null;
+    paper: string | null;
+    sourceType: string | null;
+    year: string | null;
+    order: number | null;
+    sourceInfo: Record<string, unknown> | null;
+  }>;
+  examQuestions: Array<{
+    question: string;
+    examType: number | null;
+    explanation: string | null;
+    rightIndex: number | null;
+    choices: Array<{ value: string; index: number | null }>;
+  }>;
   importLogs: Array<{
     id: string;
     status: string;

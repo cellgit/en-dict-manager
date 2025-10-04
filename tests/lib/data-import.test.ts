@@ -54,12 +54,29 @@ const sampleWord: NormalizedWord = {
   phoneticUk: null,
   audioUs: null,
   audioUk: null,
+  audioUsRaw: null,
+  audioUkRaw: null,
+  phonetic: null,
+  speech: null,
+  star: null,
+  sourceWordId: null,
   memoryTip: null,
+  memoryTipDesc: null,
+  sentenceDesc: null,
+  synonymDesc: null,
+  phraseDesc: null,
+  relatedDesc: null,
+  antonymDesc: null,
+  realExamSentenceDesc: null,
+  pictureUrl: null,
   definitions: [],
   examples: [],
   synonymGroups: [],
   phrases: [],
-  relatedWords: []
+  relatedWords: [],
+  antonyms: [],
+  realExamSentences: [],
+  examQuestions: []
 };
 
 const rawDatasetEntry = {
