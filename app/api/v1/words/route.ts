@@ -26,10 +26,31 @@ export async function GET(request: NextRequest) {
     const pageSize = Math.min(pageSizeRaw, MAX_PAGE_SIZE);
     const skip = (page - 1) * pageSize;
 
-    const query = searchParams.get("query") ?? undefined;
+    const rawQuery = searchParams.get("query");
+    const query = rawQuery?.trim() ?? undefined;
     const bookId = searchParams.get("bookId") ?? undefined;
     const exactParam = searchParams.get("exact");
-    const exact = exactParam === "true" || exactParam === "1";
+    const exactProvided = exactParam !== null;
+    const exact = exactProvided && (exactParam === "true" || exactParam === "1");
+
+    if (!exactProvided && query && page === DEFAULT_PAGE) {
+      const exactResult = await listWords({
+        query,
+        bookId,
+        skip: 0,
+        take: pageSize,
+        exact: true
+      });
+
+      if (exactResult.total > 0) {
+        return success({
+          items: exactResult.items.map(serializeWordListItem),
+          total: exactResult.total,
+          page,
+          pageSize
+        });
+      }
+    }
 
     const listResult = await listWords({
       query,

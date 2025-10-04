@@ -118,6 +118,7 @@
   - `query`（可选，词头模糊搜索）
   - `bookId`（可选，过滤指定词书）
   - `page`、`pageSize`
+  - `exact`（可选，`true`/`false`。不传时接口会先尝试大小写不敏感的精确匹配，若命中则直接返回单词详情，否则回退到模糊搜索）
 - **响应体**：分页结果，包含 `items`、`total`、`page`、`pageSize`。
 
 ### POST `/api/v1/words`

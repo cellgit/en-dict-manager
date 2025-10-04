@@ -606,28 +606,34 @@ export async function listWords(params: ListWordsParams = {}): Promise<ListWords
   } satisfies Prisma.dict_wordSelect;
 
   if (exact && normalizedQuery) {
-    const whereExact: Prisma.dict_wordWhereInput = {
-      headword: normalizedQuery
-    };
+    const filters = [Prisma.sql`LOWER("headword") = LOWER(${normalizedQuery})`];
 
     if (params.bookId) {
-      whereExact.book_id = params.bookId;
+      filters.push(Prisma.sql`"book_id" = ${params.bookId}`);
     }
 
-    const record = await prisma.dict_word.findFirst({
-      where: whereExact,
-      orderBy: {
-        updated_at: "desc"
-      },
-      select: listSelect
-    });
+    const exactRows = await prisma.$queryRaw<Array<{
+      id: string;
+      headword: string;
+      rank: number | null;
+      book_id: string | null;
+      phonetic_us: string | null;
+      phonetic_uk: string | null;
+      updated_at: Date;
+    }>>(Prisma.sql`
+      SELECT "id", "headword", "rank", "book_id", "phonetic_us", "phonetic_uk", "updated_at"
+      FROM "dict_word"
+      WHERE ${Prisma.join(filters, " AND ")}
+      ORDER BY "updated_at" DESC
+      LIMIT 1
+    `);
 
-    const rows = record ? [record] : [];
-    const paginated = rows.slice(skip, skip + take);
+    const hasRow = exactRows.length > 0;
+    const includeRow = hasRow && skip === 0 && take > 0;
 
     return {
-      total: rows.length,
-      items: paginated.map(mapListItem)
+      total: hasRow ? 1 : 0,
+      items: includeRow ? exactRows.map(mapListItem) : []
     } satisfies ListWordsResult;
   }
 

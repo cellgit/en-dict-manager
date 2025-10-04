@@ -14,17 +14,17 @@ type DictWordRow = {
 };
 
 jest.mock("@/lib/prisma", () => {
-  const findFirst = jest.fn();
   const findMany = jest.fn();
   const count = jest.fn();
+  const $queryRaw = jest.fn();
 
   return {
     prisma: {
       dict_word: {
-        findFirst,
         findMany,
         count
       },
+      $queryRaw,
       $transaction: jest.fn(async (operations: Array<Promise<unknown>>) => Promise.all(operations))
     }
   };
@@ -46,18 +46,11 @@ describe("listWords exact search", () => {
   });
 
   it("returns a single result when headword matches exactly", async () => {
-    (prisma.dict_word.findFirst as jest.Mock).mockResolvedValue(sampleRow);
+    (prisma.$queryRaw as jest.Mock).mockResolvedValue([sampleRow]);
 
     const result = await listWords({ query: "apple", exact: true });
 
-    expect(prisma.dict_word.findFirst).toHaveBeenCalledTimes(1);
-    expect(prisma.dict_word.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          headword: "apple"
-        }
-      })
-    );
+    expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
     expect(prisma.$transaction).not.toHaveBeenCalled();
     expect(result.total).toBe(1);
     expect(result.items).toHaveLength(1);
@@ -65,27 +58,31 @@ describe("listWords exact search", () => {
   });
 
   it("returns empty result when no word matches exactly", async () => {
-    (prisma.dict_word.findFirst as jest.Mock).mockResolvedValue(null);
+    (prisma.$queryRaw as jest.Mock).mockResolvedValue([]);
 
     const result = await listWords({ query: "banana", exact: true });
 
-    expect(prisma.dict_word.findFirst).toHaveBeenCalledTimes(1);
+    expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
     expect(result.total).toBe(0);
     expect(result.items).toHaveLength(0);
   });
 
   it("includes book filter when provided", async () => {
-    (prisma.dict_word.findFirst as jest.Mock).mockResolvedValue(sampleRow);
+    (prisma.$queryRaw as jest.Mock).mockResolvedValue([sampleRow]);
 
     await listWords({ query: "apple", exact: true, bookId: "Book-A" });
 
-    expect(prisma.dict_word.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          headword: "apple",
-          book_id: "Book-A"
-        }
-      })
-    );
+    expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+    const sqlArg = (prisma.$queryRaw as jest.Mock).mock.calls[0][0] as { values?: unknown[] };
+    expect(sqlArg?.values ?? []).toContain("Book-A");
+  });
+
+  it("respects pagination skip for exact match", async () => {
+    (prisma.$queryRaw as jest.Mock).mockResolvedValue([sampleRow]);
+
+    const result = await listWords({ query: "apple", exact: true, skip: 1 });
+
+    expect(result.total).toBe(1);
+    expect(result.items).toHaveLength(0);
   });
 });

@@ -168,7 +168,7 @@
 ## 5. 关键模块说明
 
 ### 5.1 `lib/word-service.ts`
-- `listWords({ query })`: 根据词头模糊搜索，默认按 `updatedAt` 降序。
+- `listWords({ query, exact })`: 支持词头模糊搜索（默认）或精确匹配；当 `exact = true` 时会走 `LOWER(headword)` 函数索引，实现大小写不敏感的单条命中，返回值仍包含 `total`/分页信息。
 - `getWordById(id)`: 返回词条完整结构，使用 Prisma `include` 加载关联实体。
 - `createWord(input)`: 通过 `prisma.$transaction` 同步创建 Word、Definition、Example、Synonym、Phrase、RelatedWord。
 - `deleteWord(id)`: 删除词条（自动清理子表）。
