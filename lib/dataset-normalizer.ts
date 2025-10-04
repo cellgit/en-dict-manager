@@ -169,19 +169,19 @@ const buildDefinitions = (content: RawWordContent | null | undefined): Normalize
   const definitions: NormalizedWordDefinition[] = [];
 
   for (const item of transArray) {
-    const meaningCn = toTrimmedString(item?.tran_cn ?? null);
-    const meaningEn = toTrimmedString(item?.tran_other ?? null);
-    const note = toTrimmedString(item?.desc_other ?? null);
-    const partOfSpeech = toTrimmedString(item?.desc_cn ?? null);
+    const tranCn = toTrimmedString(item?.tran_cn ?? null);
+    const tranOther = toTrimmedString(item?.tran_other ?? null);
+    const descOther = toTrimmedString(item?.desc_other ?? null);
+    const descCn = toTrimmedString(item?.desc_cn ?? null);
     const pos = toTrimmedString(item?.pos ?? null);
 
-    if (meaningCn || meaningEn || note || partOfSpeech || pos) {
+    if (tranCn || tranOther || descOther || descCn || pos) {
       definitions.push({
-        partOfSpeech,
+        descCn,
+        descOther,
         pos,
-        meaningCn,
-        meaningEn,
-        note,
+        tranCn,
+        tranOther,
         examples: []
       });
     }
@@ -222,12 +222,12 @@ const buildSynonymGroups = (
       .map((synonym) => toTrimmedString(synonym?.w ?? null))
       .filter((value): value is string => Boolean(value));
 
-    const partOfSpeech = toTrimmedString(group?.pos ?? null);
+    const pos = toTrimmedString(group?.pos ?? null);
     const meaningCn = toTrimmedString(group?.tran ?? null);
 
-    if (items.length > 0 || partOfSpeech || meaningCn) {
+    if (items.length > 0 || pos || meaningCn) {
       groups.push({
-        partOfSpeech,
+        pos,
         meaningCn,
         note: null,
         items
@@ -264,7 +264,7 @@ const buildRelatedWords = (
   const related: NormalizedRelatedWord[] = [];
 
   for (const group of relGroups) {
-    const partOfSpeech = toTrimmedString(group?.pos ?? null);
+    const pos = toTrimmedString(group?.pos ?? null);
     const words = asArray<RawRelWord>(group?.words);
 
     for (const word of words) {
@@ -274,7 +274,7 @@ const buildRelatedWords = (
       }
       related.push({
         headword,
-        partOfSpeech,
+        pos,
         meaningCn: toTrimmedString(word?.tran ?? null)
       });
     }

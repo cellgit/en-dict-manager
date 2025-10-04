@@ -52,22 +52,22 @@ export type WordViewModel = {
   createdAt: Date;
   updatedAt: Date;
   definitions: Array<{
-    partOfSpeech: string | null;
+    descCn: string | null;
+    descOther: string | null;
     pos: string | null;
-    meaningCn: string | null;
-    meaningEn: string | null;
-    note: string | null;
+    tranCn: string | null;
+    tranOther: string | null;
     examples: Array<{ source: string; translation: string | null }>;
   }>;
   examples: Array<{ source: string; translation: string | null }>;
   synonymGroups: Array<{
-    partOfSpeech: string | null;
+    pos: string | null;
     meaningCn: string | null;
     note: string | null;
     items: string[];
   }>;
   phrases: Array<{ content: string; meaningCn: string | null; meaningEn: string | null }>;
-  relatedWords: Array<{ headword: string; partOfSpeech: string | null; meaningCn: string | null }>;
+  relatedWords: Array<{ headword: string; pos: string | null; meaningCn: string | null }>;
   antonyms: Array<{ value: string; meta: Record<string, unknown> | null }>;
   realExamSentences: Array<{
     content: string;

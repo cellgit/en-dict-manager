@@ -92,14 +92,14 @@ model dict_word {
 
 /// 释义表，记录词性、中文释义、英文解释等信息。
 model dict_definition {
-  id              String                  @id @default(uuid()) @db.Uuid
-  word_id         String                  @db.Uuid
-  part_of_speech  String?                 @db.VarChar(64)
-  pos             String?                 @db.VarChar(64)
-  meaning_cn      String?                 @db.Text
-  meaning_en      String?                 @db.Text
-  note            String?                 @db.Text
-  created_at      DateTime                @default(now()) @db.Timestamptz(6)
+  id            String    @id @default(uuid()) @db.Uuid
+  word_id       String    @db.Uuid
+  desc_cn       String?   @db.Text
+  desc_other    String?   @db.Text
+  pos           String?   @db.VarChar(64)
+  tran_cn       String?   @db.Text
+  tran_other    String?   @db.Text
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
 
   /// 多对一：所属词条。
   word            dict_word               @relation(fields: [word_id], references: [id], onDelete: Cascade)
@@ -130,11 +130,11 @@ model dict_example_sentence {
 
 /// 近义词分组表，用于归类同义词集合。
 model dict_synonym_group {
-  id             String         @id @default(uuid()) @db.Uuid
-  word_id        String         @db.Uuid
-  part_of_speech String?        @db.VarChar(64)
-  meaning_cn     String?        @db.Text
-  note           String?        @db.Text
+  id         String  @id @default(uuid()) @db.Uuid
+  word_id    String  @db.Uuid
+  pos        String? @db.VarChar(64)
+  meaning_cn String? @db.Text
+  note       String? @db.Text
 
   /// 多对一：所属词条。
   word     dict_word            @relation(fields: [word_id], references: [id], onDelete: Cascade)
@@ -172,11 +172,11 @@ model dict_phrase {
 
 /// 同根/相关词表。
 model dict_related_word {
-  id             String      @id @default(uuid()) @db.Uuid
-  word_id        String      @db.Uuid
-  part_of_speech String?     @db.VarChar(64)
-  headword       String      @db.VarChar(255)
-  meaning_cn     String?     @db.Text
+  id         String  @id @default(uuid()) @db.Uuid
+  word_id    String  @db.Uuid
+  pos        String? @db.VarChar(64)
+  headword   String  @db.VarChar(255)
+  meaning_cn String? @db.Text
 
   /// 多对一：所属词条。
   word dict_word            @relation(fields: [word_id], references: [id], onDelete: Cascade)

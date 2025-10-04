@@ -76,8 +76,8 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
   const audioUkUrl = word.audioUk ?? voicePair.uk;
 
   const partsOfSpeech = word.definitions
-    .map((definition) => definition.partOfSpeech || definition.pos)
-    .filter(Boolean)
+    .map((definition) => definition.pos)
+    .filter((value): value is string => Boolean(value))
     .join(" · ");
 
   const describeRawAudio = (value: string | null): string =>
@@ -155,46 +155,51 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
   const definitionsContent = word.definitions.length === 0 ? (
     <EmptyState title="暂无释义" description="该词条尚未配置释义内容。" />
   ) : (
-    word.definitions.map((definition, index) => (
-      <DetailTile
-        key={`${word.id}-definition-${index}`}
-        title={`释义 ${index + 1}`}
-        description={(() => {
-          const tags = [definition.partOfSpeech, definition.pos].filter(Boolean);
-          return tags.length > 0 ? tags.join(" / ") : undefined;
-        })()}
-      >
-        <div className="space-y-3 text-sm">
-          {definition.meaningCn ? (
-            <DetailRow label="中文释义" value={definition.meaningCn} />
-          ) : null}
-          {definition.meaningEn ? (
-            <DetailRow label="英文释义" value={definition.meaningEn} />
-          ) : null}
-          {definition.note ? <DetailRow label="备注" value={definition.note} /> : null}
-          {definition.examples.length ? (
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                例句
-              </h4>
+    word.definitions.map((definition, index) => {
+      const tags = [definition.pos].filter(Boolean);
+      return (
+        <DetailTile
+          key={`${word.id}-definition-${index}`}
+          title={`释义 ${index + 1}`}
+          description={tags.length > 0 ? tags.join(" / ") : undefined}
+        >
+          <div className="space-y-3 text-sm">
+            {definition.tranCn ? (
+              <DetailRow label="中文翻译" value={definition.tranCn} />
+            ) : null}
+            {definition.tranOther ? (
+              <DetailRow label="其他翻译" value={definition.tranOther} />
+            ) : null}
+            {definition.descCn ? (
+              <DetailRow label="中文描述" value={definition.descCn} />
+            ) : null}
+            {definition.descOther ? (
+              <DetailRow label="其他描述" value={definition.descOther} />
+            ) : null}
+            {definition.examples.length ? (
               <div className="space-y-3">
-                {definition.examples.map((example, exampleIndex) => (
-                  <div
-                    key={`${word.id}-definition-${index}-example-${exampleIndex}`}
-                    className="rounded-lg border border-border/70 bg-card/60 p-3 text-sm"
-                  >
-                    <p className="font-medium text-foreground">{example.source}</p>
-                    {example.translation ? (
-                      <p className="mt-2 text-muted-foreground">{example.translation}</p>
-                    ) : null}
-                  </div>
-                ))}
+                <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  例句
+                </h4>
+                <div className="space-y-3">
+                  {definition.examples.map((example, exampleIndex) => (
+                    <div
+                      key={`${word.id}-definition-${index}-example-${exampleIndex}`}
+                      className="rounded-lg border border-border/70 bg-card/60 p-3 text-sm"
+                    >
+                      <p className="font-medium text-foreground">{example.source}</p>
+                      {example.translation ? (
+                        <p className="mt-2 text-muted-foreground">{example.translation}</p>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : null}
-        </div>
-      </DetailTile>
-    ))
+            ) : null}
+          </div>
+        </DetailTile>
+      );
+    })
   );
 
   const examplesContent = word.examples.length === 0 ? (
@@ -216,7 +221,7 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
     word.synonymGroups.map((group, index) => (
       <DetailTile
         key={`${word.id}-synonym-${index}`}
-        title={group.partOfSpeech || "近义词组"}
+        title={group.pos || "近义词组"}
         description={group.meaningCn ?? undefined}
       >
         {group.items.length ? (
@@ -257,7 +262,7 @@ export function WordDetailPanel({ word, loading, onEdit, onDelete, deleting }: W
       <DetailTile
         key={`${word.id}-related-${index}`}
         title={related.headword}
-        description={related.partOfSpeech ?? undefined}
+  description={related.pos ?? undefined}
       >
         {related.meaningCn ? (
           <p className="text-sm text-muted-foreground">{related.meaningCn}</p>

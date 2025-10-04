@@ -207,11 +207,11 @@ export const openApiDocument: OpenAPIV3.Document = {
         type: "object",
         properties: {
           id: { type: "string", format: "uuid" },
-          partOfSpeech: { type: "string", nullable: true },
+          descCn: { type: "string", nullable: true },
+          descOther: { type: "string", nullable: true },
           pos: { type: "string", nullable: true },
-          meaningCn: { type: "string", nullable: true },
-          meaningEn: { type: "string", nullable: true },
-          note: { type: "string", nullable: true },
+          tranCn: { type: "string", nullable: true },
+          tranOther: { type: "string", nullable: true },
           examples: {
             type: "array",
             items: { $ref: "#/components/schemas/ExampleSentence" }
@@ -222,7 +222,7 @@ export const openApiDocument: OpenAPIV3.Document = {
         type: "object",
         properties: {
           id: { type: "string", format: "uuid" },
-          partOfSpeech: { type: "string", nullable: true },
+          pos: { type: "string", nullable: true },
           meaningCn: { type: "string", nullable: true },
           note: { type: "string", nullable: true },
           items: {
@@ -251,7 +251,7 @@ export const openApiDocument: OpenAPIV3.Document = {
         properties: {
           id: { type: "string", format: "uuid" },
           headword: { type: "string" },
-          partOfSpeech: { type: "string", nullable: true },
+          pos: { type: "string", nullable: true },
           meaningCn: { type: "string", nullable: true }
         }
       },
@@ -435,11 +435,11 @@ export const openApiDocument: OpenAPIV3.Document = {
             items: {
               type: "object",
               properties: {
-                partOfSpeech: { type: "string", nullable: true },
+                descCn: { type: "string", nullable: true },
+                descOther: { type: "string", nullable: true },
                 pos: { type: "string", nullable: true },
-                meaningCn: { type: "string", nullable: true },
-                meaningEn: { type: "string", nullable: true },
-                note: { type: "string", nullable: true },
+                tranCn: { type: "string", nullable: true },
+                tranOther: { type: "string", nullable: true },
                 examples: {
                   type: "array",
                   items: {
@@ -472,7 +472,7 @@ export const openApiDocument: OpenAPIV3.Document = {
             items: {
               type: "object",
               properties: {
-                partOfSpeech: { type: "string", nullable: true },
+                pos: { type: "string", nullable: true },
                 meaningCn: { type: "string", nullable: true },
                 note: { type: "string", nullable: true },
                 items: {
@@ -500,7 +500,7 @@ export const openApiDocument: OpenAPIV3.Document = {
               type: "object",
               properties: {
                 headword: { type: "string" },
-                partOfSpeech: { type: "string", nullable: true },
+                pos: { type: "string", nullable: true },
                 meaningCn: { type: "string", nullable: true }
               },
               required: ["headword"]

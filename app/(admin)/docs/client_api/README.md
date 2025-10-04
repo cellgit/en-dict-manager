@@ -131,8 +131,10 @@
     "bookId": "Oxford-01",
     "definitions": [
       {
-        "partOfSpeech": "v.",
-        "meaningCn": "放弃",
+        "pos": "v.",
+        "tranCn": "放弃",
+        "descCn": "停止计划或行动",
+        "tranOther": null,
         "examples": [
           {
             "source": "They had to abandon the project.",
@@ -183,8 +185,10 @@
       "bookId": "PEPXiaoXue3_1",
       "definitions": [
         {
-          "partOfSpeech": "v.",
-          "meaningCn": "放弃；抛弃"
+          "pos": "v.",
+          "tranCn": "放弃；抛弃",
+          "descCn": null,
+          "tranOther": null
         }
       ]
     }

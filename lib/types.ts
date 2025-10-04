@@ -8,16 +8,16 @@ export interface NormalizedExampleSentence {
 }
 
 export interface NormalizedWordDefinition {
-  partOfSpeech?: string | null;
+  descCn?: string | null;
+  descOther?: string | null;
   pos?: string | null;
-  meaningCn?: string | null;
-  meaningEn?: string | null;
-  note?: string | null;
+  tranCn?: string | null;
+  tranOther?: string | null;
   examples: NormalizedExampleSentence[];
 }
 
 export interface NormalizedSynonymGroup {
-  partOfSpeech?: string | null;
+  pos?: string | null;
   meaningCn?: string | null;
   note?: string | null;
   items: string[];
@@ -31,7 +31,7 @@ export interface NormalizedPhrase {
 
 export interface NormalizedRelatedWord {
   headword: string;
-  partOfSpeech?: string | null;
+  pos?: string | null;
   meaningCn?: string | null;
 }
 

@@ -24,6 +24,7 @@ type DictionaryEntry = {
           desc_other?: string;
           tran_cn?: string;
           tran_other?: string;
+          pos?: string;
         }> | null;
         sentence?: {
           desc?: string;
@@ -88,12 +89,20 @@ function createDefinitionData(entry: DictionaryEntry): Prisma.dict_definitionCre
 
   return trans
     .map((item) => ({
-      part_of_speech: item?.desc_cn?.trim() || null,
-      meaning_cn: item?.tran_cn?.trim() || null,
-      meaning_en: item?.tran_other?.trim() || null,
-      note: item?.desc_other?.trim() || null,
+      desc_cn: item?.desc_cn?.trim() || null,
+      desc_other: item?.desc_other?.trim() || null,
+      pos: item?.pos?.trim() || null,
+      tran_cn: item?.tran_cn?.trim() || null,
+      tran_other: item?.tran_other?.trim() || null,
     }))
-    .filter((definition) => definition.meaning_cn || definition.meaning_en);
+    .filter(
+      (definition) =>
+        definition.tran_cn ||
+        definition.tran_other ||
+        definition.desc_cn ||
+        definition.desc_other ||
+        definition.pos
+    );
 }
 
 function createExampleSentenceData(entry: DictionaryEntry): Prisma.dict_example_sentenceCreateWithoutWordInput[] {
@@ -134,7 +143,7 @@ function createSynonymGroupData(entry: DictionaryEntry): Prisma.dict_synonym_gro
         return null;
       }
       return {
-        part_of_speech: group?.pos?.trim() || null,
+        pos: group?.pos?.trim() || null,
         meaning_cn: group?.tran?.trim() || null,
         synos: {
           create: words.map((value) => ({ value })),
@@ -182,7 +191,7 @@ function createRelatedWordData(entry: DictionaryEntry): Prisma.dict_related_word
       }
       relatedWords.push({
         headword,
-        part_of_speech: group?.pos?.trim() || null,
+        pos: group?.pos?.trim() || null,
         meaning_cn: word?.tran?.trim() || null,
       });
     }

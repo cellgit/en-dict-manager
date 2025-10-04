@@ -29,12 +29,12 @@ export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => {
     pictureUrl: word.picture_url,
     sourceWordId: word.source_word_id,
   definitions: word.definitions.map((definition) => ({
-    partOfSpeech: definition.part_of_speech,
-    pos: definition.pos,
-    meaningCn: definition.meaning_cn,
-    meaningEn: definition.meaning_en,
-    note: definition.note,
-    examples: definition.exampleSentences.map((example) => ({
+    descCn: definition.desc_cn ?? null,
+    descOther: definition.desc_other ?? null,
+    pos: definition.pos ?? null,
+    tranCn: definition.tran_cn ?? null,
+    tranOther: definition.tran_other ?? null,
+    examples: (definition.exampleSentences ?? []).map((example) => ({
       source: example.source,
       translation: example.translation ?? null,
       meta: example.meta ? (example.meta as Record<string, unknown>) : null
@@ -46,10 +46,10 @@ export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => {
     meta: example.meta ? (example.meta as Record<string, unknown>) : null
   })),
   synonymGroups: word.synonymGroups.map((group) => ({
-    partOfSpeech: group.part_of_speech,
-    meaningCn: group.meaning_cn,
-    note: group.note,
-    items: group.synos.map((syn) => syn.value)
+    pos: group.pos ?? null,
+    meaningCn: group.meaning_cn ?? null,
+    note: group.note ?? null,
+    items: (group.synos ?? []).map((syn) => syn.value)
   })),
   phrases: word.phrases.map((phrase) => ({
     content: phrase.content,
@@ -58,8 +58,8 @@ export const mapWordToForm = (word: WordWithRelations): NormalizedWordInput => {
   })),
   relatedWords: word.relatedWords.map((related) => ({
     headword: related.headword,
-    partOfSpeech: related.part_of_speech,
-    meaningCn: related.meaning_cn
+    pos: related.pos ?? null,
+    meaningCn: related.meaning_cn ?? null
   })),
     antonyms: word.antonyms.map((antonym) => ({
       headword: antonym.value,
@@ -116,12 +116,12 @@ export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => {
   createdAt: new Date(word.created_at),
   updatedAt: new Date(word.updated_at),
   definitions: word.definitions.map((definition) => ({
-    partOfSpeech: definition.part_of_speech,
-    pos: definition.pos,
-    meaningCn: definition.meaning_cn,
-    meaningEn: definition.meaning_en,
-    note: definition.note,
-    examples: definition.exampleSentences.map((example) => ({
+    descCn: definition.desc_cn ?? null,
+    descOther: definition.desc_other ?? null,
+    pos: definition.pos ?? null,
+    tranCn: definition.tran_cn ?? null,
+    tranOther: definition.tran_other ?? null,
+    examples: (definition.exampleSentences ?? []).map((example) => ({
       source: example.source,
       translation: example.translation ?? null
     }))
@@ -131,10 +131,10 @@ export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => {
     translation: example.translation ?? null
   })),
   synonymGroups: word.synonymGroups.map((group) => ({
-    partOfSpeech: group.part_of_speech,
-    meaningCn: group.meaning_cn,
-    note: group.note,
-    items: group.synos.map((syn) => syn.value)
+    pos: group.pos ?? null,
+    meaningCn: group.meaning_cn ?? null,
+    note: group.note ?? null,
+    items: (group.synos ?? []).map((syn) => syn.value)
   })),
   phrases: word.phrases.map((phrase) => ({
     content: phrase.content,
@@ -143,8 +143,8 @@ export const mapWordToViewModel = (word: WordWithRelations): WordViewModel => {
   })),
   relatedWords: word.relatedWords.map((related) => ({
     headword: related.headword,
-    partOfSpeech: related.part_of_speech,
-    meaningCn: related.meaning_cn
+    pos: related.pos ?? null,
+    meaningCn: related.meaning_cn ?? null
   })),
     antonyms: word.antonyms.map((antonym) => ({
       value: antonym.value,

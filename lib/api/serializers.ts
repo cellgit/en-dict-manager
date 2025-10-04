@@ -74,50 +74,50 @@ export const serializeWord = (word: WordWithRelations) => {
     realExamSentenceDesc: word.real_exam_sentence_desc,
     pictureUrl: word.picture_url,
     sourceWordId: word.source_word_id,
-  createdAt: toISOString(word.created_at),
-  updatedAt: toISOString(word.updated_at),
-  definitions: word.definitions.map((definition) => ({
-    id: definition.id,
-    partOfSpeech: definition.part_of_speech,
+    createdAt: toISOString(word.created_at),
+    updatedAt: toISOString(word.updated_at),
+    definitions: word.definitions.map((definition) => ({
+      id: definition.id,
+      descCn: definition.desc_cn,
+      descOther: definition.desc_other,
       pos: definition.pos,
-    meaningCn: definition.meaning_cn,
-    meaningEn: definition.meaning_en,
-    note: definition.note,
-    examples: (definition.exampleSentences ?? []).map((example) => ({
+      tranCn: definition.tran_cn,
+      tranOther: definition.tran_other,
+      examples: (definition.exampleSentences ?? []).map((example) => ({
+        id: example.id,
+        source: example.source,
+        translation: example.translation,
+        meta: example.meta ?? null
+      }))
+    })),
+    examples: (word.exampleSentences ?? []).map((example) => ({
       id: example.id,
       source: example.source,
       translation: example.translation,
       meta: example.meta ?? null
-    }))
-  })),
-  examples: (word.exampleSentences ?? []).map((example) => ({
-    id: example.id,
-    source: example.source,
-    translation: example.translation,
-    meta: example.meta ?? null
-  })),
-  synonymGroups: word.synonymGroups.map((group) => ({
-    id: group.id,
-    partOfSpeech: group.part_of_speech,
-    meaningCn: group.meaning_cn,
-    note: group.note,
-    items: (group.synos ?? []).map((synonym) => ({
-      id: synonym.id,
-      value: synonym.value
-    }))
-  })),
-  phrases: word.phrases.map((phrase) => ({
-    id: phrase.id,
-    content: phrase.content,
-    meaningCn: phrase.meaning_cn,
-    meaningEn: phrase.meaning_en
-  })),
-  relatedWords: word.relatedWords.map((related) => ({
-    id: related.id,
-    headword: related.headword,
-    partOfSpeech: related.part_of_speech,
-    meaningCn: related.meaning_cn
-  })),
+    })),
+    synonymGroups: word.synonymGroups.map((group) => ({
+      id: group.id,
+      pos: group.pos,
+      meaningCn: group.meaning_cn,
+      note: group.note,
+      items: (group.synos ?? []).map((synonym) => ({
+        id: synonym.id,
+        value: synonym.value
+      }))
+    })),
+    phrases: word.phrases.map((phrase) => ({
+      id: phrase.id,
+      content: phrase.content,
+      meaningCn: phrase.meaning_cn,
+      meaningEn: phrase.meaning_en
+    })),
+    relatedWords: word.relatedWords.map((related) => ({
+      id: related.id,
+      headword: related.headword,
+      pos: related.pos,
+      meaningCn: related.meaning_cn
+    })),
     antonyms: word.antonyms.map((antonym) => ({
       id: antonym.id,
       value: antonym.value,

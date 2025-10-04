@@ -38,11 +38,11 @@ export const toNullableInt = (value?: number | null): number | null => {
 };
 
 export const createEmptyDefinition = (): DefinitionInput => ({
-  partOfSpeech: "",
+  descCn: "",
+  descOther: "",
   pos: "",
-  meaningCn: "",
-  meaningEn: "",
-  note: "",
+  tranCn: "",
+  tranOther: "",
   examples: []
 });
 
@@ -53,7 +53,7 @@ export const createEmptyExample = (): ExampleInput => ({
 });
 
 export const createEmptySynonymGroup = (): SynonymGroupInput => ({
-  partOfSpeech: "",
+  pos: "",
   meaningCn: "",
   note: "",
   items: [""]
@@ -67,7 +67,7 @@ export const createEmptyPhrase = (): PhraseInput => ({
 
 export const createEmptyRelatedWord = (): RelatedWordInput => ({
   headword: "",
-  partOfSpeech: "",
+  pos: "",
   meaningCn: ""
 });
 
@@ -133,11 +133,11 @@ export const createEmptyWordInput = (): NormalizedWordInput => ({
 });
 
 const normalizeDefinition = (definition: DefinitionInput): NormalizedWordDefinition => ({
-  partOfSpeech: toNullableString(definition.partOfSpeech),
+  descCn: toNullableString(definition.descCn),
+  descOther: toNullableString(definition.descOther),
   pos: toNullableString(definition.pos),
-  meaningCn: toNullableString(definition.meaningCn),
-  meaningEn: toNullableString(definition.meaningEn),
-  note: toNullableString(definition.note),
+  tranCn: toNullableString(definition.tranCn),
+  tranOther: toNullableString(definition.tranOther),
   examples: definition.examples
     .map((example) => normalizeExample(example))
     .filter((example) => example.source.length > 0)
@@ -150,7 +150,7 @@ const normalizeExample = (example: ExampleInput): NormalizedExampleSentence => (
 });
 
 const normalizeSynonymGroup = (group: SynonymGroupInput): NormalizedSynonymGroup => ({
-  partOfSpeech: toNullableString(group.partOfSpeech),
+  pos: toNullableString(group.pos),
   meaningCn: toNullableString(group.meaningCn),
   note: toNullableString(group.note),
   items: group.items
@@ -177,7 +177,7 @@ const normalizeRelatedWord = (related: RelatedWordInput): NormalizedRelatedWord 
   }
   return {
     headword,
-    partOfSpeech: toNullableString(related.partOfSpeech),
+    pos: toNullableString(related.pos),
     meaningCn: toNullableString(related.meaningCn)
   };
 };
@@ -265,11 +265,11 @@ export const sanitizeWordInput = (form: NormalizedWordInput): NormalizedWord => 
   definitions: form.definitions
     .map((definition) => normalizeDefinition(definition))
     .filter((definition) =>
-      definition.partOfSpeech !== null ||
+      definition.descCn !== null ||
+      definition.descOther !== null ||
       definition.pos !== null ||
-      definition.meaningCn !== null ||
-      definition.meaningEn !== null ||
-      definition.note !== null ||
+      definition.tranCn !== null ||
+      definition.tranOther !== null ||
       definition.examples.length > 0
     ),
   examples: form.examples
@@ -278,7 +278,7 @@ export const sanitizeWordInput = (form: NormalizedWordInput): NormalizedWord => 
   synonymGroups: form.synonymGroups
     .map((group) => normalizeSynonymGroup(group))
     .filter((group) =>
-      group.partOfSpeech !== null ||
+      group.pos !== null ||
       group.meaningCn !== null ||
       group.note !== null ||
       group.items.length > 0

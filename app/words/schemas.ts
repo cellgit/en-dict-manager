@@ -9,16 +9,16 @@ export const exampleSentenceSchema = z.object({
 });
 
 export const wordDefinitionSchema = z.object({
-  partOfSpeech: z.string().trim().optional().nullable(),
+  descCn: z.string().trim().optional().nullable(),
+  descOther: z.string().trim().optional().nullable(),
   pos: z.string().trim().optional().nullable(),
-  meaningCn: z.string().trim().optional().nullable(),
-  meaningEn: z.string().trim().optional().nullable(),
-  note: z.string().trim().optional().nullable(),
+  tranCn: z.string().trim().optional().nullable(),
+  tranOther: z.string().trim().optional().nullable(),
   examples: z.array(exampleSentenceSchema).default([])
 });
 
 export const synonymGroupSchema = z.object({
-  partOfSpeech: z.string().trim().optional().nullable(),
+  pos: z.string().trim().optional().nullable(),
   meaningCn: z.string().trim().optional().nullable(),
   note: z.string().trim().optional().nullable(),
   items: z.array(z.string().trim().min(1, "近义词不能为空")).default([])
@@ -32,7 +32,7 @@ export const phraseSchema = z.object({
 
 export const relatedWordSchema = z.object({
   headword: z.string().trim().min(1, "相关词不能为空"),
-  partOfSpeech: z.string().trim().optional().nullable(),
+  pos: z.string().trim().optional().nullable(),
   meaningCn: z.string().trim().optional().nullable()
 });
 

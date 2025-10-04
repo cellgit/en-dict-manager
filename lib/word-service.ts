@@ -115,18 +115,18 @@ type ExampleWriteModel = {
 
 type DefinitionWriteModel = {
   data: {
-    part_of_speech: string | null;
+    desc_cn: string | null;
+    desc_other: string | null;
     pos: string | null;
-    meaning_cn: string | null;
-    meaning_en: string | null;
-    note: string | null;
+    tran_cn: string | null;
+    tran_other: string | null;
   };
   examples: ExampleWriteModel[];
 };
 
 type SynonymGroupWriteModel = {
   data: {
-    part_of_speech: string | null;
+    pos: string | null;
     meaning_cn: string | null;
     note: string | null;
   };
@@ -141,7 +141,7 @@ type PhraseWriteModel = {
 
 type RelatedWordWriteModel = {
   headword: string;
-  part_of_speech: string | null;
+  pos: string | null;
   meaning_cn: string | null;
 };
 
@@ -203,19 +203,19 @@ const prepareDefinition = (definition: NormalizedWordDefinition): DefinitionWrit
     .filter((example) => example.source.length > 0);
 
   const data = {
-    part_of_speech: toNullableString(definition.partOfSpeech ?? undefined),
+    desc_cn: toNullableString(definition.descCn ?? undefined),
+    desc_other: toNullableString(definition.descOther ?? undefined),
     pos: toNullableString(definition.pos ?? undefined),
-    meaning_cn: toNullableString(definition.meaningCn ?? undefined),
-    meaning_en: toNullableString(definition.meaningEn ?? undefined),
-    note: toNullableString(definition.note ?? undefined)
+    tran_cn: toNullableString(definition.tranCn ?? undefined),
+    tran_other: toNullableString(definition.tranOther ?? undefined)
   };
 
   const hasContent =
-    data.part_of_speech !== null ||
+    data.desc_cn !== null ||
+    data.desc_other !== null ||
     data.pos !== null ||
-    data.meaning_cn !== null ||
-    data.meaning_en !== null ||
-    data.note !== null ||
+    data.tran_cn !== null ||
+    data.tran_other !== null ||
     examples.length > 0;
 
   return hasContent
@@ -237,13 +237,13 @@ const prepareSynonymGroup = (group: NormalizedSynonymGroup): SynonymGroupWriteMo
     .filter((value): value is string => Boolean(value));
 
   const data = {
-    part_of_speech: toNullableString(group.partOfSpeech ?? undefined),
+    pos: toNullableString(group.pos ?? undefined),
     meaning_cn: toNullableString(group.meaningCn ?? undefined),
     note: toNullableString(group.note ?? undefined)
   };
 
   const hasContent =
-    data.part_of_speech !== null ||
+    data.pos !== null ||
     data.meaning_cn !== null ||
     data.note !== null ||
     items.length > 0;
@@ -275,7 +275,7 @@ const prepareRelatedWord = (related: NormalizedRelatedWord): RelatedWordWriteMod
   }
   return {
     headword,
-    part_of_speech: toNullableString(related.partOfSpeech ?? undefined),
+    pos: toNullableString(related.pos ?? undefined),
     meaning_cn: toNullableString(related.meaningCn ?? undefined)
   };
 };
@@ -486,7 +486,7 @@ const writeWordRelations = async (
       data: prepared.relatedWords.map((related) => ({
         word_id: wordId,
         headword: related.headword,
-        part_of_speech: related.part_of_speech,
+        pos: related.pos,
         meaning_cn: related.meaning_cn
       }))
     });

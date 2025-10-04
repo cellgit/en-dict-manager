@@ -460,28 +460,10 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor={`${prefix}-pos`} className="text-xs font-medium text-muted-foreground">
-                        词性
+                        词性 (POS)
                       </Label>
                       <Input
                         id={`${prefix}-pos`}
-                        value={definition.partOfSpeech ?? ""}
-                        onChange={(event) =>
-                          updateDefinition(index, {
-                            ...definition,
-                            partOfSpeech: event.target.value
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor={`${prefix}-pos-tag`}
-                        className="text-xs font-medium text-muted-foreground"
-                      >
-                        POS 标签
-                      </Label>
-                      <Input
-                        id={`${prefix}-pos-tag`}
                         value={definition.pos ?? ""}
                         onChange={(event) =>
                           updateDefinition(index, {
@@ -492,49 +474,66 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`${prefix}-note`} className="text-xs font-medium text-muted-foreground">
-                        备注
-                      </Label>
-                      <Input
-                        id={`${prefix}-note`}
-                        value={definition.note ?? ""}
-                        onChange={(event) =>
-                          updateDefinition(index, {
-                            ...definition,
-                            note: event.target.value
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor={`${prefix}-meaning-cn`} className="text-xs font-medium text-muted-foreground">
-                        中文释义
+                      <Label htmlFor={`${prefix}-tran-cn`} className="text-xs font-medium text-muted-foreground">
+                        中文翻译 / 释义
                       </Label>
                       <Textarea
-                        id={`${prefix}-meaning-cn`}
-                        value={definition.meaningCn ?? ""}
+                        id={`${prefix}-tran-cn`}
+                        value={definition.tranCn ?? ""}
                         onChange={(event) =>
                           updateDefinition(index, {
                             ...definition,
-                            meaningCn: event.target.value
+                            tranCn: event.target.value
                           })
                         }
                         rows={2}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`${prefix}-meaning-en`} className="text-xs font-medium text-muted-foreground">
-                        英文释义
+                      <Label htmlFor={`${prefix}-tran-other`} className="text-xs font-medium text-muted-foreground">
+                        其他语言翻译
                       </Label>
                       <Textarea
-                        id={`${prefix}-meaning-en`}
-                        value={definition.meaningEn ?? ""}
+                        id={`${prefix}-tran-other`}
+                        value={definition.tranOther ?? ""}
                         onChange={(event) =>
                           updateDefinition(index, {
                             ...definition,
-                            meaningEn: event.target.value
+                            tranOther: event.target.value
+                          })
+                        }
+                        rows={2}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor={`${prefix}-desc-cn`} className="text-xs font-medium text-muted-foreground">
+                        中文补充说明
+                      </Label>
+                      <Textarea
+                        id={`${prefix}-desc-cn`}
+                        value={definition.descCn ?? ""}
+                        onChange={(event) =>
+                          updateDefinition(index, {
+                            ...definition,
+                            descCn: event.target.value
+                          })
+                        }
+                        rows={2}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`${prefix}-desc-other`} className="text-xs font-medium text-muted-foreground">
+                        其他补充说明
+                      </Label>
+                      <Textarea
+                        id={`${prefix}-desc-other`}
+                        value={definition.descOther ?? ""}
+                        onChange={(event) =>
+                          updateDefinition(index, {
+                            ...definition,
+                            descOther: event.target.value
                           })
                         }
                         rows={2}
@@ -687,11 +686,11 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
                       </Label>
                       <Input
                         id={`${prefix}-pos`}
-                        value={group.partOfSpeech ?? ""}
+                        value={group.pos ?? ""}
                         onChange={(event) =>
                           updateSynonymGroup(index, {
                             ...group,
-                            partOfSpeech: event.target.value
+                            pos: event.target.value
                           })
                         }
                       />
@@ -906,11 +905,11 @@ export function WordForm({ formData, setFormData }: WordFormProps) {
                       </Label>
                       <Input
                         id={`${prefix}-pos`}
-                        value={related.partOfSpeech ?? ""}
+                        value={related.pos ?? ""}
                         onChange={(event) =>
                           updateRelatedWord(index, {
                             ...related,
-                            partOfSpeech: event.target.value
+                            pos: event.target.value
                           })
                         }
                       />
